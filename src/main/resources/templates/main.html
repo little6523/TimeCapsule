@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>TimeCapsule</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body>
+<!-- Include header fragment -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Include sidebar fragment -->
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<main th:class="${userDTO == null} ? 'notloginPage' : 'main-content'">
+  <div class="notloginPage" th:if="${userDTO == null}">
+    <h1>로그인 안했을때 기본 페이지입니다.</h1>
+  </div>
+
+  <div class="main-content" th:if="${userDTO != null}">
+    <h1>로그인 되었을때 메인 페이지 입니다.</h1>
+  </div>
+</main>
+
+<!-- Include footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
