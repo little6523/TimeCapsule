@@ -1,0 +1,48 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  padding-top: 150px; /* 헤더의 높이만큼 상단 패딩 추가 */
+  padding-left: 300px; /* 헤더의 높이만큼 상단 패딩 추가 */
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.notloginPage {
+  flex: 1;
+  padding: 2rem;
+  padding-top: 120px; /* 헤더와의 간격을 위해 상단 패딩 추가 */
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center; /* 텍스트를 중앙 정렬 */
+}
+
+.notloginPage h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.notloginPage img {
+  width: 500px;
+  height: auto;
+  margin: 10px;
+}
+
+
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+    padding-top: 0;
+  }
+}
