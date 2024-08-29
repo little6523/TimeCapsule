@@ -10,6 +10,10 @@ spring:
     mode: HTML
     encoding: UTF-8
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
   datasource:
     url: jdbc:mysql://localhost:3306/timecapsule
     username: root   # ?? ??? ?? ??????
