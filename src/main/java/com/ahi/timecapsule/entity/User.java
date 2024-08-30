@@ -17,43 +17,43 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
-    @Id
-    @Column(name = "id")
-    private String userId;
+  @Id
+  @Column(name = "id")
+  private String userId;
 
-    private String password;
+  private String password;
 
-    private String email;
+  private String email;
 
-    private String nickname;
+  private String nickname;
 
-    private Integer role;
+  private Integer role;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp
+  private LocalDateTime updatedAt;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Story> stories = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Notice> notices = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user", cascade CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Comment> comments = new ArrayList<>();
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Story> stories = new ArrayList<>();
 
-    @Builder
-    public User(String userId, String password, String email, String nickname, Integer role, Integer sharelistId) {
-        this.userId = userId;
-        this.password = password;
-        this.email = email;
-        this.nickname = nickname;
-        this.role = role;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Notice> notices = new ArrayList<>();
 
-    }
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Comment> comments = new ArrayList<>();
+
+  @Builder
+  public User(String userId, String password, String email, String nickname, Integer role, Integer sharelistId) {
+    this.userId = userId;
+    this.password = password;
+    this.email = email;
+    this.nickname = nickname;
+    this.role = role;
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+
+  }
 
 }
