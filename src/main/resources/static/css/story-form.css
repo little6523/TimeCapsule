@@ -57,6 +57,15 @@ select {
     margin-bottom: 10px;
 }
 
+.remove-button {
+    width: 15px;
+    height: 15px;
+    border: 0;
+    background-image: url(../images/Remove.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
 #file-upload {
     width: 1px;
     height: 1px;
