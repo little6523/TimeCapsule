@@ -29,13 +29,12 @@ if (navigator.mediaDevices) {
             // 기존 파일 유지 및 녹음된 파일 추가
             const dataTransfer = new DataTransfer();
             let currentFiles = Array.from(fileInput.files);
-            console.log(currentFiles)
             currentFiles.forEach(f => dataTransfer.items.add(f));
             dataTransfer.items.add(file);
             fileInput.files = dataTransfer.files;
 
-            // 업로드된 파일 이름을 표시
-            uploadText.innerHTML = Array.from(dataTransfer.files).map(v => v.name).join("<br>");
+            // 업로드된 파일 이름을 표시 및 삭제 버튼 추가
+            renderFileList(Array.from(dataTransfer.files));
             uploadContainer.classList.remove("active");
         };
     }).catch((err) => {
