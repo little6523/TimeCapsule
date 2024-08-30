@@ -6,21 +6,29 @@ const uploadText = document.getElementById('upload-text');
 uploadContainer.ondrop = (e) => {
     e.preventDefault();
 
-    // 파일 리스트
-    const files = [...e.dataTransfer?.files];
-    console.log(files);
+    // 새로운 파일 리스트
+    const newFiles = [...e.dataTransfer?.files];
+    console.log(newFiles);
 
-    for (let i = 0; i < files.length; i++) {
-        if (!validation(files[i])) {
+    for (let i = 0; i < newFiles.length; i++) {
+        if (!validation(newFiles[i])) {
             uploadContainer.classList.remove("active");
             return;
         }
     }
 
-    // file 타입의 input 요소에 drop한 파일 전달
-    fileInput.files = e.dataTransfer.files;
+    // 기존 파일 목록에 새 파일들 추가
+    // 업로드된 파일들을 저장할 배열
+    const dataTransfer = new DataTransfer();
+    let currentFiles = Array.from(fileInput.files);
+    currentFiles = [...currentFiles, ...newFiles];
 
-    uploadText.innerText = files.map(v => v.name).join("<br>");
+    // DataTransfer 객체를 이용해 fileInput에 새로운 FileList 생성
+    currentFiles.forEach(file => dataTransfer.items.add(file));
+    fileInput.files = dataTransfer.files;
+
+    // 업로드된 파일 이름을 표시
+    uploadText.innerHTML = Array.from(dataTransfer.files).map(v => v.name).join("<br>");
     uploadContainer.classList.remove("active");
 }
 

@@ -1,10 +1,8 @@
 const recordButton = document.getElementById('record-button');
-const fileUpload = document.getElementById("file-upload");
 
 let constraints;
 let chunks;
 let mediaRecorder;
-let dataTransfer = new DataTransfer();
 
 if (navigator.mediaDevices) {
 
@@ -28,13 +26,18 @@ if (navigator.mediaDevices) {
                 lastModified: new Date().getTime()
             });
 
+            // 기존 파일 유지 및 녹음된 파일 추가
+            const dataTransfer = new DataTransfer();
+            let currentFiles = Array.from(fileInput.files);
+            console.log(currentFiles)
+            currentFiles.forEach(f => dataTransfer.items.add(f));
             dataTransfer.items.add(file);
-            fileUpload.files = dataTransfer.files[Symbol.iterator];
-            console.log(fileUpload.files);
+            fileInput.files = dataTransfer.files;
 
-            uploadText.innerText = dataTransfer.map(v => v.name).join("<br>");
+            // 업로드된 파일 이름을 표시
+            uploadText.innerHTML = Array.from(dataTransfer.files).map(v => v.name).join("<br>");
             uploadContainer.classList.remove("active");
-        }
+        };
     }).catch((err) => {
         console.error("The following error occurred: " + err);
     });
@@ -42,6 +45,7 @@ if (navigator.mediaDevices) {
     console.error("getUserMedia is not supported in this browser.");
 }
 
+// 녹음 버튼 및 정비 버튼 스위칭, 녹음 메소드
 recordButton.addEventListener('click', function () {
     if (mediaRecorder.state !== 'recording') {
         this.style.backgroundImage = 'url(../images/AfterRecording.png)';
