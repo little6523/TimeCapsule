@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TimeCapsule</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/story-detail.css}">
+</head>
+
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+<main>
+    <h1 th:unless="${currentURI.contains('/stories/shared')}">마이 스토리</h1>
+    <h1 th:if="${currentURI.contains('/stories/shared')}" th:text="${story.author.nickname + '의 스토리'}"></h1>
+
+    <article>
+        <div class="story-header">
+            <div class="story-metadata">
+                <h2 th:text="${story.title}">스토리 제목</h2>
+                <p>작성일 | <span th:text="${#temporals.format(story.createdAt, 'yyyy.MM.dd')}">YYYY.MM.DD</span></p>
+                <p th:unless="${currentURI.contains('/stories/shared')}">공유자 |
+                    <span th:each="shared, iterStat : ${story.sharedStories}">
+                        <span th:text="${shared.sharedWithUser.nickname}"></span><span th:if="${!iterStat.last}">,</span>
+                    </span>
+                </p>
+                <p>커뮤니티 | <span th:text="${story.isShared() ? '공개' : '비공개'}"></span></p>
+            </div>
+
+            <div th:unless="${currentURI.contains('/stories/shared')}" class="story-actions">
+                <button class="action-btn" th:onclick="'downloadAudio(' + ${story.id} + ')'"><img
+                        src="/images/soundDownload.png" alt="MP3 다운로드 버튼">MP3 다운로드
+                </button>
+                <button class="action-btn" th:onclick="'downloadPDF(' + ${story.id} + ')'"><img
+                        src="/images/pdfDownload.png" alt="PDF 다운로드 버튼">PDF 다운로드
+                </button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="story-images">
+            <div th:each="image : ${story.images}">
+                <img th:src="@{${image.url}}" alt="첨부된 이미지">
+            </div>
+        </div>
+
+        <div class="story-content">
+            <p th:text="${story.content}">게시물 내용 (사진 포함)</p>
+        </div>
+
+        <div th:unless="${currentURI.contains('/stories/shared')}" class="story-buttons">
+            <button class="back-btn" onclick="history.back()">목록</button>
+            <button class="edit-btn">수정</button>
+            <button class="delete-btn">삭제</button>
+        </div>
+
+        <div th:if="${currentURI.contains('/stories/shared')}" class="shared-version-btn">
+            <button class="back-btn" onclick="history.back()">목록</button>
+        </div>
+    </article>
+</main>
+
+<!-- Footer -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
