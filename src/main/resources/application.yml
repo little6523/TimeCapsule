@@ -3,12 +3,20 @@ spring:
     restart:
       enabled: true
 
+  mvc:
+    async:
+      request-timeout: 300000
+
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML
     encoding: UTF-8
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
   datasource:
     url: jdbc:mysql://localhost:3306/timecapsule
