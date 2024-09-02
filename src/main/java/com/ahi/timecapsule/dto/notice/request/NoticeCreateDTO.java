@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class NoticeCreateDTO {
 
   @NotBlank(message = "제목은 비워둘 수 없습니다.")
