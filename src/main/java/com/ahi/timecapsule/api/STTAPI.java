@@ -26,7 +26,8 @@ public class STTAPI {
   @Value("${STT.API-KEY}")
   private String accessKey;    // 발급받은 API Key
   private String languageCode = "korean";     // 언어 코드
-  private String audioFilePath = "AUDIO_FILE_PATH";  // 녹음된 음성 파일 경로
+  private final String audioFilePath =
+          Paths.get(System.getProperty("user.home"), "files") + "/sounds/recording.ogg";  // 녹음된 음성 파일 경로
   private String audioContents = null;
 
   Gson gson = new Gson();

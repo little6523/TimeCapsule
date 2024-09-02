@@ -25,4 +25,11 @@ public class ApiController {
 
     return ResponseEntity.ok(apiService.createContent(content));
   }
+
+  @GetMapping("/stt")
+  public ResponseEntity<Void> changeSpeechToText() {
+    apiService.changeSpeechToText();
+
+    return ResponseEntity.ok().build();
+  }
 }
