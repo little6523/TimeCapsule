@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>TimeCapsule</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/signup.css}">
+  <!-- SweetAlert2 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+<!-- Include header fragment -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main>
+  <div class="container">
+    <h1>회원가입</h1>
+    <form id="signupForm" th:object="${userSignUp}" th:action="@{/signUp}" method="post" autocomplete="off">
+      <div class="form-group input-with-icon">
+        <img src="/images/id.png" alt="아이디 아이콘" class="icon">
+        <input type="text" id="userId" name="userId" th:field="*{userId}" class="input-icon" placeholder="아이디" required onblur="validateField('userId')">
+        <button type="button" class="duplicate-button" onclick="checkDuplicateAndValidate('userId')">중복확인</button>
+      </div>
+
+      <div class="form-group input-with-icon">
+        <img src="/images/lock.png" alt="비밀번호 아이콘" class="icon">
+        <input type="password" id="password" name="password" th:field="*{password}" class="input-icon" placeholder="비밀번호" required onblur="validateField('password')">
+      </div>
+
+      <div class="form-group input-with-icon">
+        <img src="/images/lock.png" alt="비밀번호 아이콘" class="icon">
+        <input type="password" id="confirmPassword" name="confirmPassword" class="input-icon" placeholder="비밀번호 확인" onblur="validatePasswordMatch()">
+        <p id="passwordMismatch" class="fieldError" style="display: none;">비밀번호가 일치하지 않습니다.</p>
+      </div>
+
+      <div class="form-group input-with-icon">
+        <img src="/images/nickname.png" alt="닉네임 아이콘" class="icon">
+        <input type="text" id="nickname" name="nickname" th:field="*{nickname}" class="input-icon" placeholder="닉네임" required onblur="validateField('nickname')">
+        <button type="button" class="duplicate-button" onclick="checkDuplicateAndValidate('nickname')">중복확인</button>
+      </div>
+
+      <div class="form-group input-with-icon">
+        <img src="/images/email.png" alt="비밀번호 아이콘" class="icon">
+        <input type="email" id="email" name="email" th:field="*{email}" class="input-icon" placeholder="이메일" required onblur="validateField('email')">
+        <button type="button" class="duplicate-button" onclick="checkDuplicateAndValidate('email')">중복확인</button>
+      </div>
+
+      <button type="submit" class="action-button" disabled="disabled">가입하기</button>
+      <button type="button" class="action-button" onclick="history.back()">돌아가기</button>
+    </form>
+  </div>
+  <div id = "error-message" th:if="${errorMessage}" th:text="${errorMessage}" style="display: none;"></div>
+</main>
+
+<!-- Include footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" th:src="@{/js/signup.js}"></script>
+
+</body>
+</html>
