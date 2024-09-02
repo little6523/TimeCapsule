@@ -3,6 +3,9 @@ spring:
     restart:
       enabled: true
 
+  config:
+    import: application-secret.yml
+
   mvc:
     async:
       request-timeout: 300000
