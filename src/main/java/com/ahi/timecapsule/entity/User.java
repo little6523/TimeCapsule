@@ -23,8 +23,10 @@ public class User {
 
   private String password;
 
+  @Column(unique = true)
   private String email;
 
+  @Column(unique = true)
   private String nickname;
 
   private Integer role;
@@ -35,14 +37,14 @@ public class User {
   @UpdateTimestamp
   private LocalDateTime updatedAt;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Story> stories = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Notice> notices = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Comment> comments = new ArrayList<>();
+//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//  private List<Story> stories = new ArrayList<>();
+//
+//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//  private List<Notice> notices = new ArrayList<>();
+//
+//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//  private List<Comment> comments = new ArrayList<>();
 
   @Builder
   public User(String userId, String password, String email, String nickname, Integer role, Integer sharelistId) {
