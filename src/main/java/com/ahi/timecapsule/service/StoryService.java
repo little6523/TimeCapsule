@@ -1,26 +1,36 @@
 package com.ahi.timecapsule.service;
 
-import com.ahi.timecapsule.dto.FindImageResponseDTO;
-import com.ahi.timecapsule.dto.FindSharedResponseDTO;
-import com.ahi.timecapsule.dto.FindStoryResponseDTO;
-import com.ahi.timecapsule.dto.StoryUserResponseDTO;
+import com.ahi.timecapsule.dto.*;
+import com.ahi.timecapsule.entity.Image;
 import com.ahi.timecapsule.entity.Story;
+import com.ahi.timecapsule.entity.StoryShare;
+import com.ahi.timecapsule.entity.User;
+import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
+import com.ahi.timecapsule.repository.StoryShareRepository;
+import com.ahi.timecapsule.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class StoryService {
   private final StoryRepository storyRepository;
+  private final UserRepository userRepository;
+  private final StoryShareRepository storyShareRepository;
+  private final ImageRepository imageRepository;
 
-  public StoryService(StoryRepository storyRepository) {
+  public StoryService(StoryRepository storyRepository, UserRepository userRepository, StoryShareRepository storyShareRepository, ImageRepository imageRepository) {
     this.storyRepository = storyRepository;
+    this.userRepository = userRepository;
+    this.storyShareRepository = storyShareRepository;
+    this.imageRepository = imageRepository;
   }
 
   // 마이 스토리 목록 조회
@@ -106,5 +116,51 @@ public class StoryService {
             .build();
   }
 
+  // 특정 스토리 수정
+  @Transactional
+  public void updateStory(Integer id, UpdateStoryRequestDTO storyRequestDTO) {
+    Story existingStory = storyRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("스토리를 찾을 수 없습니다." + id));
+                              // 예외 처리 수정 필요
 
+    List<StoryShare> updatedStoryShares = createUpdatedStoryShares(storyRequestDTO, existingStory);
+    List<Image> updatedImages = createUpdatedImages(storyRequestDTO, existingStory);
+
+    Story updatedStory = Story.updateStory(
+            existingStory,
+            storyRequestDTO.getTitle(),
+            storyRequestDTO.getContent(),
+            storyRequestDTO.isShared(),
+            updatedStoryShares,
+            updatedImages
+    );
+
+    storyRepository.save(updatedStory);
+  }
+
+  private static List<Image> createUpdatedImages(UpdateStoryRequestDTO storyRequestDTO, Story existingStory) {
+    return storyRequestDTO.getImages().stream()
+            .map(url -> Image.builder()
+                    .story(existingStory)
+                    .url(url)
+                    .build())
+            .toList();
+  }
+
+  private List<StoryShare> createUpdatedStoryShares(UpdateStoryRequestDTO storyRequestDTO, Story existingStory) {
+    return storyRequestDTO.getSharedWithUsers().stream()
+            .map(userId -> {
+              User user = userRepository.findById(userId)
+                      .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. ID: " + userId));
+
+              return StoryShare.builder().story(existingStory).user(user).build();
+            })
+            .toList();
+  }
+
+  // 특정 스토리 삭제
+  @Transactional
+  public void deleteStoryById(int storyId) {
+    storyRepository.deleteById(storyId);
+  }
 }
