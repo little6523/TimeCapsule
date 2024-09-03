@@ -9,6 +9,11 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/story-detail.css}">
+
+    <style>
+
+
+    </style>
 </head>
 
 <body>
@@ -33,11 +38,11 @@
                 <p>커뮤니티 | <span th:text="${story.isShared() ? '공개' : '비공개'}"></span></p>
             </div>
 
-            <div th:unless="${currentURI.contains('/stories/shared')}" class="story-actions">
-                <button class="action-btn" th:onclick="'downloadAudio(' + ${story.id} + ')'"><img
+            <div th:unless="${currentURI.contains('/stories/shared')}" class="download-buttons">
+                <button class="download-btn" th:onclick="'downloadAudio(' + ${story.id} + ')'"><img
                         src="/images/soundDownload.png" alt="MP3 다운로드 버튼">MP3 다운로드
                 </button>
-                <button class="action-btn" th:onclick="'downloadPDF(' + ${story.id} + ')'"><img
+                <button class="download-btn" th:onclick="'downloadPDF(' + ${story.id} + ')'"><img
                         src="/images/pdfDownload.png" alt="PDF 다운로드 버튼">PDF 다운로드
                 </button>
             </div>
@@ -57,17 +62,62 @@
 
         <div th:unless="${currentURI.contains('/stories/shared')}" class="story-buttons">
             <button class="back-btn" onclick="history.back()">목록</button>
-            <button class="edit-btn">수정</button>
-            <button class="delete-btn">삭제</button>
+            <button class="edit-btn" th:data-url="@{/stories/{id}/edit(id=${story.id})}" onclick="location.href=this.getAttribute('data-url')">수정</button>
+            <button class="delete-btn" id="deleteBtn">삭제</button>
         </div>
 
         <div th:if="${currentURI.contains('/stories/shared')}" class="shared-version-btn">
             <button class="back-btn" onclick="history.back()">목록</button>
         </div>
     </article>
+
+    <!-- 삭제 완료 모달 -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p>스토리가 삭제되었습니다.</p>
+            <button class="close" id="closeModal">확인</button>
+        </div>
+    </div>
 </main>
 
 <!-- Footer -->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+    // 삭제 모달창
+    document.getElementById("deleteBtn").addEventListener("click", function() {
+
+        const storyId = [[${story.id}]];
+
+        console.log("story id: ", storyId);
+
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            fetch('/stories/' + storyId, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let modal = document.getElementById("deleteModal");
+                        modal.style.display = "flex";
+                    } else {
+                        alert("삭제에 실패했습니다. 다시 시도해주세요.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error: ', error);
+                });
+        }
+    });
+
+    document.getElementById("closeModal").addEventListener("click", function() {
+        let modal = document.getElementById("deleteModal");
+        modal.style.display = "none";
+        window.location.href = "/stories";
+    });
+</script>
 </body>
 </html>
