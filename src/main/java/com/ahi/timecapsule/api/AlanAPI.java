@@ -1,34 +1,43 @@
 package com.ahi.timecapsule.api;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Flux;
 
 @Component
-@EnableAsync
 public class AlanAPI {
 
-  private final WebClient webClient;
+  private WebClient webClient;
 
-  private final String ALAN_API_URL = "https://kdt-api-function.azurewebsites.net";
+  @Value("${Alan.URL}")
+  private String ALAN_API_URL;
 
-  private final String END_POINT = "/api/v1/question/sse-streaming";
+  @Value("${Alan.END-POINT}")
+  private String END_POINT;
 
-  private final String CLIENT_ID = "65cef0e5-ce7a-4655-a5a8-5f6414f55d03";
+  @Value("${Alan.API-KEY}")
+  private String CLIENT_ID;
 
   public AlanAPI() {
-    this.webClient = WebClient.builder().baseUrl(ALAN_API_URL).build();
+
   }
 
   // ExecutorService 생성: 고정된 스레드 풀 사용
-  private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+  private final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-  public SseEmitter get(String content) {
+  public SseEmitter get(List<String> contents) {
     SseEmitter emitter = new SseEmitter();
+    StringBuilder content = new StringBuilder();
+    for (String s : contents) {
+      content.append(s);
+    }
+
+    webClient = WebClient.builder().baseUrl(ALAN_API_URL).build();
 
     // 외부 API로 GET 요청을 보냄
     Flux<String> responseFlux =
@@ -38,7 +47,7 @@ public class AlanAPI {
                 uriBuilder ->
                     uriBuilder
                         .path(END_POINT)
-                        .queryParam("content", content)
+                        .queryParam("content", content.toString())
                         .queryParam("client_id", CLIENT_ID)
                         .build())
             .retrieve()
@@ -49,6 +58,7 @@ public class AlanAPI {
         data -> {
           // 데이터를 받았을 때마다 비동기 작업으로 emitter.send 호출
           executorService.submit(() -> sendData(emitter, data));
+          System.out.println("보낼 Data: " + data);
           try {
             Thread.sleep(10);
           } catch (InterruptedException e) {

@@ -1,11 +1,12 @@
 package com.ahi.timecapsule.controller;
 
 import com.ahi.timecapsule.service.ApiService;
-import org.springframework.http.MediaType;
+import java.io.IOException;
+import java.util.List;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/api")
@@ -18,18 +19,38 @@ public class ApiController {
     this.apiService = apiService;
   }
 
-  @GetMapping(path = "/alan", produces = "text/event-stream")
-  public ResponseEntity<SseEmitter> createContent(@RequestParam String content) {
+  @GetMapping(path = "/story", produces = "text/event-stream")
+  public ResponseEntity<SseEmitter> createStory() throws IOException, ParseException, InterruptedException {
+    apiService.post();
+//    Thread.sleep(10000);
+    List<String> contents = apiService.get();
 
-    System.out.println(content);
+    System.out.println(contents.get(0));
 
-    return ResponseEntity.ok(apiService.createContent(content));
+    return ResponseEntity.ok(apiService.createContent(contents));
   }
 
-  @GetMapping("/stt")
-  public ResponseEntity<Void> changeSpeechToText() {
-    apiService.changeSpeechToText();
+  @GetMapping("/stt2/auth")
+  public ResponseEntity<String> test() throws IOException {
+    apiService.auth();
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok("확인되었어요!");
+  }
+
+  @GetMapping("/stt/post")
+  public ResponseEntity<String> post() throws ParseException {
+    try {
+      apiService.post();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return ResponseEntity.ok("확인되었어요!");
+  }
+
+  @GetMapping("stt/get")
+  public ResponseEntity<String> get() throws IOException, ParseException, InterruptedException {
+    apiService.get();
+
+    return ResponseEntity.ok("확인되었어요!");
   }
 }

@@ -2,9 +2,12 @@ package com.ahi.timecapsule.service;
 
 import com.ahi.timecapsule.api.AlanAPI;
 import com.ahi.timecapsule.api.STTAPI;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import reactor.core.publisher.Flux;
+
+import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ApiService {
@@ -17,11 +20,19 @@ public class ApiService {
     this.sttAPI = sttAPI;
   }
 
-  public SseEmitter createContent(String content) {
-    return alanAPI.get(content);
+  public SseEmitter createContent(List<String> contents) {
+    return alanAPI.get(contents);
   }
 
-  public void changeSpeechToText() {
-    sttAPI.SpeechToText();
+  public void auth() throws IOException {
+    sttAPI.auth();
+  }
+
+  public void post() throws IOException, ParseException {
+    sttAPI.post();
+  }
+
+  public List<String> get() throws IOException, ParseException, InterruptedException {
+    return sttAPI.get();
   }
 }

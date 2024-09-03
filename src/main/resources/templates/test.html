@@ -10,10 +10,8 @@
 <div id="output"></div>
 
 <script>
-    const contents = '오늘 몇 시에 잘까?';
-    const eventSource = new EventSource(`http://localhost:8080/api/alan?content=${encodeURI(contents)}`);
+    const eventSource = new EventSource('http://localhost:8080/api/story');
     const output = document.getElementById('output')
-    const today = new Date();
 
     eventSource.onmessage = function(event) {
         try {
@@ -25,7 +23,9 @@
                 eventSource.close();
             } else {
                 const parsedContent = jsonData.data.content;
-                output.innerText += parsedContent;
+                if(parsedContent !== undefined) {
+                    output.innerText += parsedContent;
+                }
             }
         } catch (error) {
             console.error('Error processing event data:', error);
