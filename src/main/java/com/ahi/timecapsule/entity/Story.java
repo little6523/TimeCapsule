@@ -49,4 +49,21 @@ public class Story {
   @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Image> images = new ArrayList<>();
 
+  // 스토리 수정 시 사용되는 정적 팩토리 메서드
+  public static Story updateStory(Story original, String newTitle, String newContent, Boolean newIsShared,
+                                  List<StoryShare> newStoryShares, List<Image> newImages) {
+    return new Story(
+            original.id,
+            original.user,
+            newTitle != null ? newTitle : original.title,
+            newContent != null ? newContent : original.content,
+            original.createdAt,
+            LocalDateTime.now(),
+            original.soundFile,
+            newIsShared != null ? newIsShared : original.isShared,
+            newStoryShares != null ? newStoryShares : original.storyShares,
+            newImages != null ? newImages : original.images
+    );
+  }
+
 }
