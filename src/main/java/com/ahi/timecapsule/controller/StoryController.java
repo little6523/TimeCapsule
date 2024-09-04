@@ -1,15 +1,15 @@
 package com.ahi.timecapsule.controller;
 
-import com.ahi.timecapsule.dto.StoryDTO;
 import com.ahi.timecapsule.dto.StoryOptionDTO;
 import com.ahi.timecapsule.service.StoryService;
+import java.io.IOException;
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequestMapping("/stories")
@@ -48,4 +48,9 @@ public class StoryController {
 
         return "redirect:form";
     }
+
+  @GetMapping("/create")
+  public String stt() {
+    return "test";
+  }
 }
