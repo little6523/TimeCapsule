@@ -28,10 +28,11 @@
             스토리</a>
     </div>
 
-    <div class="search-container">
-        <input type="text" placeholder="제목, 내용으로 검색해주세요" class="search-input">
-        <button class="search-btn"><img src="/images/Search.svg" alt="검색 아이콘"></button>
-    </div>
+    <form th:action="@{${tab == 'myStories' ? '/stories/search' : '/stories/shared/search'}}" method="get" class="search-container">
+        <label for="keyword" class="visually-hidden">검색어</label>
+        <input type="text" id="keyword" name="keyword" placeholder="제목, 내용으로 검색해주세요" class="search-input">
+        <button type="submit" class="search-btn"><img src="/images/Search.svg" alt="검색 아이콘"></button>
+    </form>
 
     <table class="story-table">
         <thead>
