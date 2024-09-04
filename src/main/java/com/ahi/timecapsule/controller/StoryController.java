@@ -87,6 +87,7 @@ public class StoryController {
   @PutMapping("/{id}")
   public ResponseEntity<String> updateStory(@PathVariable("id") Integer id,
                                             @RequestBody UpdateStoryRequestDTO storyRequestDTO) {
+
     // 예외 세분화 수정 필요
     try {
       storyService.updateStory(id, storyRequestDTO);
