@@ -113,4 +113,36 @@ public class StoryController {
     }
     return ResponseEntity.ok(response);
   }
+
+  // 마이스토리 내 키워드 검색
+  @GetMapping("/search")
+  public String searchMyStory(@RequestParam("keyword") String keyword,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "10") int size,
+                            HttpServletRequest request, Model model) {
+
+    String userId = "user123";
+    Page<FindStoryResponseDTO> storyPage = storyService.findMyStoryByKeyword(userId, keyword, page, size);
+    model.addAttribute("storyPage", storyPage);
+    model.addAttribute("tab", "myStories");
+    model.addAttribute("currentURI", request.getRequestURI());
+    return "storylist";
+  }
+
+  // 공유된 스토리 내 키워드 검색
+  @GetMapping("/shared/search")
+  public String searchSharedStory(@RequestParam("keyword") String keyword,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "10") int size,
+                              HttpServletRequest request, Model model) {
+
+    System.out.println("공유된 스토리 검색 호출");
+    String userId = "user123";
+    Page<FindStoryResponseDTO> storyPage = storyService.findSharedStoryByKeyword(userId, keyword, page, size);
+
+    model.addAttribute("storyPage", storyPage);
+    model.addAttribute("tab", "sharedStories");
+    model.addAttribute("currentURI", request.getRequestURI());
+    return "storylist";
+  }
 }

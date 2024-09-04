@@ -23,14 +23,10 @@ import java.util.Optional;
 public class StoryService {
   private final StoryRepository storyRepository;
   private final UserRepository userRepository;
-  private final StoryShareRepository storyShareRepository;
-  private final ImageRepository imageRepository;
 
-  public StoryService(StoryRepository storyRepository, UserRepository userRepository, StoryShareRepository storyShareRepository, ImageRepository imageRepository) {
+  public StoryService(StoryRepository storyRepository, UserRepository userRepository) {
     this.storyRepository = storyRepository;
     this.userRepository = userRepository;
-    this.storyShareRepository = storyShareRepository;
-    this.imageRepository = imageRepository;
   }
 
   // 마이 스토리 목록 조회
@@ -163,4 +159,42 @@ public class StoryService {
   public void deleteStoryById(int storyId) {
     storyRepository.deleteById(storyId);
   }
+
+  // 마이 스토리에서 특정 키워드가 제목, 내용에 포함된 스토리 조회
+  @Transactional(readOnly = true)
+  public Page<FindStoryResponseDTO> findMyStoryByKeyword (String userId, String keyword,  int page, int size){
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Story> storyPage = storyRepository.findByUser_IdAndTitleContainsOrContentContains(userId, keyword, pageable);
+
+    return storyPage.map(story -> FindStoryResponseDTO.builder()
+            .id(story.getId())
+            .title(story.getTitle())
+            .content(story.getContent())
+            .createdAt(story.getCreatedAt())
+            .author(StoryUserResponseDTO.builder()
+                    .id(story.getUser().getId())
+                    .nickname(story.getUser().getNickname())
+                    .build())
+            .build());
+  }
+
+  // 공유된 스토리에서 특정 키워드가 제목, 내용에 포함된 스토리 조회
+  @Transactional(readOnly = true)
+  public Page<FindStoryResponseDTO> findSharedStoryByKeyword (String userId, String keyword,  int page, int size){
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Story> storyPage = storyRepository.findByStoryShares_User_IdAndTitleContainsOrContentContains(userId, keyword, pageable);
+
+    return storyPage.map(story -> FindStoryResponseDTO.builder()
+            .id(story.getId())
+            .title(story.getTitle())
+            .content(story.getContent())
+            .createdAt(story.getCreatedAt())
+            .author(StoryUserResponseDTO.builder()
+                    .id(story.getUser().getId())
+                    .nickname(story.getUser().getNickname())
+                    .build())
+            .build());
+  }
 }
+
+
