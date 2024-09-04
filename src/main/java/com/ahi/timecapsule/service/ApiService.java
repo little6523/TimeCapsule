@@ -24,7 +24,7 @@ public class ApiService {
     return alanAPI.get(contents);
   }
 
-  public void auth() throws IOException {
+  public void auth() throws Exception {
     sttAPI.auth();
   }
 

@@ -30,8 +30,8 @@ public class ApiController {
     return ResponseEntity.ok(apiService.createContent(contents));
   }
 
-  @GetMapping("/stt2/auth")
-  public ResponseEntity<String> test() throws IOException {
+  @GetMapping("/stt/auth")
+  public ResponseEntity<String> test() throws Exception {
     apiService.auth();
 
     return ResponseEntity.ok("확인되었어요!");

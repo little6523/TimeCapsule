@@ -1,9 +1,12 @@
 package com.ahi.timecapsule.api;
 
+import com.ahi.timecapsule.util.FileUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -19,28 +22,48 @@ import java.util.Scanner;
 @Component
 public class STTAPI {
 
-  private final String audioFilePath =
-      Paths.get(System.getProperty("user.home"), "files") + "/sounds/recording.ogg"; // 녹음된 음성 파일 경로
+  private final String JWTFilePath;
+
+  private final String audioFilePath;
+
+  @Value("${STT.URL}")
+  private String URL;
+
+  @Value("${STT.AUTH-URL}")
+  private String AUTH_URL;
+
+  @Value("${STT.CLIENT-ID}")
+  private String CLIENT_ID;
+
+  @Value("${STT.CLIENT-SECRET}")
+  private String CLIENT_SECRET;
 
   private String id;
 
-  private final String jwt =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYSI6dHJ1Z"
-          + "SwiZXhwIjoxNzI1MzQ1OTY3LCJmdWUiOmZhbHNlLCJoYmkiOmZhbHNlLCJpYXQiOjE3MjUzM"
-          + "jQzNjcsImp0aSI6Im84UnE3dnc0N25uM3d3bTY0YUIxIiwicGxhbiI6ImJhc2ljIiwic2NvcGU"
-          + "iOiJzcGVlY2giLCJzdWIiOiI2UEZlRlcxemRtNXN4bUNXbncyQSIsInVjIjpmYWxzZSwidiI6MX0"
-          + ".SvQHhRBrCv61gVRxipqf7KxnCNyR5aomxZa1R-76d3M";
+  private String jwt;
 
-  public void auth() throws IOException {
-    URL url = new URL("https://openapi.vito.ai/v1/authenticate");
+  public STTAPI() throws Exception {
+    this.JWTFilePath = Paths.get(System.getProperty("user.home"), "files", "JWT.txt").toString();
+    this.audioFilePath = Paths.get(System.getProperty("user.home"), "files") + "/sounds/recording.ogg";
+
+    File file = new File(JWTFilePath);
+    if (file.exists()) {
+      this.jwt = FileUtil.decryptFile();
+    }
+  }
+
+  // STT 사용을 위해 API로부터 JWT토큰을 발급받는 메소드
+  // 매 6시마다 메소드 실행
+  @Scheduled(cron = "0 0 */6 * * *")
+  public void auth() throws Exception {
+    URL url = new URL(AUTH_URL);
     HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
     httpConn.setRequestMethod("POST");
     httpConn.setRequestProperty("accept", "application/json");
     httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
     httpConn.setDoOutput(true);
 
-    String data =
-        "client_id=6PFeFW1zdm5sxmCWnw2A&client_secret=g0W8FBHjVFWr5zYcBJQGcigdy7w_vKnBRIcfJ2fa";
+    String data = "client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET;
 
     byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
@@ -55,11 +78,17 @@ public class STTAPI {
     String response = s.hasNext() ? s.next() : "";
     s.close();
     System.out.println(response);
+
+    JSONParser jsonParser = new JSONParser();
+    JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
+    this.jwt = (String) jsonObject.get("access_token");
+
+    FileUtil.encryptFile(jwt);
   }
 
   // 저장되어 있는 음성 파일을 해당 API로 전송하는 메소드
   public void post() throws IOException, ParseException {
-    URL url = new URL("https://openapi.vito.ai/v1/transcribe");
+    URL url = new URL(URL);
     HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
     httpConn.setRequestMethod("POST");
     httpConn.setRequestProperty("accept", "application/json");
@@ -111,6 +140,8 @@ public class STTAPI {
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
     this.id = (String) jsonObject.get("id");
+
+    System.out.println(id);
   }
 
   // 요청에 대한 결과를 받는 메소드
@@ -120,7 +151,7 @@ public class STTAPI {
     InputStream responseStream;
 
     while (true) {
-      URL url = new URL("https://openapi.vito.ai/v1/transcribe/" + id);
+      URL url = new URL(URL + "/" + id);
       HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
       httpConn.setRequestMethod("GET");
       httpConn.setRequestProperty("accept", "application/json");
@@ -128,6 +159,7 @@ public class STTAPI {
 
       if (httpConn.getResponseCode() / 100 == 2) {
         responseStream = httpConn.getInputStream();
+        System.out.println("요청 성공!");
       } else {
         responseStream = httpConn.getErrorStream();
       }
@@ -135,6 +167,8 @@ public class STTAPI {
       s = new Scanner(responseStream).useDelimiter("\\A");
       response = s.hasNext() ? s.next() : "";
 
+      // STT 작업이 완료된 상태이면 결과 반환
+      // 아니라면 10초 주기로 Polling
       if (response.contains("completed")) {
         break;
       } else {
