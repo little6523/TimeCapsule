@@ -1,7 +1,6 @@
 package com.ahi.timecapsule.dto.notice.response;
 
 import com.ahi.timecapsule.entity.Notice;
-import com.ahi.timecapsule.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,7 +16,7 @@ public class NoticeListDTO {
   private String title;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  private User user;
+  private String userNickname;
 
   // Entity -> DTO 변환
   public static NoticeListDTO fromEntity(Notice notice) {
@@ -26,7 +25,7 @@ public class NoticeListDTO {
             .title(notice.getTitle())
             .createdAt(notice.getCreatedAt())
             .updatedAt(notice.getUpdatedAt())
-            .user(notice.getUser())
+            .userNickname(notice.getUser().getNickname())
             .build();
   }
 }

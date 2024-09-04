@@ -73,8 +73,8 @@ public class NoticeController {
     if (bindingResult.hasErrors()) {
       return "notice/form";
     }
-    String username = principal.getName();
-    NoticeDetailDTO createdNotice = noticeService.createNotice(createDTO, username);
+    String userNickname  = principal.getName();
+    NoticeDetailDTO createdNotice = noticeService.createNotice(createDTO, userNickname);
     return "redirect:/notices/" + createdNotice.getId();
   }
 

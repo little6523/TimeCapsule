@@ -26,9 +26,9 @@ public class NoticeService {
 
   // 공지사항 생성
   @Transactional
-  public NoticeDetailDTO createNotice(NoticeCreateDTO createDTO, String userId) {
-    User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException(userId));
+  public NoticeDetailDTO createNotice(NoticeCreateDTO createDTO, String userNickname) {
+    User user = userRepository.findByNickname(userNickname)
+            .orElseThrow(() -> new UserNotFoundException(userNickname));
 
     Notice notice = createDTO.toEntity(user);
     Notice savedNotice = noticeRepository.save(notice);
@@ -51,7 +51,7 @@ public class NoticeService {
     Notice notice = noticeRepository.findById(id)
             .orElseThrow(NoticeNotFoundException::new);
 
-    notice.updateNotice(updateDTO.getTitle(), updateDTO.getContent());
+    notice = updateDTO.toEntity(notice);
     Notice updatedNotice = noticeRepository.save(notice);
 
     return NoticeDetailDTO.fromEntity(updatedNotice);
