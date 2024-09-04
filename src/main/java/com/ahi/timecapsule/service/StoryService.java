@@ -1,5 +1,6 @@
 package com.ahi.timecapsule.service;
 
+import com.ahi.timecapsule.dto.request.StoryOptionDTO;
 import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
 import org.springframework.stereotype.Service;

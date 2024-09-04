@@ -35,13 +35,15 @@ uploadContainer.ondrop = (e) => {
 // ondragover 이벤트가 없으면 onDrop 이벤트가 실행되지 않습니다.
 uploadContainer.ondragover = (e) => {
     e.preventDefault();
+
+    uploadContainer.classList.add("active");
 }
 
 // 드래그한 파일이 최초로 진입했을 때
 uploadContainer.ondragenter = (e) => {
     e.preventDefault();
 
-    uploadContainer.classList.add("active");
+    // uploadContainer.classList.add("active");
 }
 
 // 드래그한 파일이 영역을 벗어났을 때
@@ -80,7 +82,7 @@ function validation(obj) {
     return true;
 }
 
-// 파일 목록을 UI에 표시하고 삭제 기능 추가
+// 파일 목록을 UI에 표시하고 삭제 버튼 추가
 function renderFileList(files) {
     // 기존 목록 초기화
     uploadText.innerHTML = '';

@@ -2,6 +2,7 @@ package com.ahi.timecapsule.service;
 
 import com.ahi.timecapsule.api.AlanAPI;
 import com.ahi.timecapsule.api.STTAPI;
+import com.ahi.timecapsule.dto.request.StoryOptionDTO;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

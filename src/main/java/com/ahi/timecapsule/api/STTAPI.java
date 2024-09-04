@@ -1,5 +1,6 @@
 package com.ahi.timecapsule.api;
 
+import com.ahi.timecapsule.dto.request.StoryOptionDTO;
 import com.ahi.timecapsule.util.FileUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

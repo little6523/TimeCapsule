@@ -1,4 +1,4 @@
-package com.ahi.timecapsule.dto;
+package com.ahi.timecapsule.dto.request;
 
 import lombok.*;
 
