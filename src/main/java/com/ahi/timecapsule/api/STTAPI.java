@@ -140,8 +140,6 @@ public class STTAPI {
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
     this.id = (String) jsonObject.get("id");
-
-    System.out.println(id);
   }
 
   // 요청에 대한 결과를 받는 메소드
@@ -159,7 +157,6 @@ public class STTAPI {
 
       if (httpConn.getResponseCode() / 100 == 2) {
         responseStream = httpConn.getInputStream();
-        System.out.println("요청 성공!");
       } else {
         responseStream = httpConn.getErrorStream();
       }
