@@ -44,7 +44,7 @@
                     <span class="text-title">
                         <a th:href="@{/notices/{id}(id=${notice.id})}" th:text="${notice.title}"></a>
                     </span>
-                    <span class="text-author" th:text="${notice.user != null ? notice.user.nickname : ''}"></span>
+                    <span class="text-author" th:text="${notice.userNickname != null ? notice.userNickname : ''}"></span>
                     <span class="text-date" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}"></span>
                 </li>
             </ul>
