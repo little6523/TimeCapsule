@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoryOptionDTO {
-    
-    private String dialect;   // 사투리
-    private String speaker;   // 화자
+
+  private String dialect; // 사투리
+  private String speaker; // 화자
 }
