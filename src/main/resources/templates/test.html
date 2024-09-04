@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Data Display</title>
+</head>
+<body>
+<h1>Real-time Data Stream</h1>
+<div id="output"></div>
+
+<script>
+    const eventSource = new EventSource('http://localhost:8080/api/story');
+    const output = document.getElementById('output')
+
+    eventSource.onmessage = function(event) {
+        try {
+            let data = event.data.replace(/'/g, '"');
+            console.log(data);
+            const jsonData = JSON.parse(data);
+
+            if (jsonData.type === "complete") {
+                eventSource.close();
+            } else {
+                const parsedContent = jsonData.data.content;
+                if(parsedContent !== undefined) {
+                    output.innerText += parsedContent;
+                }
+            }
+        } catch (error) {
+            console.error('Error processing event data:', error);
+        }
+    };
+
+    eventSource.onerror = function(error) {
+        console.error('SSE error:', error);
+        eventSource.close();
+    };
+</script>
+</body>
+</html>
