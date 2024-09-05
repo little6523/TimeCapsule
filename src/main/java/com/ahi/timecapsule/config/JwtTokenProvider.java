@@ -3,7 +3,6 @@ package com.ahi.timecapsule.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
-//  private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+  //  private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
   @Value("${jwt.jwtSecret}")
   private String key;
 
@@ -30,8 +29,9 @@ public class JwtTokenProvider {
   private long refreshTokenExpirationMs;
 
   private Key getSigningKey() {
-    byte[] keyBytes = Base64.getDecoder().decode(key);  // Base64 인코딩된 키를 디코딩
-    return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS512.getJcaName());  // HS512 알고리즘을 위한 키 생성
+    byte[] keyBytes = Base64.getDecoder().decode(key); // Base64 인코딩된 키를 디코딩
+    return new SecretKeySpec(
+        keyBytes, SignatureAlgorithm.HS512.getJcaName()); // HS512 알고리즘을 위한 키 생성
   }
 
   public String generateAccessToken(Authentication authentication) {
