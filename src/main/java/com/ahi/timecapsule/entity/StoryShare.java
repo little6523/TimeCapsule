@@ -25,11 +25,10 @@ public class StoryShare {
   private User user;
 
   /**
-   * Story 객체를 내부적으로 설정합니다.
-   * 이 메서드는 편의 메서드를 통해서만 호출되어야 하며,
-   * 외부에서는 직접 호출하지 말아야 합니다.
+   * Story 객체 설정 (내부에서만 사용)
+   * 편의 메서드를 통해서만 호출되어야 함.
    *
-   * @param story Story 객체 (null 값은 관계 해제를 의미합니다)
+   * @param story Story 객체 (null = 관계 해제)
    */
   void setStoryInternal(Story story) {
     this.story = story;
