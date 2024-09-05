@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TimeCapsule</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/story-detail.css}">
+
+    <style>
+        .edit-container {
+            width: 80%;
+            min-height: 300px;
+            margin: 0 auto 30px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            box-sizing: border-box;
+
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .form-group {
+            width: 100%;
+            height: 35px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            border: none;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .form-group label:not(.switch) {
+            min-width: 60px;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group.content-group {
+            height: auto;
+        }
+
+        .tag {
+            display: flex;
+            align-items: center;
+            background-color: #EAE1E1;
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 14px;
+            color: #333;
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+
+        .tag i {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .tag-input-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ccc;
+            padding: 0 5px;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .tag-input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 35px;
+            height: 18px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #E5C1C1;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(15px);
+        }
+
+        .hidden-file-input {
+            display: none;
+        }
+
+        .image-upload-container {
+            display: flex;
+            height: 35px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            border: none;
+            border-radius: 4px;
+            padding: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        .upload-btn img {
+            height: 15px;
+            margin-right: 5px;
+        }
+
+        .upload-btn:hover {
+            filter: brightness(0.8);
+        }
+
+        .content {
+            width: 100%;
+            height: 300px;
+            resize: none;
+            overflow-y: auto;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .btn-container button {
+            padding: 8px 16px;
+            color: black;
+            border-radius: 4px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 110px;
+            background-color: #E7DEDE;
+        }
+
+        .btn-container button:hover {
+            filter: brightness(0.8);
+        }
+
+    </style>
+</head>
+
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+
+<aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+<main>
+    <h1>마이 스토리</h1>
+
+    <div class="edit-container">
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" style="border: 1px solid #ccc;" th:value="${story.title}"
+                   placeholder="제목을 입력하세요.">
+        </div>
+
+        <div class="form-group">
+            <label for="sharedList">공유자</label>
+            <div class="tag-input-container">
+                <input type="text" id="sharedList" class="tag-input">
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between">
+            <div class="form-group">
+                <label>커뮤니티 게시 여부</label>
+                <label class="switch">
+                    <input type="checkbox" id="communityToggle" name="isCommunityPost" th:checked="${story.isShared()}">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="image-upload-container">
+                <input type="file" id="imageUpload" name="images" accept="image/*" multiple class="hidden-file-input">
+                <button type="button" class="upload-btn" id="uploadBtn"><img src="/images/ImageFileAdd.png"
+                                                                             alt="이미지 업로드">이미지 업로드
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group content-group">
+            <label for="content" class="visually-hidden">내용</label>
+            <div id="content" name="content" contenteditable="true" class="content"></div>
+        </div>
+
+        <div class="btn-container">
+            <button class="back-btn" onclick="history.back()">이전</button>
+            <button type="button" id="saveButton" onclick="submitForm()">저장</button>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // 공유자 ID를 태그 형태로 추가 및 삭제
+        const tagInputContainer = document.querySelector('.tag-input-container');
+        const tagInput = document.querySelector('.tag-input');
+
+        tagInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && tagInput.value.trim() !== '') {
+                e.preventDefault();
+                const newSharedUser = tagInput.value.trim();
+                addTag(newSharedUser);
+                // 새로운 공유자를 sharedList에 추가
+                sharedList.push(newSharedUser);
+                tagInput.value = '';
+            }
+        });
+
+        function addTag(text) {
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.innerHTML = `${text} <i class="remove-tag">×</i>`;
+            tagInputContainer.insertBefore(tag, tagInput);
+
+            tag.querySelector('.remove-tag').addEventListener('click', function () {
+                tagInputContainer.removeChild(tag);
+                // 삭제된 공유자를 shareList에서 제거
+                const index = sharedList.indexOf(text);
+                if (index > -1) {
+                    sharedList.splice(index, 1);
+                }
+            });
+        }
+
+        const sharedList = [];
+
+        // 기존 공유자 리스트를 태그 형태로 출력
+        const existingSharedList = /*[[${story.sharedStories}]]*/ [];
+        existingSharedList.forEach(function (shared) {
+            addTag(shared.sharedWithUser.id);
+            sharedList.push(shared.sharedWithUser.id); // sharedList 배열에 추가
+        });
+
+
+        const contentEditableDiv = document.getElementById('content');
+        const imageUploadInput = document.getElementById('imageUpload');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        // 기존 이미지, 콘텐츠 로드
+        const existingImages = /*[[${story.images}]]*/ [];
+        const content = /*[[${story.content}]]*/ '';
+        const images = [];
+
+        let beforeEditContent = `<p>${content}</p>`;
+
+        existingImages.forEach(function (image) {
+            insertImage(image.url);
+            images.push(image.url);
+        });
+
+        contentEditableDiv.innerHTML += beforeEditContent;
+
+        // 이미지 업로드 버튼 클릭 시 파일 선택창 열기
+        uploadBtn.addEventListener('click', function () {
+            imageUploadInput.click();
+        })
+
+        // 파일 선택 후 이미지 추가
+        imageUploadInput.addEventListener('change', function () {
+            const files = Array.from(imageUploadInput.files);
+
+            files.forEach(file => {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                // Data Url -> 상대 경로
+                fetch('/upload-image', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.text())
+                    .then(relativeUrl => {
+                        images.push(relativeUrl);
+                        insertImage(relativeUrl);
+                    })
+                    .catch(error => console.error('파일 업로드 중 오류 발생: ', error));
+            });
+        });
+
+        // 이미지 및 삭제 버튼 삽입 함수
+        function insertImage(src) {
+            const imageContainer = document.createElement('div');
+            imageContainer.style.position = 'relative';
+            imageContainer.style.display = 'inline-block';
+            imageContainer.style.marginBottom = '10px';
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '400px';
+            img.style.display = 'block';
+            imageContainer.appendChild(img);
+
+            const removeButton = document.createElement('button');
+            removeButton.className = 'remove-button';
+            removeButton.style.position = 'absolute';
+            removeButton.style.top = '0px';
+            removeButton.style.right = '0px';
+            removeButton.style.border = 'none';
+            removeButton.style.background = 'rgba(22, 22, 22, 0.3)';
+            removeButton.style.cursor = 'pointer';
+            removeButton.style.padding = '5px';
+
+            const removeIcon = document.createElement('img');
+            removeIcon.src = '/images/Trash.png';
+            removeIcon.alt = '이미지 삭제';
+            removeIcon.style.width = '20px';
+            removeIcon.style.height = '20px';
+            removeIcon.style.opacity = '1';
+
+            removeButton.appendChild(removeIcon);
+            imageContainer.appendChild(removeButton);
+
+            contentEditableDiv.appendChild(imageContainer);
+        }
+
+        // 절대 경로 -> 상대 경로
+        function getRelativePath(absoluteUrl) {
+            const url = new URL(absoluteUrl, window.location.origin);
+            return url.pathname + url.search + url.hash;
+        }
+
+        contentEditableDiv.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-button')) {
+                // 삭제 버튼 클릭 이벤트 감지
+                const imageContainer = e.target.closest('div');
+                const imgElement = imageContainer.querySelector('img').src;
+                const imgSrc = getRelativePath(imgElement);
+                const index = images.findIndex(image => image === imgSrc);
+                if (index > -1) {
+                    images.splice(index, 1);
+                }
+                imageContainer.remove();
+            }
+        });
+
+        // 폼 데이터를 PUT 요청으로 서버로 전송
+        window.submitForm = function () {
+            const storyId = [[${story.id}]];
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').innerText;
+            const isCommunityPost = document.getElementById('communityToggle').checked;
+
+            const storyData = {
+                title: title,
+                content: content,
+                images: images,
+                sharedWithUsers: sharedList,
+                isShared: true,
+            };
+
+            fetch(`/stories/${storyId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(storyData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('스토리가 성공적으로 수정되었습니다.');
+                        window.location.href = `/stories/${storyId}`;
+                    } else {
+                        alert('스토리 수정에 실패했습니다. 다시 시도해주세요.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        };
+    });
+</script>
+</body>
+</html>
