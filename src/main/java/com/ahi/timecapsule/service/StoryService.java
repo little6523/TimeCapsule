@@ -5,9 +5,7 @@ import com.ahi.timecapsule.entity.Image;
 import com.ahi.timecapsule.entity.Story;
 import com.ahi.timecapsule.entity.StoryShare;
 import com.ahi.timecapsule.entity.User;
-import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
-import com.ahi.timecapsule.repository.StoryShareRepository;
 import com.ahi.timecapsule.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,38 +28,20 @@ public class StoryService {
 
   // 마이 스토리 목록 조회
   @Transactional(readOnly = true)
-  public Page<FindStoryResponseDTO> getUserStories(String userId, int page, int size) {
+  public Page<FindStoryResponseDTO> findUserStoryPage(String userId, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
     Page<Story> storyPage = storyRepository.findByUser_Id(userId, pageable);
 
-    return storyPage.map(story -> FindStoryResponseDTO.builder()
-            .id(story.getId())
-            .title(story.getTitle())
-            .content(story.getContent())
-            .createdAt(story.getCreatedAt())
-            .author(StoryUserResponseDTO.builder()
-                    .id(story.getUser().getId())
-                    .nickname(story.getUser().getNickname())
-                    .build())
-            .build());
+    return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 
   // 공유된 스토리 목록 조회
   @Transactional(readOnly = true)
-  public Page<FindStoryResponseDTO> getSharedStoriesForUser(String userId, int page, int size) {
+  public Page<FindStoryResponseDTO> findSharedStoryPageForUser(String userId, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
     Page<Story> storyPage = storyRepository.findByStoryShares_User_Id(userId, pageable);
 
-    return storyPage.map(story -> FindStoryResponseDTO.builder()
-            .id(story.getId())
-            .title(story.getTitle())
-            .content(story.getContent())
-            .createdAt(story.getCreatedAt())
-            .author(StoryUserResponseDTO.builder()
-                    .id(story.getUser().getId())
-                    .nickname(story.getUser().getNickname())
-                    .build())
-            .build());
+    return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 
   // 스토리 상세 조회
@@ -76,40 +55,7 @@ public class StoryService {
 
     Story story = storyOpt.get();
 
-    // 이미지 조회를 위한 DTO 생성
-    List<FindImageResponseDTO> imageResponseDTOs = story.getImages().stream()
-            .map(image -> FindImageResponseDTO.builder()
-                    .id(image.getId())
-                    .url(image.getUrl())
-                    .build())
-            .toList();
-
-    // 공유자 조회를 위한 DTO 생성
-    List<FindSharedResponseDTO> sharedResponseDTOs = story.getStoryShares().stream()
-            .map(share -> FindSharedResponseDTO.builder()
-                    .id(share.getId())
-                    .sharedStory(null)
-                    .sharedWithUser(StoryUserResponseDTO.builder()
-                            .id(share.getUser().getId())
-                            .nickname(share.getUser().getNickname())
-                            .build())
-                    .build())
-            .toList();
-
-    return FindStoryResponseDTO.builder()
-            .id(story.getId())
-            .title(story.getTitle())
-            .content(story.getContent())
-            .createdAt(story.getCreatedAt())
-            .soundFile(story.getSoundFile())
-            .isShared(story.isShared())
-            .author(StoryUserResponseDTO.builder()
-                    .id(story.getUser().getId())
-                    .nickname(story.getUser().getNickname())
-                    .build())
-            .images(imageResponseDTOs)
-            .sharedStories(sharedResponseDTOs)
-            .build();
+    return FindStoryResponseDTO.fromEntity(story);
   }
 
   // 특정 스토리 수정
@@ -122,8 +68,7 @@ public class StoryService {
     List<StoryShare> updatedStoryShares = createUpdatedStoryShares(storyRequestDTO, existingStory);
     List<Image> updatedImages = createUpdatedImages(storyRequestDTO, existingStory);
 
-    Story updatedStory = Story.updateStory(
-            existingStory,
+    Story updatedStory = existingStory.updateStory(
             storyRequestDTO.getTitle(),
             storyRequestDTO.getContent(),
             storyRequestDTO.isShared(),
@@ -135,7 +80,7 @@ public class StoryService {
   }
 
   private static List<Image> createUpdatedImages(UpdateStoryRequestDTO storyRequestDTO, Story existingStory) {
-    return storyRequestDTO.getImages().stream()
+    return storyRequestDTO.getImageUrls().stream()
             .map(url -> Image.builder()
                     .story(existingStory)
                     .url(url)
@@ -166,16 +111,7 @@ public class StoryService {
     Pageable pageable = PageRequest.of(page, size);
     Page<Story> storyPage = storyRepository.findByUser_IdAndTitleContainsOrContentContains(userId, keyword, pageable);
 
-    return storyPage.map(story -> FindStoryResponseDTO.builder()
-            .id(story.getId())
-            .title(story.getTitle())
-            .content(story.getContent())
-            .createdAt(story.getCreatedAt())
-            .author(StoryUserResponseDTO.builder()
-                    .id(story.getUser().getId())
-                    .nickname(story.getUser().getNickname())
-                    .build())
-            .build());
+    return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 
   // 공유된 스토리에서 특정 키워드가 제목, 내용에 포함된 스토리 조회
@@ -184,16 +120,7 @@ public class StoryService {
     Pageable pageable = PageRequest.of(page, size);
     Page<Story> storyPage = storyRepository.findByStoryShares_User_IdAndTitleContainsOrContentContains(userId, keyword, pageable);
 
-    return storyPage.map(story -> FindStoryResponseDTO.builder()
-            .id(story.getId())
-            .title(story.getTitle())
-            .content(story.getContent())
-            .createdAt(story.getCreatedAt())
-            .author(StoryUserResponseDTO.builder()
-                    .id(story.getUser().getId())
-                    .nickname(story.getUser().getNickname())
-                    .build())
-            .build());
+    return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 }
 
