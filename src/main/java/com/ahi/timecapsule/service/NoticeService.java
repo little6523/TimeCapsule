@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
@@ -27,7 +26,9 @@ public class NoticeService {
   // 공지사항 생성
   @Transactional
   public NoticeDetailDTO createNotice(NoticeCreateDTO createDTO, String userNickname) {
-    User user = userRepository.findByNickname(userNickname)
+    User user =
+        userRepository
+            .findByNickname(userNickname)
             .orElseThrow(() -> new UserNotFoundException(userNickname));
 
     Notice notice = createDTO.toEntity(user);
@@ -39,8 +40,7 @@ public class NoticeService {
   // 공지사항 상세 조회
   @Transactional(readOnly = true)
   public NoticeDetailDTO getDetailNotice(Integer id) {
-    Notice notice = noticeRepository.findById(id)
-            .orElseThrow(NoticeNotFoundException::new);
+    Notice notice = noticeRepository.findById(id).orElseThrow(NoticeNotFoundException::new);
 
     return NoticeDetailDTO.fromEntity(notice);
   }
@@ -48,8 +48,7 @@ public class NoticeService {
   // 공지사항 수정
   @Transactional
   public NoticeDetailDTO updateNotice(Integer id, NoticeUpdateDTO updateDTO) {
-    Notice notice = noticeRepository.findById(id)
-            .orElseThrow(NoticeNotFoundException::new);
+    Notice notice = noticeRepository.findById(id).orElseThrow(NoticeNotFoundException::new);
 
     notice = updateDTO.toEntity(notice);
     Notice updatedNotice = noticeRepository.save(notice);
@@ -60,8 +59,7 @@ public class NoticeService {
   // 공지사항 삭제
   @Transactional
   public void deleteNotice(Integer id) {
-    Notice notice = noticeRepository.findById(id)
-            .orElseThrow(NoticeNotFoundException::new);
+    Notice notice = noticeRepository.findById(id).orElseThrow(NoticeNotFoundException::new);
 
     noticeRepository.delete(notice);
   }
@@ -77,7 +75,8 @@ public class NoticeService {
   // 공지사항 제목, 내용 검색 목록 조회
   @Transactional(readOnly = true)
   public Page<NoticeListDTO> searchNotices(String title, String content, Pageable pageable) {
-    Page<Notice> noticePage = noticeRepository.findByTitleOrContentOrderByCreatedAtDesc(title, content, pageable);
+    Page<Notice> noticePage =
+        noticeRepository.findByTitleOrContentOrderByCreatedAtDesc(title, content, pageable);
 
     return noticePage.map(NoticeListDTO::fromEntity);
   }

@@ -22,10 +22,6 @@ public class NoticeCreateDTO {
 
   // DTO -> Entity 변환
   public Notice toEntity(User user) {
-    return Notice.builder()
-            .title(this.title)
-            .content(this.content)
-            .user(user)
-            .build();
+    return Notice.builder().title(this.title).content(this.content).user(user).build();
   }
 }

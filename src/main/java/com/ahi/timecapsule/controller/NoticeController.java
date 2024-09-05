@@ -7,6 +7,7 @@ import com.ahi.timecapsule.dto.notice.response.NoticeListDTO;
 import com.ahi.timecapsule.service.NoticeService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,9 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
-
 @Controller
 @RequestMapping("/notices")
 @RequiredArgsConstructor
@@ -30,10 +28,11 @@ public class NoticeController {
 
   // 전체 공지사항 목록 조회
   @GetMapping
-  public String getNoticeList(Model model,
-                              @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "10") int size,
-                              @RequestParam(required = false) String searchTerm) {
+  public String getNoticeList(
+      Model model,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(required = false) String searchTerm) {
     Pageable pageable = PageRequest.of(page, size);
     Page<NoticeListDTO> notices;
 
@@ -67,13 +66,14 @@ public class NoticeController {
   // 공지사항 생성
   @PostMapping
   @RolesAllowed("ADMIN")
-  public String createNotice(@Valid @ModelAttribute("noticeForm") NoticeCreateDTO createDTO,
-                             BindingResult bindingResult,
-                             Principal principal) {
+  public String createNotice(
+      @Valid @ModelAttribute("noticeForm") NoticeCreateDTO createDTO,
+      BindingResult bindingResult,
+      Principal principal) {
     if (bindingResult.hasErrors()) {
       return "notice/form";
     }
-    String userNickname  = principal.getName();
+    String userNickname = principal.getName();
     NoticeDetailDTO createdNotice = noticeService.createNotice(createDTO, userNickname);
     return "redirect:/notices/" + createdNotice.getId();
   }
@@ -90,9 +90,10 @@ public class NoticeController {
   // 공지사항 수정
   @PostMapping("/{id}")
   @RolesAllowed("ADMIN")
-  public String updateNotice(@PathVariable Integer id,
-                             @Valid @ModelAttribute("noticeForm") NoticeUpdateDTO updateDTO,
-                             BindingResult bindingResult) {
+  public String updateNotice(
+      @PathVariable Integer id,
+      @Valid @ModelAttribute("noticeForm") NoticeUpdateDTO updateDTO,
+      BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       return "notice/edit";
     }
@@ -109,5 +110,3 @@ public class NoticeController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
-
-

@@ -1,9 +1,8 @@
 package com.ahi.timecapsule.dto.notice.response;
 
 import com.ahi.timecapsule.entity.Notice;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 // Notice 상세 조회를 위한 DTO
 @Getter
@@ -23,13 +22,13 @@ public class NoticeDetailDTO {
   // Entity -> DTO 변환
   public static NoticeDetailDTO fromEntity(Notice notice) {
     return NoticeDetailDTO.builder()
-            .id(notice.getId())
-            .title(notice.getTitle())
-            .content(notice.getContent())
-            .createdAt(notice.getCreatedAt())
-            .updatedAt(notice.getUpdatedAt())
-            .userId(notice.getUser().getUserId())
-            .userNickname(notice.getUser().getNickname())
-            .build();
+        .id(notice.getId())
+        .title(notice.getTitle())
+        .content(notice.getContent())
+        .createdAt(notice.getCreatedAt())
+        .updatedAt(notice.getUpdatedAt())
+        .userId(notice.getUser().getUserId())
+        .userNickname(notice.getUser().getNickname())
+        .build();
   }
 }

@@ -6,4 +6,3 @@ public class NoticeNotFoundException extends RuntimeException {
     super("해당 공지사항은 존재하지 않습니다.");
   }
 }
-
