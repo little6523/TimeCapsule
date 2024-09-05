@@ -13,7 +13,7 @@ public class UpdateStoryRequestDTO {
 
   private String title;
   private String content;
-  private List<String> images;
+  private List<String> imageUrls;
   private List<String> sharedWithUsers;
   @JsonProperty("isShared")
   private boolean isShared;
