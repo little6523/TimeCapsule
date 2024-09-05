@@ -1,4 +1,3 @@
 package com.ahi.timecapsule.repository;
 
-public interface StoryRepository {
-}
+public interface StoryRepository {}
