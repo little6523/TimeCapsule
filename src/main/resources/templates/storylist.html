@@ -17,18 +17,22 @@
 <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
 <main>
-    <h1 th:unless="${currentURI.contains('/stories/shared')}">마이 스토리</h1>
-    <h1 th:if="${currentURI.contains('/stories/shared')}">공유된 스토리</h1>
+    <div class="main-header">
+        <h1 th:unless="${currentURI.contains('/stories/shared')}">마이 스토리</h1>
+        <h1 th:if="${currentURI.contains('/stories/shared')}">공유된 스토리</h1>
+            <img src="/images/timecapsulelogo.png" alt="로고">
+    </div>
+
 
     <div class="tabs">
         <a th:classappend="${tab == 'myStories'} ? 'active'" th:href="@{/stories}" class="tab-btn"
            style="background-color: #E5C1C1">마이 스토리</a>
         <a th:classappend="${tab == 'sharedStories'} ? 'active'" th:href="@{/stories/shared}" class="tab-btn"
-           style="background-color: #E7DEDE">공유 받은
-            스토리</a>
+           style="background-color: #E7DEDE">공유 받은 스토리</a>
     </div>
 
-    <form th:action="@{${tab == 'myStories' ? '/stories/search' : '/stories/shared/search'}}" method="get" class="search-container">
+    <form th:action="@{${tab == 'myStories' ? '/stories' : '/stories/shared'}}" method="get"
+          class="search-container">
         <label for="keyword" class="visually-hidden">검색어</label>
         <input type="text" id="keyword" name="keyword" placeholder="제목, 내용으로 검색해주세요" class="search-input">
         <button type="submit" class="search-btn"><img src="/images/Search.svg" alt="검색 아이콘"></button>
@@ -59,7 +63,7 @@
             <a th:href="@{${currentURI}(page=${storyPage.number - 1})}">
                 <img src="/images/KeyboardArrowLeft.png" alt="이전"></a>
         </span>
-        <span th:each="i : ${#numbers.sequence(0, storyPage.totalPages - 1)}">
+        <span th:if="${storyPage.totalPages >= 1}" th:each="i : ${#numbers.sequence(0, storyPage.totalPages - 1)}">
             <a th:href="@{${currentURI}(page=${i})}" th:text="${i + 1}"
                th:classappend="${i == storyPage.number} ? 'current'"></a>
         </span>
@@ -73,5 +77,13 @@
 
 <!-- Footer -->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+<script>
+    // 현재 URL의 페이지 번호를 sessionStorage에 저장
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const pageNumber = params.get('page') || 1;  // 페이지 번호가 없으면 기본값 1
+        sessionStorage.setItem('currentPage', pageNumber);
+    };
+</script>
 </body>
 </html>

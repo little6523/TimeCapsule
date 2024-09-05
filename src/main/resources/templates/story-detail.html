@@ -9,11 +9,6 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/story-detail.css}">
-
-    <style>
-
-
-    </style>
 </head>
 
 <body>
@@ -61,13 +56,14 @@
         </div>
 
         <div th:unless="${currentURI.contains('/stories/shared')}" class="story-buttons">
-            <button class="back-btn" onclick="history.back()">목록</button>
-            <button class="edit-btn" th:data-url="@{/stories/{id}/edit(id=${story.id})}" onclick="location.href=this.getAttribute('data-url')">수정</button>
+            <button class="back-btn" onclick=goToStoryList()>목록</button>
+            <button class="edit-btn" th:data-url="@{/stories/{id}/edit(id=${story.id})}"
+                    onclick="location.href=this.getAttribute('data-url')">수정</button>
             <button class="delete-btn" id="deleteBtn">삭제</button>
         </div>
 
         <div th:if="${currentURI.contains('/stories/shared')}" class="shared-version-btn">
-            <button class="back-btn" onclick="history.back()">목록</button>
+            <button class="back-btn" onclick=goToStoryList()>목록</button>
         </div>
     </article>
 
@@ -118,6 +114,12 @@
         modal.style.display = "none";
         window.location.href = "/stories";
     });
+
+    // 페이지 번호를 유지한 스토리 목록 페이지로 이동하는 함수
+    function goToStoryList() {
+        const pageNumber = sessionStorage.getItem('currentPage') || 1;
+        window.location.href = `/stories?page=${pageNumber}`;
+    }
 </script>
 </body>
 </html>
