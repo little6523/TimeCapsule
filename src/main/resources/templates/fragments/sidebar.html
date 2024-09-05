@@ -9,10 +9,10 @@
 <aside th:fragment="sidebar" class="sidebar" th:if="${userDTO != null}">
   <nav>
     <ul class="sidebar-nav">
-      <li><a href="#"><img th:src="@{/images/homeicon.png}" alt="홈">홈</a></li>
-      <li><a href="#"><img th:src="@{/images/bookicon.png}" alt="마이 스토리">마이 스토리</a></li>
-      <li><a href="#"><img th:src="@{/images/communityicon.png}" alt="커뮤니티">커뮤니티</a></li>
-      <li><a href="#"><img th:src="@{/images/accounticon.png}" alt="계정 관리">계정 관리</a></li>
+      <li><a href="/"><img th:src="@{/images/homeicon.png}" alt="홈">홈</a></li>
+      <li><a href="/stories"><img th:src="@{/images/bookicon.png}" alt="마이 스토리">마이 스토리</a></li>
+      <li><a href="/community/stories"><img th:src="@{/images/communityicon.png}" alt="커뮤니티">커뮤니티</a></li>
+      <li><a href="/users/info"><img th:src="@{/images/accounticon.png}" alt="계정 관리">계정 관리</a></li>
     </ul>
   </nav>
 </aside>

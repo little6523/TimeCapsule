@@ -8,14 +8,14 @@
 <header>
   <div class="header-container">
     <div class="logo">
-      <a href="#"><img th:src="@{/images/timecapsulelogo.png}" alt="TimeCapsule Logo" class="logo"></a>
+      <a href="/"><img th:src="@{/images/timecapsulelogo.png}" alt="TimeCapsule Logo" class="logo"></a>
       <span>TimeCapsule</span>
     </div>
     <nav class="nav-buttons">
-      <a href="#" class="nav-button">고객센터</a>
-      <a href="#" class="nav-button" th:if="${userDTO == null}">로그인</a>
-      <a href="#" class="nav-button" th:if="${userDTO == null}">회원가입</a>
-      <a href="#" class="nav-button" th:if="${userDTO != null}">로그아웃</a>
+      <a href="/notices" class="nav-button">고객센터</a>
+      <a href="/users/login" class="nav-button" th:if="${userDTO == null}">로그인</a>
+      <a href="/users/signup" class="nav-button" th:if="${userDTO == null}">회원가입</a>
+      <a href="/users/logout" class="nav-button" th:if="${userDTO != null}">로그아웃</a>
     </nav>
   </div>
 </header>
