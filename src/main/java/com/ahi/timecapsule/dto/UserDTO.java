@@ -1,10 +1,9 @@
 package com.ahi.timecapsule.dto;
 
 import com.ahi.timecapsule.entity.User;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -19,14 +18,13 @@ public class UserDTO {
 
   public static UserDTO fromEntity(User user) {
     return UserDTO.builder()
-            .userId(user.getUserId())
-            .email(user.getEmail())
-            .nickname(user.getNickname())
-            .password(user.getPassword())
-            .role(user.getRole())
-            .createdAt(user.getCreatedAt())
-            .updatedAt(user.getUpdatedAt())
-            .build();
-
+        .userId(user.getUserId())
+        .email(user.getEmail())
+        .nickname(user.getNickname())
+        .password(user.getPassword())
+        .role(user.getRole())
+        .createdAt(user.getCreatedAt())
+        .updatedAt(user.getUpdatedAt())
+        .build();
   }
 }

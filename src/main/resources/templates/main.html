@@ -16,17 +16,28 @@
 <!-- Include sidebar fragment -->
 <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<main th:class="${userDTO == null} ? 'notloginPage' : 'main-content'">
-  <div class="notloginPage" th:if="${userDTO == null}">
+<main id="main-content">
+  <!-- 로그인하지 않았을 때 보여주는 부분 -->
+  <div class="notloginPage" id="not-logged-in" style="display: none;">
     <h1>로그인 안했을때 기본 페이지입니다.</h1>
   </div>
 
-  <div class="main-content" th:if="${userDTO != null}">
+  <!-- 로그인되었을 때 보여주는 부분 -->
+  <div class="main-content" id="logged-in" style="display: none;">
     <h1>로그인 되었을때 메인 페이지 입니다.</h1>
+    <p>안녕하세요, <span id="user-id">사용자</span>님!</p>
+    <form th:action="@{/index}" method="get">
+      <button type="submit" class="oauth2-kakao">
+        <img src="/images/kakao.png" alt="카카오 로그인">
+      </button>
+    </form>
   </div>
 </main>
-
 <!-- Include footer fragment -->
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
+
 </body>
 </html>

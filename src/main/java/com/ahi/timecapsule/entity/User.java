@@ -1,16 +1,13 @@
 package com.ahi.timecapsule.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -31,23 +28,27 @@ public class User {
 
   private Integer role;
 
-  @CreationTimestamp
-  private LocalDateTime createdAt;
+  @CreationTimestamp private LocalDateTime createdAt;
 
-  @UpdateTimestamp
-  private LocalDateTime updatedAt;
+  @UpdateTimestamp private LocalDateTime updatedAt;
 
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//  private List<Story> stories = new ArrayList<>();
-//
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//  private List<Notice> notices = new ArrayList<>();
-//
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//  private List<Comment> comments = new ArrayList<>();
+  //  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  //  private List<Story> stories = new ArrayList<>();
+  //
+  //  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  //  private List<Notice> notices = new ArrayList<>();
+  //
+  //  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  //  private List<Comment> comments = new ArrayList<>();
 
   @Builder
-  public User(String userId, String password, String email, String nickname, Integer role, Integer sharelistId) {
+  public User(
+      String userId,
+      String password,
+      String email,
+      String nickname,
+      Integer role,
+      Integer sharelistId) {
     this.userId = userId;
     this.password = password;
     this.email = email;
@@ -55,7 +56,5 @@ public class User {
     this.role = role;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
-
   }
-
 }
