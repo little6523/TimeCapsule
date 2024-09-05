@@ -349,7 +349,7 @@ h2 {
 .container-notice-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 4px;
 }
 
 .container-notice-actions a {
