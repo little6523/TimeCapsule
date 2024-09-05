@@ -34,7 +34,7 @@ public class StoryController {
                                 HttpServletRequest request) {
 
     String userId = "user123";
-    Page<FindStoryResponseDTO> storyPage = storyService.getUserStories(userId, page, size);
+    Page<FindStoryResponseDTO> storyPage = storyService.findUserStoryPage(userId, page, size);
     model.addAttribute("storyPage", storyPage);
     model.addAttribute("tab", "myStories");
     model.addAttribute("currentURI", request.getRequestURI());
@@ -48,7 +48,7 @@ public class StoryController {
                                   @RequestParam(defaultValue = "10") int size,
                                   HttpServletRequest request) {
     String userId = "user123";
-    Page<FindStoryResponseDTO> storyPage = storyService.getSharedStoriesForUser(userId, page, size);
+    Page<FindStoryResponseDTO> storyPage = storyService.findSharedStoryPageForUser(userId, page, size);
     model.addAttribute("storyPage", storyPage);
     model.addAttribute("tab", "sharedStories");
     model.addAttribute("currentURI", request.getRequestURI());

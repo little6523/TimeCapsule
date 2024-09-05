@@ -1,5 +1,6 @@
 package com.ahi.timecapsule.dto;
 
+import com.ahi.timecapsule.entity.User;
 import lombok.*;
 
 @Getter
@@ -9,4 +10,12 @@ import lombok.*;
 public class StoryUserResponseDTO {
   private String id;
   private String nickname;
+
+  // Entity -> DTO 변환 메서드
+  public static StoryUserResponseDTO fromEntity(User user) {
+    return StoryUserResponseDTO.builder()
+            .id(user.getId())
+            .nickname(user.getNickname())
+            .build();
+  }
 }
