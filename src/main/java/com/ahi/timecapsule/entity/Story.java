@@ -71,16 +71,21 @@ public class Story extends BaseEntity {
     }
   }
 
-  // 스토리 수정 시 사용되는 정적 팩토리 메서드
-  public Story updateStory(String newTitle, String newContent, Boolean newIsShared,
+  // 스토리를 업데이트 하는 메서드
+  public void updateStory(String newTitle, String newContent, Boolean newIsShared,
                            List<StoryShare> newStoryShares, List<Image> newImages) {
-    return this.toBuilder()
-            .title(newTitle != null ? newTitle : this.title)
-            .content(newContent != null ? newContent : this.content)
-            .isShared(newIsShared != null ? newIsShared : this.isShared)
-            .storyShares(newStoryShares != null ? newStoryShares : this.storyShares)
-            .images(newImages != null ? newImages : this.images)
-            .build();
-  }
+    this.title = newTitle != null ? newTitle : this.title;
+    this.content = newContent != null ? newContent : this.content;
+    this.isShared = newIsShared != null ? newIsShared : this.isShared;
 
+    this.storyShares.clear();
+    if (newStoryShares != null) {
+      newStoryShares.forEach(this::addStoryShare);
+    }
+
+    this.images.clear();
+    if (newImages != null) {
+      newImages.forEach(this::addImage);
+    }
+  }
 }
