@@ -1,4 +1,3 @@
 package com.ahi.timecapsule.entity;
 
-public class User {
-}
+public class User {}

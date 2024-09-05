@@ -1,4 +1,3 @@
 package com.ahi.timecapsule.controller;
 
-public class StoryController {
-}
+public class StoryController {}

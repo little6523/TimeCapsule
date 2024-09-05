@@ -1,4 +1,3 @@
 package com.ahi.timecapsule.controller;
 
-public class NoticeController {
-}
+public class NoticeController {}
