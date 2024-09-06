@@ -70,13 +70,11 @@ public class StoryService {
   // 특정 스토리 삭제
   @Transactional
   public void deleteStoryById(int storyId) {
-    Story story = storyRepository.findById(storyId)
-            .orElseThrow(() -> new StoryNotFoundException(storyId));
-
+    storyRepository.findById(storyId).orElseThrow(() -> new StoryNotFoundException(storyId));
     storyRepository.deleteById(storyId);
   }
 
-  // 마이 스토리에서 특정 키워드가 제목, 내용에 포함된 스토리 조회
+  // 특정 키워드가 제목, 내용에 포함된 마이 스토리 목록 조회
   @Transactional(readOnly = true)
   public Page<FindStoryResponseDTO> findMyStoriesByKeyword (String userId, String keyword,  int page, int size){
     Pageable pageable = PageRequest.of(page, size);
@@ -85,7 +83,7 @@ public class StoryService {
     return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 
-  // 공유된 스토리에서 특정 키워드가 제목, 내용에 포함된 스토리 조회
+  // 특정 키워드가 제목, 내용에 포함된 공유된 스토리 목록 조회
   @Transactional(readOnly = true)
   public Page<FindStoryResponseDTO> findSharedStoriesByKeyword (String userId, String keyword,  int page, int size){
     Pageable pageable = PageRequest.of(page, size);
