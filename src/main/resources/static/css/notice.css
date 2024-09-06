@@ -74,7 +74,6 @@ h1 {
 
 .container {
     width: 100%;
-    margin-top: 10px;
     margin: 0 auto;
 }
 
@@ -437,8 +436,8 @@ h2 {
     .wrapper-form-content,
     .container-notice-edit,
     .container-notice-detail {
-        margin: 0 auto; /* 중앙 정렬 */
-        padding: 0 10px; /* 내부 여백 조정 */
+        margin: 0 auto;
+        padding: 0 10px;
     }
 
     h1, h2 {
