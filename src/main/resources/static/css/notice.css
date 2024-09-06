@@ -1,8 +1,20 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    padding-top: 150px;
+    padding-left: 230px;
+}
+
 .container-notice {
     width: 100%;
-    max-width: 1000px;
-    padding: 2px;
-    margin-left: 60px;
+    max-width: 990px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,9 +33,10 @@ h1 {
 
 .container-search {
     width: 100%;
-    max-width: 890px;
-    margin-top: 40px;
-    margin-right: 25px;
+    max-width: 750px;
+    margin-top: 30px;
+    margin-bottom: 5px;
+    margin-left: 100px;
     display: flex;
     justify-content: flex-end;
 }
@@ -62,11 +75,11 @@ h1 {
 .container {
     width: 100%;
     margin-top: 10px;
+    margin: 0 auto;
 }
 
 .list-notice {
     width: 100%;
-    padding: 0;
     list-style-type: none;
     border-top: 2px solid #f4eeee;
 }
@@ -93,11 +106,13 @@ h1 {
 .text-date {
     flex: 0 0 20%;
     text-align: center;
+    font-size: 16px;
 }
 
 .text-title {
     flex: 1;
     text-align: left;
+    font-size: 16px;
 }
 
 .text-title a:link,
@@ -110,8 +125,8 @@ h1 {
 
 .container-button {
     height: 38px;
+    padding-left: 730px;
     margin-top: 10px;
-    padding-left: 750px;
     display: flex;
     justify-content: flex-end;
 }
@@ -130,7 +145,7 @@ h1 {
 }
 
 .list-pagination {
-    padding: 50px 50px 50px 65px;
+    padding: 40px 50px 50px 90px;
     display: flex;
     list-style-type: none;
 }
@@ -156,8 +171,9 @@ h1 {
 }
 
 .wrapper-form-content {
-    max-width: 1000px;
-    margin-left: 140px;
+    width: 100%;
+    max-width: 990px;
+    margin: 0 auto;
 }
 
 h2 {
@@ -171,9 +187,11 @@ h2 {
 }
 
 .wrapper-form-content input[type="text"] {
-    width: 900px;
+    width: 100%;
+    max-width: 900px;
     height: 50px;
     padding: 10px 20px 10px 30px;
+    margin-left: 50px;
     font-size: 18px;
     border: 3px solid #eae1e1;
     border-radius: 15px;
@@ -183,9 +201,11 @@ h2 {
 }
 
 .wrapper-form-content textarea {
-    width: 900px;
+    width: 100%;
+    max-width: 900px;
     min-height: 350px;
     padding: 25px 20px 10px 30px;
+    margin-left: 50px;
     font-size: 18px;
     border: 1px solid #f8f7f7;
     border-radius: 10px;
@@ -196,6 +216,7 @@ h2 {
 }
 
 .group-button {
+    padding-right: 40px;
     display: flex;
     justify-content: flex-end;
 }
@@ -222,8 +243,9 @@ h2 {
 }
 
 .container-notice-edit {
-    max-width: 850px;
-    margin-left: 140px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .container-notice-edit h1 {
@@ -234,7 +256,8 @@ h2 {
 }
 
 .group-input input[type="text"] {
-    width: 900px;
+    width: 100%;
+    max-width: 900px;
     height: 50px;
     padding: 10px 20px 10px 30px;
     margin-bottom: 10px;
@@ -247,7 +270,8 @@ h2 {
 }
 
 .group-input textarea {
-    width: 900px;
+    width: 100%;
+    max-width: 900px;
     min-height: 350px;
     padding: 20px 20px 10px 30px;
     margin-bottom: 10px;
@@ -267,9 +291,9 @@ h2 {
 }
 
 .actions-form {
-    width: 900px;
-    margin-left: auto;
-    margin-right: 30px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
     display: flex;
     justify-content: flex-end;
 }
@@ -299,9 +323,11 @@ h2 {
 }
 
 .container-notice-detail {
-    max-width: 800px;
-    margin-left: 350px;
-    padding-left: 130px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .container-notice-detail h2 {
@@ -312,6 +338,7 @@ h2 {
 
 .header-notice {
     margin-bottom: 10px;
+    margin-left: 30px;
     font-size: 20px;
     color: #333;
     text-align: left;
@@ -319,6 +346,7 @@ h2 {
 
 .container-notice-meta {
     margin-bottom: 20px;
+    margin-left: 30px;
     font-size: 14px;
     color: #666;
 }
@@ -329,7 +357,8 @@ h2 {
 }
 
 .separator {
-    width: 800px;
+    width: 100%;
+    max-width: 850px;
     margin: 15px 0;
     border: 0;
     border-top: 2px solid #efdddd;
@@ -337,6 +366,7 @@ h2 {
 
 .content-notice {
     margin-bottom: 10px;
+    margin-left: 30px;
     min-height: 300px;
     font-size: 16px;
     line-height: 1.6;
@@ -347,6 +377,7 @@ h2 {
 }
 
 .container-notice-actions {
+    margin-right: 25px;
     display: flex;
     justify-content: flex-end;
     gap: 4px;
@@ -401,9 +432,13 @@ h2 {
 }
 
 @media (max-width: 767px) {
-    .container-notice {
-        margin-left: 10px;
-        padding: 10px;
+    .container-notice,
+    .container-search,
+    .wrapper-form-content,
+    .container-notice-edit,
+    .container-notice-detail {
+        margin: 0 auto; /* 중앙 정렬 */
+        padding: 0 10px; /* 내부 여백 조정 */
     }
 
     h1, h2 {
@@ -475,10 +510,6 @@ h2 {
         margin: 5px 0;
     }
 
-    .wrapper-form-content {
-        margin-left: 10px;
-    }
-
     .wrapper-form-content input[type="text"],
     .wrapper-form-content textarea {
         width: 100%;
@@ -495,7 +526,7 @@ h2 {
     }
 
     .container-notice-edit {
-        margin-left: 10px;
+        margin-left: 0;
     }
 
     .text-error {
@@ -503,7 +534,7 @@ h2 {
     }
 
     .container-notice-detail {
-        margin-left: 10px;
+        margin-left: 0;
         padding-left: 0;
     }
 
