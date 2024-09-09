@@ -1,4 +1,3 @@
 package com.ahi.timecapsule.dto;
 
-public class UserDTO {
-}
+public class UserDTO {}
