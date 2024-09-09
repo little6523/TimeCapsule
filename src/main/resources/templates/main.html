@@ -10,70 +10,21 @@
     <link rel="stylesheet" th:href="@{/css/footer.css}">
 </head>
 <body>
-<!-- Include header fragment -->
 <div th:replace="~{fragments/header :: header}"></div>
-<!-- Include sidebar fragment -->
 <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-
-<main th:class="${userDTO == null} ? 'notloginPage' : 'main-content'">
-    <!-- 로그인 전 메인 페이지-->
-    <section class="notloginPage" th:if="${userDTO == null}">
-        <h1>가족 또는 세대 간 이야기, 기록하고 공유해보세요</h1>
-        <img src="/images/Family.png" alt="가족 이미지">
-        <section class="feature-boxes">
-            <div class="top-boxes">
-                <p class="feature-box">음성 인터뷰를 텍스트로 변환하고 AI가 정리 이야기로 재구성합니다</p>
-                <p class="feature-box">완성된 이야기 PDF파일, 음성파일 다운로드 가능합니다</p>
-            </div>
-            <p class="feature-box">완성된 스토리는 전체 또는 특정 공유자를 설정하여 공유 할 수 있습니다</p>
-        </section>
-        <section class="story-intro">
-            <h3>스토리 생성되는 흐름을 보여드릴게요!<br>잠깐 놀랄 준비 되셨나요?</h3>
-            <h2>Q . 우리 부모님 연애시절 이야기인데 하나의 스토리로 만들어줄래?</h2>
-        </section>
-        <section class="story-creation">
-            <article class="story-input">
-                <div class="title-with-icon">
-                    <img src="/images/Inquiry.png" alt="스토리 생성 아이콘" class="title-icon">
-                    <h4>스토리 생성 요청</h4>
-                </div>
-                <div class="story-box">
-                    <p>딸: 엄마, 아빠, 어떻게 처음 만나셨어요?</p>
-                    <p>엄마: 우리는 대학교 3학년 때 같은 교양 수업을 들으면서 만났어.<br>엄마가 앞자리에 앉아있었고, 아빠가 뒷자리에 있었지.</p>
-                    <p>아빠: 그래, 엄마가 수업 중에 열심히 필기하는 모습이 참 예뻐 보여서 용기를 내서 말을 걸었단다.</p>
-                    <p>딸: 아, 그렇구나. 첫 데이트는 어땠어요?</p>
-                    <p>엄마: 학교 근처 조그만 카페에서 커피를 마시면서 이야기를 나눴어.<br> 처음엔 조금 어색했지만, 대화가 잘 통해서 즐거웠지.</p>
-                    <p>아빠: 맞아. 그날 우리는 몇 시간 동안 이야기를 나누었어.<br> 시간 가는 줄도 모르고 대화에 빠져들었던 것 같아.</p>
-                </div>
-            </article>
-            <article class="story-output">
-                <div class="title-with-icon">
-                    <img src="/images/Answers.png" alt="스토리 답변 아이콘" class="title-icon">
-                    <h4>엄마 아빠 스토리 생성</h4>
-                </div>
-                <div class="story-box">
-                    <p>대학교 3학년 때였다. 나는 평소처럼 교양 수업을 듣기 위해 강의실에 들어섰다. 늘 그랬듯 앞자리에 앉아 수업에 집중했다. 열심히 필기를 하며 강의를 듣고 있을 때, 뒤에서 누군가 나를 지켜보고 있다는 느낌은 전혀 없었다.</p>
-                    <p>수업이 끝나고 집을 챙기고 있을 때, 뒷자리에 앉아있던 남학생이 다가왔다. 그는 수줍은 듯 웃으며 말을 걸어왔다. 처음에는 당황스러웠지만, 그의 따뜻한 미소에 마음이 조금 열렸다.</p>
-                    <p>우리는 그렇게 이야기를 나누다가 자연스럽게 학교 근처 작은 카페로 향했다. 처음엔 어색한 침묵이 흘렀지만, 커피를 마시며 대화를 나누다 보니 그 어색함은 금세 사라졌다.</p>
-                    <p>우리는 학교 생활부터 시작해 각자의 꿈, 가족 이야기까지 다양한 주제로 대화를 나눴다. 그의 이야기 하나하나가 흥미로웠고, 우리의 관심사가 비슷하다는 것을 알게 되었다. 시간 가는 줄도 모르고 대화에 빠져들었다.</p>
-                    <p>카페 직원이 마감 시간을 알려줄 때까지 우리는 그렇게 앉아 있었다. 집으로 돌아가는 길, 이상하게 기분이 좋았다. 그날의 우연한 만남이 이렇게 특별한 인연의 시작이 될 줄은 몰랐다. 그의 용기 있는 첫 말걸기가 우리의 삶을 바꿔놓은 순간이었다.</p>
-                </div>
-            </article>
-        </section>
-    </section>
-    <!-- 로그인 후 메인 페이지-->
-    <section class="main-content" th:if="${userDTO != null}">
+<main th:class="main-content">
+    <section class="main-content">
         <section class="story-creation-section">
             <h2>
-                <img src="/images/Plus.png" alt="스토리 생성 플러스 아이콘" class="text-plus-icon">
+                <img src="/images/MainPlus.png" alt="스토리 생성 플러스 아이콘" class="text-plus-icon">
                 스토리 생성
             </h2>
             <div class="story-cards">
                 <a href="/stories/form" class="story-card new-story">
-                    <span class="plus-icon"><img src="/images/Plus.png" alt="스토리 생성 플러스 아이콘" class="box-plus-icon"></span>
+                    <span class="plus-icon"><img src="/images/MainPlus.png" alt="스토리 생성 플러스 아이콘" class="box-plus-icon"></span>
                 </a>
                 <a href="#" class="story-card"> <!-- 가장 최근 생성한 스토리 페이지(기능 구현 후 연결) -->
-                    <img src="/images/timecapsulelogo.png" alt="최근 스토리 책 아이콘" class="box-book-icon">
+                    <img src="/images/MainTimecapsuleLogo.png" alt="최근 스토리 책 아이콘" class="box-book-icon">
                     <article class="story-content">
                         <h2>할아버지의 6.25 전쟁 이야기</h2>
                         <h4>할아버지께서 겪으신 6.25 전쟁 당시의 경험담을 들었습니다..<br>전쟁의 참혹함 속에서도 서로를 위해 희생하고 도왔던 그 시절의<br>기억이 아직도 생생하다고 하셨습니다.</h4>
@@ -83,21 +34,21 @@
             <section class="service-intro">
                 <h1>가족 또는 세대 간 이야기, 기록하고 공유해보세요</h1>
                 <article class="intro-item">
-                    <img src="/images/FamilyLaw.png" alt="새로운 스토리 만들기" class="intro-image">
+                    <img src="/images/MainFamilyLaw.png" alt="새로운 스토리 만들기" class="intro-image">
                     <div class="intro-content">
                         <h3 class="intro-title">새로운 스토리 만들기</h3>
                         <p class="intro-description">나만의 스토리를 생성하세요.</p>
                     </div>
                 </article>
                 <article class="intro-item">
-                    <img src="/images/Upload.png" alt="사진 및 음성 업로드하기" class="intro-image">
+                    <img src="/images/MainUpload.png" alt="사진 및 음성 업로드하기" class="intro-image">
                     <div class="intro-content">
                         <h3 class="intro-title">사진 및 음성 업로드하기</h3>
                         <p class="intro-description">업로드한 사진과 음성을 기반으로,<br> 멋진 스토리를 만들어 드립니다.</p>
                     </div>
                 </article>
                 <article class="intro-item">
-                    <img src="/images/Knowledge.png" alt="스토리 공유하기" class="intro-image">
+                    <img src="/images/MainKnowledge.png" alt="스토리 공유하기" class="intro-image">
                     <div class="intro-content">
                         <h3 class="intro-title">스토리 공유하기</h3>
                         <p class="intro-description">소중한 우리 가족의 이야기,<br> 함께 기억할 수 있도록 공유할 수 있습니다.</p>
@@ -107,7 +58,9 @@
         </section>
     </section>
 </main>
-<!-- Include footer fragment -->
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
+<script type="text/javascript" th:src="@{/js/auth.js}"></script>
 </body>
 </html>

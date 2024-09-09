@@ -168,6 +168,57 @@ main {
   background-color: #EFDDDD;
   font-weight: bold;
 }
+
+.dialect-story-creation {
+    width: calc(100vw + 300px);
+    margin-top: 150px;
+    margin-left: calc(50% - 50vw - 150px);
+    margin-bottom: 90px;
+    padding: 50px 0;
+    background-color: #FAF6F6;
+    position: relative;
+    left: -191px;
+}
+
+.dialect-story-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    left: 150px;
+}
+
+.dialect-story-creation h2 {
+    padding: 50px 0 20px 0;
+}
+
+.dialect-story-exchange img {
+    width: 170px;
+    height: auto;
+}
+
+.dialect-story-exchange p {
+    font-weight: 900;
+    font-size: 20px;
+    color: #8D5454;
+}
+
+.dialect-details {
+    width: 620px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #F6EEEE;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dialect-details p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 900;
+    text-align: left;
+    color: #333;
+}
 /*로그인 전 MAIN CSS*/
 /*로그인 후 MAIN CSS*/
 .story-creation-section {
