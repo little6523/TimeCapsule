@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TimeCapsule</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<!-- Include header fragment -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main>
+
+    <div class="container">
+        <h1>로그인</h1>
+        <form id="loginForm">
+            <div class="form-group input-with-icon">
+                <img src="/images/id.png" alt="아이디 아이콘" class="icon">
+                <input type="text" id="username" name="username" class="input-icon" placeholder="아이디" required>
+            </div>
+
+            <div class="form-group input-with-icon">
+                <img src="/images/lock.png" alt="비밀번호 아이콘" class="icon">
+                <input type="password" id="password" name="password" class="input-icon" placeholder="비밀번호" required>
+            </div>
+
+            <button type="submit" class="action-button">로그인</button>
+        </form>
+
+        <div class="form-group-button">
+            <form th:action="@{/signUpPage}" method="get">
+                <button>회원가입</button>
+            </form>
+            <form th:action="@{/users/password/find}" method="get">
+                <button>비밀번호 찾기</button>
+            </form>
+        </div>
+
+        <div class="oauth2-login-start">
+            <img src="/images/login_line.png" alt="오어스로그인용 선">
+            <p>소설 계정 간편 로그인</p>
+            <img src="/images/login_line.png" alt="오어스로그인용 선">
+        </div>
+
+        <div class="form-group-oauth2">
+            <a href="/oauth2/authorization/google"><img src="/images/IndexAnswers.png" alt="구글 로그인"></a>
+            <a href="/oauth2/authorization/kakao" id="kakaoLogin"><img src="/images/blog.png" alt="카카오 로그인"></a>
+        </div>
+    </div>
+
+</main>
+
+<!-- Include footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script type="text/javascript" th:src="@{/js/login.js}"></script>
+<script type="text/javascript" th:src="@{/js/oauthLogin.js}"></script>
+</body>
+</html>
