@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* 전체 화면 높이 */
+    display: flex; /* 전체 화면 중앙 정렬을 위한 Flexbox */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+main {
+    width: 100%; /* 필요에 따라 조정 가능 */
+    max-width: 600px; /* 컨테이너의 최대 너비 설정 */
+    display: flex; /* 중앙 정렬을 위한 Flexbox */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    padding: 20px; /* 내부 여백 */
+}
+
+.container form {
+    display: flex;
+    flex-direction: column; /* 수직 정렬 */
+    align-items: center; /* 가운데 정렬 */
+    gap: 20px; /* 요소 간의 간격 추가 */
+}
+
+.container h1{
+    text-align: center;
+}
+
+.oauth2-login-start {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 10px;
+}
+
+.oauth2-login-start p {
+    font-size: 13px;
+}
+
+.oauth2-login-start img {
+    /*width: 50px; !* 이미지의 가로 크기를 고정 *!*/
+    height: 1px;
+}
+
+.form-group {
+    position: relative; /* 절대 위치를 위한 기준 */
+}
+
+.form-group button {
+    position: absolute; /* 버튼을 절대 위치로 설정 */
+}
+
+.form-group-button {
+    display: flex;
+    justify-content: center;
+    margin-top : 10px;
+    gap: 10px;
+}
+
+.form-group-button button {
+    background-color: #F0EFEF;
+    border-radius: 5px;
+    width: 120px;
+    height: 30px;
+    border: none;
+    font-size: 13px;
+}
+
+.form-group-oauth2 {
+    display: flex;
+    justify-content: center;
+    margin-top : 10px;
+    gap: 10px;
+}
+
+.oauth2-google {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    border: 1px solid #B3ABAB;
+    width: 50px; /* 너비 설정 */
+    height: 50px;
+}
+
+.oauth2-kakao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FCD54A;
+    border-radius: 50%;
+    border: none;
+    width: 50px; /* 너비 설정 */
+    height: 50px;
+}
+
+.form-group-oauth2 img{
+    width: 30px;
+    height: 30px;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    width: 300px; /* 입력 필드의 너비 */
+    padding: 10px 10px 10px 40px; /* 아이콘 공간 확보 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 auto; /* 입력 필드들을 가운데 정렬 */
+}
+
+.input-with-icon .icon {
+    position: absolute;
+    left: 10px; /* 아이콘 위치 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px; /* 아이콘 크기 */
+    height: 20px; /* 아이콘 크기 */
+    pointer-events: none; /* 클릭 불가능 */
+}
+
+.action-button {
+    background-color: #F0EFEF;
+    border-radius: 5px;
+    width: 60%;
+    height: 34px;
+    border: none;
+    font-size: 13px;
+}

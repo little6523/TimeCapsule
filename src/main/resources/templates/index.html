@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>TimeCapsule</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
 </head>
 <body>
-
+<div th:replace="~{fragments/header :: header}"></div>
+<main th:class="notloginPage">
+    <section class="notloginPage">
+        <h1>가족 또는 세대 간 이야기, 기록하고 공유해보세요</h1>
+        <img src="/images/IndexFamily.png" alt="가족 이미지">
+        <section class="feature-boxes">
+            <div class="top-boxes">
+                <p class="feature-box">음성 인터뷰를 텍스트로 변환하고 AI가 정리 이야기로 재구성합니다</p>
+                <p class="feature-box">완성된 이야기 PDF파일, 음성파일 다운로드 가능합니다</p>
+            </div>
+            <p class="feature-box">완성된 스토리는 전체 또는 특정 공유자를 설정하여 공유 할 수 있습니다</p>
+        </section>
+        <section class="story-intro">
+            <h3>스토리 생성되는 흐름을 보여드릴게요!<br>잠깐 놀랄 준비 되셨나요?</h3>
+            <h2>Q . 우리 부모님 연애시절 이야기인데 하나의 스토리로 만들어줄래?</h2>
+        </section>
+        <section class="story-creation">
+            <article class="story-input">
+                <div class="title-with-icon">
+                    <img src="/images/IndexInquiry.png" alt="스토리 생성 아이콘" class="title-icon">
+                    <h4>스토리 생성 요청</h4>
+                </div>
+                <div class="story-box">
+                    <p>딸: 엄마, 아빠, 어떻게 처음 만나셨어요?</p>
+                    <p>엄마: 우리는 대학교 3학년 때 같은 교양 수업을 들으면서 만났어.<br>엄마가 앞자리에 앉아있었고, 아빠가 뒷자리에 있었지.</p>
+                    <p>아빠: 그래, 엄마가 수업 중에 열심히 필기하는 모습이 참 예뻐 보여서 용기를 내서 말을 걸었단다.</p>
+                    <p>딸: 아, 그렇구나. 첫 데이트는 어땠어요?</p>
+                    <p>엄마: 학교 근처 조그만 카페에서 커피를 마시면서 이야기를 나눴어.<br> 처음엔 조금 어색했지만, 대화가 잘 통해서 즐거웠지.</p>
+                    <p>아빠: 맞아. 그날 우리는 몇 시간 동안 이야기를 나누었어.<br> 시간 가는 줄도 모르고 대화에 빠져들었던 것 같아.</p>
+                </div>
+            </article>
+            <article class="story-output">
+                <div class="title-with-icon">
+                    <img src="/images/IndexAnswers.png" alt="스토리 답변 아이콘" class="title-icon">
+                    <h4>엄마 아빠 스토리 생성</h4>
+                </div>
+                <div class="story-box">
+                    <p>대학교 3학년 때였다. 나는 평소처럼 교양 수업을 듣기 위해 강의실에 들어섰다. 늘 그랬듯 앞자리에 앉아 수업에 집중했다. 열심히 필기를 하며 강의를 듣고 있을 때, 뒤에서 누군가 나를 지켜보고 있다는 느낌은 전혀 없었다.</p>
+                    <p>수업이 끝나고 집을 챙기고 있을 때, 뒷자리에 앉아있던 남학생이 다가왔다. 그는 수줍은 듯 웃으며 말을 걸어왔다. 처음에는 당황스러웠지만, 그의 따뜻한 미소에 마음이 조금 열렸다.</p>
+                    <p>우리는 그렇게 이야기를 나누다가 자연스럽게 학교 근처 작은 카페로 향했다. 처음엔 어색한 침묵이 흘렀지만, 커피를 마시며 대화를 나누다 보니 그 어색함은 금세 사라졌다.</p>
+                    <p>우리는 학교 생활부터 시작해 각자의 꿈, 가족 이야기까지 다양한 주제로 대화를 나눴다. 그의 이야기 하나하나가 흥미로웠고, 우리의 관심사가 비슷하다는 것을 알게 되었다. 시간 가는 줄도 모르고 대화에 빠져들었다.</p>
+                    <p>카페 직원이 마감 시간을 알려줄 때까지 우리는 그렇게 앉아 있었다. 집으로 돌아가는 길, 이상하게 기분이 좋았다. 그날의 우연한 만남이 이렇게 특별한 인연의 시작이 될 줄은 몰랐다. 그의 용기 있는 첫 말걸기가 우리의 삶을 바꿔놓은 순간이었다.</p>
+                </div>
+            </article>
+        </section>
+        <section class="dialect-story-creation">
+            <div class="dialect-story-container">
+            <h2>더욱더 놀라운 사실!<br>사투리로도 변경이 가능합니다!</h2>
+            <div class="dialect-story-exchange">
+                <img src="/images/IndexArrow.png" alt="체인지" class="arrow-icon">
+                <p>제주도 사투리 스토리 생성</p>
+            </div>
+            <article class="dialect-details">
+                <p>대학교 3학년 때랑.나 평상시처럼 교양 수업 들으러 강의실 들어갔수다.</p>
+                <p>늘 하듯이 앞자리에 앉아 집중허멍 수업 들었져. 열심히 필기 허멍 강의 들을 땐, 뒤에서 누군가 날<br>쳐다보고 있다는 생각은 전혀 안했수다.<br>수업 끝나고 짐 챙기고 있는데, 뒷자리에 앉아있던 남학생이 다가왔수다. 그 남학생이 살짝 부끄러<br>
+                    운 듯 웃으멍 말을 걸어오는데, 처음엔 좀 당황했수다만, 그 양반 미소가 참 따뜻해서 내 맘도 좀 열<br>리주게.
+                </p>
+                <p>우리 이야기가 자연스럽게 이어지면서, 학교 근처 조그마한 카페로 가게 됐수다. 처음엔 어색한 침<br>묵이 흘렀수다만, 커피 한잔 허멍 얘기 나누다 보니 그 어색함도 금방 사라지주게.<br>우리 학교 이야기부터 시작해서 각자 꿈이랑 가족 이야기까지 별의별 얘기 다 나눴수다. 그 양반 얘
+                    기 하나하나가 참 재미졌고, 우리 관심사가 비슷한 것도 알게 됐수다.시간 가는 줄도 모르고 이야<br>기 빠져들었주게.
+                </p>
+                <p>카페 직원이 마감 시간 알려줄 때까지 우리 그렇게 앉아 있었수다. 집으로 돌아가는 길에 참 기분이<br>이상하게 좋았수다. 그날 그 우연한 만남이 이렇게 특별한 인연의 시작이 될 줄이야. 그양반의 용<br>기 있는 첫 마디가 우리 인생을 바꿔놓은 순간이었주게.</p>
+            </article>
+            </div>
+        </section>
+        <section class="timecapsule-highlight">
+            <h1>오직! TimeCapsule에서만 발견할 수 있는 특별한 순간!<br>지금 바로 확인하러 오세요!</h1>
+        </section>
+    </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
