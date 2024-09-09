@@ -8,6 +8,7 @@ import lombok.*;
 
 // Notice 생성을 위한 DTO
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

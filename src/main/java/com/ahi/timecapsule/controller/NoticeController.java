@@ -1,5 +1,6 @@
 package com.ahi.timecapsule.controller;
 
+import com.ahi.timecapsule.config.JwtTokenProvider;
 import com.ahi.timecapsule.dto.notice.request.NoticeCreateDTO;
 import com.ahi.timecapsule.dto.notice.request.NoticeUpdateDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeDetailDTO;
@@ -7,7 +8,6 @@ import com.ahi.timecapsule.dto.notice.response.NoticeListDTO;
 import com.ahi.timecapsule.service.NoticeService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class NoticeController {
 
   private final NoticeService noticeService;
+  private final JwtTokenProvider jwtTokenProvider;
 
   // 전체 공지사항 목록 조회
   @GetMapping
@@ -67,14 +68,23 @@ public class NoticeController {
   @PostMapping
   @RolesAllowed("ADMIN")
   public String createNotice(
+      @RequestHeader("Authorization") String bearerToken,
       @Valid @ModelAttribute("noticeForm") NoticeCreateDTO createDTO,
       BindingResult bindingResult,
-      Principal principal) {
+      Model model) {
     if (bindingResult.hasErrors()) {
       return "notice/form";
     }
-    String userNickname = principal.getName();
+
+    String token = bearerToken.substring(7);
+    String userNickname = jwtTokenProvider.getUsernameFromJwtToken(token);
     NoticeDetailDTO createdNotice = noticeService.createNotice(createDTO, userNickname);
+
+    if (createdNotice == null) {
+      model.addAttribute("errorMessage", "공지사항 생성에 실패했습니다. 다시 시도해 주세요.");
+      return "notice/form";
+    }
+
     return "redirect:/notices/" + createdNotice.getId();
   }
 

@@ -7,6 +7,7 @@ import lombok.*;
 
 // Notice 수정을 위한 DTO
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
