@@ -357,7 +357,7 @@ h2 {
 
 .separator {
     width: 100%;
-    max-width: 850px;
+    max-width: 930px;
     margin: 15px 0;
     border: 0;
     border-top: 2px solid #efdddd;
@@ -376,7 +376,8 @@ h2 {
 }
 
 .container-notice-actions {
-    margin-right: 25px;
+    margin-top: 30px;
+    margin-bottom: 40px;
     display: flex;
     justify-content: flex-end;
     gap: 4px;
@@ -416,18 +417,13 @@ h2 {
     outline: none;
 }
 
-.btn-notice-delete:focus {
-    outline: none;
-}
-
 .btn-notice-back {
+    padding: 10px 10px;
     background-color: #f8f4f4;
     color: black;
     font-weight: bold;
-}
-
-.form-notice-delete {
-    display: inline;
+    text-align: center;
+    border-radius: 10px;
 }
 
 @media (max-width: 767px) {

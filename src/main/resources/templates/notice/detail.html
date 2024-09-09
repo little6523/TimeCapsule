@@ -20,7 +20,7 @@
         <div class="container-notice-meta">
             <span th:text="${notice.userNickname != null ? notice.userNickname : ''}">작성자</span>
             <span class="divider">|</span>
-            <span th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+            <span th:text="${#temporals.format(notice.updatedAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
             <hr class="separator">
         </div>
         <div class="content-notice" th:utext="${notice.content}">
@@ -38,7 +38,7 @@
                     </button>
                 </form>
             </div>
-            <a th:href="@{/notices}" class="btn-notice-back">뒤로가기</a>
+            <a th:href="@{/notices}" class="btn-notice-back">목록</a>
         </div>
     </div>
 </main>
@@ -46,5 +46,6 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/notice-delete.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
 </body>
 </html>
