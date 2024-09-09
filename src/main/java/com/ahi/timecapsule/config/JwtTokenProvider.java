@@ -1,11 +1,11 @@
 package com.ahi.timecapsule.config;
 
+import com.ahi.timecapsule.oauth.CustomOAuth2User;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
@@ -99,13 +99,10 @@ public class JwtTokenProvider {
     } catch (Exception e) {
       throw new RuntimeException("JWT 검증 중 알 수 없는 오류 발생: " + e.getMessage());
     }
-
   }
 
   public String resolveToken(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
-    System.out.println("혹시?" + request);
-    System.out.println("token이다" + bearerToken);
     //        return bearerToken;
     if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
       return bearerToken.substring(7, bearerToken.length());
@@ -116,5 +113,31 @@ public class JwtTokenProvider {
   public long getExpiration(String token) {
     Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
     return claims.getExpiration().getTime() - System.currentTimeMillis();
+  }
+
+  // OAuth2.0 로그인 시 AccessToken 생성
+  public String generateOAuth2AccessToken(CustomOAuth2User oAuth2User) {
+    String authorities =
+        oAuth2User.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
+
+    return Jwts.builder()
+        .setSubject(oAuth2User.getId())
+        .claim("roles", authorities)
+        .setIssuedAt(new Date())
+        .setExpiration(new Date((new Date()).getTime() + accessTokenExpirationMs))
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        .compact();
+  }
+
+  // OAuth2.0 로그인 시 RefreshToken 생성
+  public String generateOAuth2RefreshToken(CustomOAuth2User oAuth2User) {
+    return Jwts.builder()
+        .setSubject(oAuth2User.getId())
+        .setIssuedAt(new Date())
+        .setExpiration(new Date((new Date()).getTime() + refreshTokenExpirationMs))
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        .compact();
   }
 }

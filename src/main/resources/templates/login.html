@@ -38,7 +38,7 @@
             <form th:action="@{/signUpPage}" method="get">
                 <button>회원가입</button>
             </form>
-            <form th:action="@{/signUpPage}" method="get">
+            <form th:action="@{/users/password/find}" method="get">
                 <button>비밀번호 찾기</button>
             </form>
         </div>
@@ -50,15 +50,9 @@
         </div>
 
         <div class="form-group-oauth2">
-            <form th:action="@{/signUpPage}" method="get">
-                <button class="oauth2-google"><img src="/images/google.png" alt="구글 로그인"></button>
-            </form>
-            <form th:action="@{/signUpPage}" method="get">
-                <button class="oauth2-kakao"><img src="/images/kakao.png" alt="카카오 로그인"></button>
-            </form>
+            <a href="/oauth2/authorization/google" class="oauth2-google"><img src="/images/google.png" alt="구글 로그인"></a>
+            <a href="/oauth2/authorization/kakao" class="oauth2-kakao" id="kakaoLogin"><img src="/images/kakao.png" alt="카카오 로그인"></a>
         </div>
-
-
     </div>
     <div id = "error-message" th:if="${errorMessage}" th:text="${errorMessage}" style="display: none;"></div>
 
@@ -69,5 +63,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
+<script type="text/javascript" th:src="@{/js/oauthLogin.js}"></script>
 </body>
 </html>

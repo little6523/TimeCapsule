@@ -24,15 +24,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    System.out.println(response.getHeader("Set-Cookie") + "wow");
-    System.out.println(request.getHeader("Authorization") + "request입니당당");
     String jwt = jwtTokenProvider.resolveToken(request); // 헤더에서 jwt 토큰 받아오기
 
     // 토큰이 유효할 때
     if (jwt != null && jwtTokenProvider.validateToken(jwt)) {
       String username = jwtTokenProvider.getUsernameFromJwtToken(jwt);
       UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-      System.out.println("권한이 제대로 나오나?" + userDetails.getAuthorities());
       var authentication =
           new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

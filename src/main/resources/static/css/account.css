@@ -1,0 +1,133 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    padding-top: 150px;
+    padding-left: 300px;
+    display: flex;
+    flex: 1;
+}
+
+.account-management-main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 40px;
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding-top: 0;
+        flex-direction: column;
+    }
+}
+
+.account-management-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 60px;
+}
+
+.password-reset-title {
+    margin-top: 250px;
+    margin-bottom: 30px;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.account-management-title {
+    margin-top: 100px;
+    margin-bottom: 30px;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-group {
+    width: 450px;
+    margin-bottom: 20px;
+}
+
+.form-actions {
+    width: 100%;
+}
+
+.account-management-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 20px 20px;
+    background-color: #F8F4F4;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.delete-account-actions {
+    margin-top: 200px;
+    text-align: right;
+}
+
+.delete-account-btn {
+    padding: 12px 12px;
+    background-color: #EFDDDD;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.input-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 20px 10px 20px 45px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.input-wrapper::before {
+    width: 25px;
+    height: 25px;
+    top: 50%;
+    left: 10px;
+    position: absolute;
+    content: '';
+    transform: translateY(-50%);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon-user::before { background-image: url('../images/ProfileUser.png'); }
+.icon-email::before { background-image: url('../images/ProfileEmail.png'); }
+.icon-password::before { background-image: url('../images/ProfilePassword.png'); }
+.icon-nickname::before { background-image: url('../images/ProfileNickname.png'); }
+
+.input-wrapper input::placeholder { color: #999; }
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+#nicknameResult, #emailResult {
+    position: absolute;
+    right: -220px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: bold;
+}

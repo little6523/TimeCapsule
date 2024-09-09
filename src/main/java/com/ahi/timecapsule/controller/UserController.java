@@ -2,13 +2,10 @@ package com.ahi.timecapsule.controller;
 
 import com.ahi.timecapsule.config.JwtTokenProvider;
 import com.ahi.timecapsule.config.RedisService;
-import com.ahi.timecapsule.dto.UserDTO;
-import com.ahi.timecapsule.dto.UserLoginDTO;
-import com.ahi.timecapsule.dto.UserSignUpDTO;
+import com.ahi.timecapsule.dto.*;
 import com.ahi.timecapsule.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @RequestMapping
 public class UserController {
+
   private final UserService userService;
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisService redisService;
@@ -77,7 +76,7 @@ public class UserController {
   @ResponseBody
   public ResponseEntity<?> login(
       @RequestBody UserLoginDTO userLogin, HttpServletResponse response, Model model) {
-//    System.out.println("왔는데?");
+    //    System.out.println("왔는데?");
 //    String token = userService.login(userLogin);
 //    System.out.println(token);
 //    if (token != null) {
@@ -93,12 +92,24 @@ public class UserController {
 //      return new ResponseEntity<>("아이디 또는 비밀번호가 잘못되었습니다.", HttpStatus.UNAUTHORIZED);
 //    }
 
-      // 로그인 로직 수행
-      String token = userService.login(userLogin);
+    // 로그인 로직 수행
+    String token = userService.login(userLogin);
 
-      // 로그인 성공 시 토큰을 응답 헤더에 추가
-      response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-      return ResponseEntity.ok().build();
+    // 로그인 성공 시 토큰을 응답 헤더에 추가
+    response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+    return ResponseEntity.ok().build();
+  }
+
+  // OAuth2.0 로그인
+  @PostMapping("/oauth/login")
+  public ResponseEntity<?> oauthLogin(@RequestBody TokenExchangeRequest request) {
+    TokenResponse tokenResponse = userService.oauthLogin(request.getOneTimeCode());
+
+    if (tokenResponse != null) {
+      return ResponseEntity.ok(tokenResponse);
+    } else {
+      return ResponseEntity.badRequest().body("유효하지 않거나 만료된 일회성 코드입니다.");
+    }
   }
 
   // 메인 페이지 이동
@@ -114,9 +125,9 @@ public class UserController {
       HttpServletResponse response) {
     // Access Token 추출
     String accessToken =
-        authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-            ? authorizationHeader.substring(7)
-            : null;
+            authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+                    ? authorizationHeader.substring(7)
+                    : null;
     System.out.println("valid-token " + accessToken);
 
     if (accessToken == null) {
@@ -131,7 +142,7 @@ public class UserController {
 
     // Access Token 검증 및 필요한 경우 재발급
     String validAccessToken =
-        userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+            userService.validateAndRefreshAccessToken(accessToken, refreshToken);
     String role = jwtTokenProvider.getAuthoritiesFromJwtToken(validAccessToken);
 
     if(role.contains("ROLE_USER")) {
@@ -144,8 +155,6 @@ public class UserController {
     } else {
       throw new RuntimeException("권한이 없습니다.");
     }
-
-
   }
 
   @PostMapping("/logout")
@@ -184,5 +193,93 @@ public class UserController {
   public ResponseEntity<Boolean> isPasswordMatching(@RequestBody UserSignUpDTO userSignUp) {
     boolean isMatch = userService.isPasswordMatching(userSignUp);
     return ResponseEntity.ok(isMatch);
+  }
+
+  // 페이지 이동(비밀번호 찾기)
+  @GetMapping("/users/password/find")
+  public String findPasswordPage() {
+    return "account/reset-password";
+  }
+
+  // 임시 비밀번호 발급
+  @PostMapping("/users/password/temporary")
+  public ResponseEntity<ApiResponse<Void>> issueTemporaryPassword(
+      @Valid @RequestBody TemporaryPasswordDTO temporaryPasswordDTO, BindingResult bindingResult) {
+    // 유효성 검사(첫번쨰 오류 메시지만 담아서 사용자에게 반환)
+    if (bindingResult.hasErrors()) {
+      FieldError fieldError = bindingResult.getFieldError();
+      if (fieldError != null) {
+        return ResponseEntity.badRequest()
+            .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
+      }
+    }
+
+    ApiResponse<Void> response = userService.issueTemporaryPassword(temporaryPasswordDTO);
+    if (!response.isSuccess()) {
+      return ResponseEntity.badRequest().body(response);
+    }
+    return ResponseEntity.ok(response);
+  }
+
+  // 계정 관리 페이지 이동
+  @GetMapping("/users/info")
+  public String getUserInfo(Model model, @RequestParam String userId) {
+    UserDTO userDTO = userService.getUserInfo(userId);
+    model.addAttribute("user", userDTO);
+    return "account/account-management";
+  }
+
+  // 회원 수정
+  @PatchMapping("/users/update")
+  public ResponseEntity<ApiResponse<String>> updateUser(
+      @Valid @RequestBody UserUpdateDTO userUpdateDTO, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      FieldError fieldError = bindingResult.getFieldError();
+      if (fieldError != null) {
+        return ResponseEntity.badRequest()
+            .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
+      }
+    }
+
+    ApiResponse<String> response = userService.updateUser(userUpdateDTO);
+    if (!response.isSuccess()) {
+      return ResponseEntity.badRequest().body(response);
+    }
+
+    return ResponseEntity.ok(response);
+  }
+
+  // 닉네임 중복체크
+  @GetMapping("/users/checkDuplicateNickname")
+  public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
+    boolean exists = userService.isNicknameDuplicate(nickname);
+    return ResponseEntity.ok(exists);
+  }
+
+  // 이메일 중복체크
+  @GetMapping("/users/checkDuplicateEmail")
+  public ResponseEntity<Boolean> checkDuplicateEmail(@RequestParam String email) {
+    boolean exists = userService.isEmailDuplicate(email);
+    return ResponseEntity.ok(exists);
+  }
+
+  // 회원 탈퇴
+  @DeleteMapping("/users/delete")
+  public ResponseEntity<ApiResponse<Void>> deleteUser(
+      @Valid @RequestBody UserWithdrawalDTO userWithdrawalDTO, BindingResult bindingResult) {
+    // 유효성 검사
+    if (bindingResult.hasErrors()) {
+      FieldError fieldError = bindingResult.getFieldError();
+      if (fieldError != null) {
+        return ResponseEntity.badRequest()
+            .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
+      }
+    }
+
+    ApiResponse<Void> response = userService.deleteUser(userWithdrawalDTO);
+    if (!response.isSuccess()) {
+      return ResponseEntity.badRequest().body(response);
+    }
+    return ResponseEntity.ok(response);
   }
 }

@@ -20,17 +20,25 @@ if (logoutButton) {
             if (response.ok) {
                 // 로컬 스토리지에서 토큰 삭제
                 localStorage.removeItem('jwtToken');
-                alert('로그아웃 되었습니다.');
+                showError('로그아웃 되었습니다.');
                 window.location.href = '/login'; // 로그아웃 후 리다이렉트할 페이지 설정
             } else {
                 const errorMessage = await response.text();
-                alert(errorMessage);
+                showError(errorMessage);
             }
         } catch (error) {
             console.error('로그아웃 중 오류 발생:', error);
-            alert('로그아웃 중 오류가 발생했습니다.');
+            showError('로그아웃 중 오류가 발생했습니다.');
         }
     });
 } else {
     console.error('로그아웃 버튼을 찾을 수 없습니다.');
+}
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: '입력 오류',
+        text: message,
+        confirmButtonText: '확인'
+    });
 }

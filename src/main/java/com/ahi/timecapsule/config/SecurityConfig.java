@@ -1,5 +1,8 @@
 package com.ahi.timecapsule.config;
 
+import com.ahi.timecapsule.oauth.CustomOAuth2FailureHandler;
+import com.ahi.timecapsule.oauth.CustomOAuth2SuccessHandler;
+import com.ahi.timecapsule.oauth.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +28,10 @@ public class SecurityConfig {
   private final JwtAuthenticationEntryPoint unauthorizedHandler;
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+  private final CustomOAuth2UserService customOAuth2UserService;
+  private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+  private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     //        http.formLogin(cnf ->
@@ -37,13 +44,27 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers("/login", "/signUpPage", "/signUp", "/api/users/**")
+                    .requestMatchers(
+                        "/login",
+                        "/signUpPage",
+                        "/signUp",
+                        "/api/users/**",
+                        "/users/**",
+                        "/valid-token",
+                        "/oauth/login")
                     .permitAll() // 특정 경로 허용
                     .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**")
                     .permitAll()
                     .anyRequest()
                     .permitAll() // 나머지 요청 전부 허용
             )
+        .oauth2Login(
+            oauth2Login ->
+                oauth2Login
+                    .loginPage("/login")
+                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                    .successHandler(customOAuth2SuccessHandler)
+                    .failureHandler(customOAuth2FailureHandler))
         .addFilterBefore(
             jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
     http.headers(

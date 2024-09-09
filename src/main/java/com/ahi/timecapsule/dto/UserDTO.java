@@ -15,6 +15,7 @@ public class UserDTO {
   private Integer role;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  private String provider; // 추가
 
   public static UserDTO fromEntity(User user) {
     return UserDTO.builder()
@@ -25,6 +26,7 @@ public class UserDTO {
         .role(user.getRole())
         .createdAt(user.getCreatedAt())
         .updatedAt(user.getUpdatedAt())
+        .provider(user.getProvider()) // 추가
         .build();
   }
 }

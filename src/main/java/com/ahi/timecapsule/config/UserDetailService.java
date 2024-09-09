@@ -23,7 +23,8 @@ public class UserDetailService implements UserDetailsService {
 
     // UserDetails 객체로 변환
     return org.springframework.security.core.userdetails.User.withUsername(user.getUserId())
-        .password(user.getPassword())
+        //						.password(user.getPassword())
+        .password(user.getPassword() != null ? user.getPassword() : "") // 추가
         .authorities("ROLE_USER") // 역할 설정 필요 시 수정
         .accountExpired(false)
         .accountLocked(false)
