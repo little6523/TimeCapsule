@@ -1,3 +1,14 @@
+main {
+    display: flex;
+    flex-direction: column;
+    padding-right: 70px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
 .edit-container {
     width: 80%;
     min-height: 300px;
