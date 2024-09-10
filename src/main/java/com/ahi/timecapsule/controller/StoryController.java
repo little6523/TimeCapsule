@@ -62,7 +62,8 @@ public class StoryController {
 
   @ResponseBody
   @GetMapping(path = "/story", produces = "text/event-stream")
-  public ResponseEntity<SseEmitter> createStory() throws IOException, ParseException, InterruptedException {
+  public ResponseEntity<SseEmitter> createStory()
+      throws IOException, ParseException, InterruptedException {
     apiService.post();
 
     List<String> contents = apiService.get();

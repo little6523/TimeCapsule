@@ -8,22 +8,19 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class StoryShareDTO {
-  
+
   private StoryDTO storyDTO;
-  
+
   private UserDTO userDTO;
 
   public static StoryShareDTO fromEntity(StoryShare storyShare) {
     return StoryShareDTO.builder()
-            .storyDTO(StoryDTO.fromEntity(storyShare.getStory()))
-            .userDTO(UserDTO.fromEntity(storyShare.getUser()))
-            .build();
+        .storyDTO(StoryDTO.fromEntity(storyShare.getStory()))
+        .userDTO(UserDTO.fromEntity(storyShare.getUser()))
+        .build();
   }
 
   public StoryShare toEntity() {
-    return StoryShare.builder()
-            .story(storyDTO.toEntity())
-            .user(userDTO.toEntity())
-            .build();
+    return StoryShare.builder().story(storyDTO.toEntity()).user(userDTO.toEntity()).build();
   }
 }

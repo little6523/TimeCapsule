@@ -16,8 +16,8 @@ public class CustomOAuth2FailureHandler extends SimpleUrlAuthenticationFailureHa
 
   @Override
   public void onAuthenticationFailure(
-          HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-          throws IOException, ServletException {
+      HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+      throws IOException, ServletException {
     String errorMessage = "인증에 실패했습니다.";
     String errorCode = "authentication_error";
 
@@ -29,11 +29,11 @@ public class CustomOAuth2FailureHandler extends SimpleUrlAuthenticationFailureHa
 
     String encodedErrorMessage = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
     String targetUrl =
-            UriComponentsBuilder.fromUriString("/login")
-                    .queryParam("error", errorCode)
-                    .queryParam("message", encodedErrorMessage)
-                    .build()
-                    .toUriString();
+        UriComponentsBuilder.fromUriString("/login")
+            .queryParam("error", errorCode)
+            .queryParam("message", encodedErrorMessage)
+            .build()
+            .toUriString();
 
     getRedirectStrategy().sendRedirect(request, response, targetUrl);
   }
