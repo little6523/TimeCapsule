@@ -33,7 +33,7 @@ public class StoryController {
   // 스토리 생성 폼 조회
   @GetMapping("/form")
   public String getStoryForm(Model model) {
-    model.addAttribute("StoryOptionDTO", new StoryOptionDTO());
+//    model.addAttribute("StoryOptionDTO", new StoryOptionDTO());
     model.addAttribute("dialects", dialects);
     model.addAttribute("speakers", speakers);
 
