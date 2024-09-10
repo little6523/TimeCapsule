@@ -12,7 +12,7 @@ public class StoryNotFoundException extends NotFoundException {
     super(DEFAULT_MESSAGE + "\n" + message);
   }
 
-  public StoryNotFoundException(int storyId) {
+  public StoryNotFoundException(Long storyId) {
     super(DEFAULT_MESSAGE + " ID: " + storyId);
   }
 }
