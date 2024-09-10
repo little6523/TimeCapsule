@@ -2,18 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
         showError("이미 로그인 되어있습니다!");
-        window.location.href = '/main';
-        return;
+
     }
 });
 
 document.getElementById('loginForm').addEventListener('submit', async function (event) {
     event.preventDefault(); // 폼의 기본 제출 동작을 막음
     const token = localStorage.getItem('jwtToken');
+
     if (token) {
-        alert("이미 로그인 되어있습니다!");
-        window.location.href = '/main';
-        return;
+        showError("이미 로그인 되어있습니다!");
+
     }
 // 폼 데이터 수집
     const userId = document.getElementById('username').value;
@@ -61,6 +60,10 @@ function showError(message) {
         title: '입력 오류',
         text: message,
         confirmButtonText: '확인'
-    });
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // history.back();
+        }
+    })
 }
   // 페이지 로드 시 showError 함수 실행

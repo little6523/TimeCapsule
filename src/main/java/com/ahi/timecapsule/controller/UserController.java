@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -110,10 +109,10 @@ public class UserController {
       HttpServletResponse response) {
     // Access Token 추출
     String accessToken =
-            authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-                    ? authorizationHeader.substring(7)
-                    : null;
-
+        authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+            ? authorizationHeader.substring(7)
+            : null;
+    System.out.println("accessToken " + accessToken);
     if (accessToken == null) {
       throw new RuntimeException("Access Token이 제공되지 않았습니다.");
     }
@@ -125,15 +124,14 @@ public class UserController {
     String refreshToken = redisService.getRefreshToken(username);
 
     // Access Token 검증 및 필요한 경우 재발급
-    String validAccessToken =
-            userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+    String validAccessToken = userService.validateAndRefreshAccessToken(accessToken, refreshToken);
     String role = jwtTokenProvider.getAuthoritiesFromJwtToken(validAccessToken);
 
-    if(role.contains("ROLE_USER")) {
+    if (role.contains("ROLE_USER")) {
       // 유효한 Access Token으로 사용자 정보 추출
       response.addHeader("X-User-Id", username); // 사용자 정보 추가
       response.addHeader(
-              HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
+          HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
 
       return ResponseEntity.ok().build();
     } else {

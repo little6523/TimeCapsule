@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const newAccessToken = response.headers.get('Authorization').split(' ')[1];
                 if (newAccessToken) {
                     // 새로운 Access Token을 로컬 스토리지나 메모리에 저장
-                    localStorage.setItem('accessToken', newAccessToken);
+                    localStorage.setItem('jwtToken', newAccessToken);
                 }
                 console.log(response.headers);
                 const userId = response.headers.get('X-User-Id');

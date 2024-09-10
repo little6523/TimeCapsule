@@ -1,9 +1,6 @@
 package com.ahi.timecapsule.service;
 
-import com.ahi.timecapsule.config.AuthorityUtils;
-import com.ahi.timecapsule.config.JwtTokenProvider;
-import com.ahi.timecapsule.config.PasswordEncoderConfig;
-import com.ahi.timecapsule.config.RedisService;
+import com.ahi.timecapsule.config.*;
 import com.ahi.timecapsule.dto.*;
 import com.ahi.timecapsule.entity.User;
 import com.ahi.timecapsule.oauth.CustomOAuth2User;
@@ -82,15 +79,18 @@ public class UserService {
     Optional<User> optionalUser = userRepository.findByUserId(userlogindto.getUserId());
 
     // 사용자가 없거나 비밀번호가 틀린 경우 예외 발생
-    User user = optionalUser.orElseThrow(() -> new BadCredentialsException("아이디 또는 비밀번호가 잘못되었습니다."));
-    if (!passwordencoderconfig.passwordEncoder().matches(userlogindto.getPassword(), user.getPassword())) {
+    User user =
+        optionalUser.orElseThrow(() -> new BadCredentialsException("아이디 또는 비밀번호가 잘못되었습니다."));
+    if (!passwordencoderconfig
+        .passwordEncoder()
+        .matches(userlogindto.getPassword(), user.getPassword())) {
       throw new BadCredentialsException("아이디 또는 비밀번호가 잘못되었습니다.");
     }
 
     Authentication authentication =
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            userlogindto.getUserId(), userlogindto.getPassword()));
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                userlogindto.getUserId(), userlogindto.getPassword()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String accessToken = jwtTokenProvider.generateAccessToken(authentication);
     String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
@@ -118,41 +118,36 @@ public class UserService {
   // Access Token 검증 및 필요한 경우 자동 재발급 메서드
   public String validateAndRefreshAccessToken(String accessToken, String refreshToken) {
     // Access Token 유효성 검사
-    if (jwtTokenProvider.validateToken(accessToken)) {
+    boolean isAccessTokenValid = jwtTokenProvider.validateToken(accessToken);
+    System.out.println("Access Token 유효성 결과: " + isAccessTokenValid); // 추가된 로깅
+
+    if (isAccessTokenValid) {
       // Access Token이 유효하면 기존 토큰 반환
       return accessToken;
     }
 
-    // Access Token이 만료된 경우, Refresh Token 검사
-    if (jwtTokenProvider.validateToken(refreshToken)) {
-      String username = jwtTokenProvider.getUsernameFromJwtToken(refreshToken);
+    String username =
+        jwtTokenProvider.getUsernameFromJwtToken(
+            refreshToken); // refreshToken은 따로 검증 안함. 만료여부와 무관하게 재발급.
 
-      // Redis에서 Refresh Token 검증
-      if (redisService.validateRefreshToken(username, refreshToken)) {
-        // User 객체 가져오기
-        User user =
-                userRepository
-                        .findByUserId(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
+    // Redis에서 Refresh Token이 동일한지 검증
+    if (redisService.validateRefreshToken(username, refreshToken)) {
 
-        // 숫자 권한을 GrantedAuthority로 변환
-        List<GrantedAuthority> authorities =
-                AuthorityUtils.convertRolesToAuthorities(user.getRole());
+      // User 객체 가져오기
+      User user =
+          userRepository
+              .findByUserId(username)
+              .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
 
-        // Authentication 객체 생성
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(user, null, authorities);
+      List<GrantedAuthority> role = AuthorityUtils.convertRolesToAuthorities(user.getRole());
+      String newAccessToken = jwtTokenProvider.generateAccessToken(username, role);
 
-        // 새로운 Access Token 발급
-        String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
+      // 새로운 Refresh Token 발급 및 저장 (선택 사항)
+      String newRefreshToken = jwtTokenProvider.generateRefreshToken(username);
+      redisService.saveRefreshToken(username, newRefreshToken);
 
-        // 새로운 Refresh Token 발급 및 저장 (선택 사항)
-        String newRefreshToken = jwtTokenProvider.generateRefreshToken(authentication);
-        redisService.saveRefreshToken(username, newRefreshToken);
-
-        // 새로운 Access Token 반환
-        return newAccessToken;
-      }
+      // 새로운 Access Token 반환
+      return newAccessToken;
     }
 
     // Refresh Token이 유효하지 않거나 만료된 경우 예외 처리 또는 재로그인 요구

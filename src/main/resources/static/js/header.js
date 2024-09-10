@@ -20,8 +20,10 @@ if (logoutButton) {
             if (response.ok) {
                 // 로컬 스토리지에서 토큰 삭제
                 localStorage.removeItem('jwtToken');
-                showError('로그아웃 되었습니다.');
-                window.location.href = '/login'; // 로그아웃 후 리다이렉트할 페이지 설정
+                showSuccess('로그아웃 되었습니다.', '/login');
+
+                // alert("로그아웃 되었습니다.");
+                // window.location.href = '/login'; // 로그아웃 후 리다이렉트할 페이지 설정
             } else {
                 const errorMessage = await response.text();
                 showError(errorMessage);
@@ -34,6 +36,21 @@ if (logoutButton) {
 } else {
     console.error('로그아웃 버튼을 찾을 수 없습니다.');
 }
+
+function showSuccess(message, redirectUrl) {
+    Swal.fire({
+        icon: 'success',
+        title: '성공',
+        text: message,
+        confirmButtonText: '확인'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 확인 버튼이 눌리면 페이지 이동
+            window.location.href = redirectUrl;
+        }
+    });
+}
+
 function showError(message) {
     Swal.fire({
         icon: 'error',

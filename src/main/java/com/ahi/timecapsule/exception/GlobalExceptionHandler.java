@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
- public class GlobalExceptionHandler {
+public class GlobalExceptionHandler {
 
   // 중복 검사
   @ExceptionHandler(DataIntegrityViolationException.class)
   @ResponseStatus(HttpStatus.CONFLICT)
-  public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+  public ResponseEntity<String> handleDataIntegrityViolationException(
+      DataIntegrityViolationException e) {
     return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
   }
 
@@ -42,5 +43,4 @@ import org.springframework.web.bind.annotation.ResponseStatus;
   public ResponseEntity<String> handleGenericException(Exception ex) {
     return new ResponseEntity<>("알 수 없는 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
-
- }
+}
