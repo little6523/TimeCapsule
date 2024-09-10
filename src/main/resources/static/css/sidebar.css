@@ -1,0 +1,51 @@
+/* Sidebar styles */
+.sidebar {
+  width: 180px;
+  height: 400px; /* 헤더(80px)의 높이만 고려 */
+  background-color: #F8F7F7;
+  position: fixed;
+  left: 70px; /* 왼쪽에서 70px 떨어짐 */
+  top: 140px; /* 헤더(80px) 바로 아래에 위치 */
+}
+
+.sidebar-nav {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 80px;
+}
+
+.sidebar-nav li {
+  padding: 10px 20px;
+}
+
+.sidebar-nav li a {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-nav li a img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+
+/* Responsive design for sidebar and main content */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    margin-top: 80px; /* 헤더 아래에 위치 */
+    margin-bottom: 20px;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-top: 0;
+  }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modal Fragment</title>
+</head>
+<body>
+    <!-- Basic Modal -->
+    <div class="modal" id="modal" th:fragment="allModals">
+        <div class="modal-content">
+            <h2>회원탈퇴</h2>
+            <label for="modalPassword">비밀번호</label>
+            <input type="password" id="modalPassword" name="modalPassword" placeholder="비밀번호를 입력하세요." required><!-- name 값으로 서버로 넘김-->
+            <div class="buttons">
+                <button class="withdraw">탈퇴하기</button>
+                <button class="cancel">돌아가기</button>
+            </div>
+        </div>
+    </div>
+    <!-- Confirm Modal -->
+    <div class="confirm-modal" id="confirmModal" th:fragment="allModals">
+        <div class="confirm-content">
+            <p>정말로 회원 탈퇴를 하시겠습니까? 탈퇴 시 모든 정보가 삭제되며, <br>복구가 불가능합니다.</p>
+            <div class="confirm-buttons">
+                <button class="confirm">확인</button>
+                <button class="cancel">취소</button>
+            </div>
+        </div>
+    </div>
+    <!-- Alert Modal -->
+    <div class="alert-modal" id="alertModal" th:fragment="allModals">
+        <div class="alert-content">
+            <h3>회원 탈퇴 처리 되었습니다</h3>
+            <button class="alert-button">확인</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 상세 조회</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/notice.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<main class="container-notice-detail">
+    <div>
+        <h2>공지사항</h2>
+        <h1 class="header-notice" th:text="${notice.title}">공지사항 제목</h1>
+        <div class="container-notice-meta">
+            <span th:text="${notice.userNickname != null ? notice.userNickname : ''}">작성자</span>
+            <span class="divider">|</span>
+            <span th:text="${#temporals.format(notice.updatedAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+            <hr class="separator">
+        </div>
+        <div class="content-notice" th:utext="${notice.content}">
+            공지사항 내용이 여기에 표시됩니다.
+        </div>
+        <div class="container-notice-actions">
+            <div sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/notices/{id}/edit(id=${notice.id})}" class="btn-notice-edit">수정</a>
+                <form th:action="@{/notices/{id}(id=${notice.id})}" method="post" style="display: inline;"
+                      class="form-notice-delete">
+                    <input type="hidden" name="_method" value="DELETE"/>
+                    <button type="button" class="btn-notice-delete"
+                            th:attr="data-id=${notice.id}"
+                            onclick="deleteNotice(this.getAttribute('data-id'))">삭제
+                    </button>
+                </form>
+            </div>
+            <a th:href="@{/notices}" class="btn-notice-back">목록</a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/notice-delete.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+</body>
+</html>

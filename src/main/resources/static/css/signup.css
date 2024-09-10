@@ -1,0 +1,90 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* 전체 화면 높이 */
+    display: flex; /* 전체 화면 중앙 정렬을 위한 Flexbox */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+main {
+    width: 100%;
+    max-width: 600px; /* 컨테이너의 최대 너비 설정 */
+    display: flex; /* 중앙 정렬을 위한 Flexbox */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    padding: 20px; /* 내부 여백 */
+}
+
+.container form {
+    display: flex;
+    flex-direction: column; /* 수직 정렬 */
+    align-items: center; /* 가운데 정렬 */
+    gap: 20px; /* 요소 간의 간격 추가 */
+}
+
+.container h1{
+    text-align: center;
+}
+
+.form-group {
+    position: relative; /* 절대 위치를 위한 기준 */
+}
+
+.form-group button {
+    position: absolute; /* 버튼을 절대 위치로 설정 */
+}
+.form-group p {
+    position: absolute;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    width: 300px; /* 입력 필드의 너비 */
+    padding: 10px 10px 10px 40px; /* 아이콘 공간 확보 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 auto; /* 입력 필드들을 가운데 정렬 */
+}
+
+.input-with-icon .icon {
+    position: absolute;
+    left: 10px; /* 아이콘 위치 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px; /* 아이콘 크기 */
+    height: 20px; /* 아이콘 크기 */
+    pointer-events: none; /* 클릭 불가능 */
+}
+
+.duplicate-button {
+    background-color: #F0EFEF;
+    border-radius: 5px;
+    width: 80px;
+    height: 34px;
+    border: none;
+    margin-left: 15px;
+    font-size: 13px;
+}
+
+.action-button {
+    background-color: #F0EFEF;
+    border-radius: 5px;
+    width: 60%;
+    height: 34px;
+    border: none;
+    font-size: 13px;
+}
+
+.error-message {
+    font-size: 50px;
+}
+
+.fieldError {
+    margin: 0;
+    margin-top: 3px;
+    font-size: 13px;
+}
