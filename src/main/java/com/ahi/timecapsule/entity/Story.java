@@ -16,7 +16,7 @@ public class Story extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
@@ -28,6 +28,10 @@ public class Story extends BaseEntity {
   @Lob
   @Column(nullable = false)
   private String content;
+
+  private String dialect;
+
+  private String speaker;
 
   @Column(nullable = false)
   private String soundFile;
@@ -73,7 +77,7 @@ public class Story extends BaseEntity {
 
   // 스토리를 업데이트 하는 메서드
   public void updateStory(String newTitle, String newContent, Boolean newIsShared,
-                           List<StoryShare> newStoryShares, List<Image> newImages) {
+                           List<StoryShare> newStoryShares) {
     this.title = newTitle != null ? newTitle : this.title;
     this.content = newContent != null ? newContent : this.content;
     this.isShared = newIsShared != null ? newIsShared : this.isShared;
@@ -83,9 +87,9 @@ public class Story extends BaseEntity {
       newStoryShares.forEach(this::addStoryShare);
     }
 
-    this.images.clear();
-    if (newImages != null) {
-      newImages.forEach(this::addImage);
-    }
+//    this.images.clear();
+//    if (newImages != null) {
+//      newImages.forEach(this::addImage);
+//    }
   }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class FindStoryResponseDTO {
-  private int id;
+  private Long id;
   private String title;
   private String content;
   private LocalDateTime createdAt;

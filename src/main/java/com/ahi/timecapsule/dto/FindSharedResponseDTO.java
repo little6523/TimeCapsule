@@ -8,14 +8,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class FindSharedResponseDTO {
-  private int id;
   private FindStoryResponseDTO sharedStory;
   private StoryUserResponseDTO sharedWithUser;
 
   // Entity -> DTO 변환 메서드
   public static FindSharedResponseDTO fromEntity(StoryShare storyShare) {
     return FindSharedResponseDTO.builder()
-            .id(storyShare.getId())
             .sharedWithUser(StoryUserResponseDTO.fromEntity(storyShare.getUser()))
             .build();
   }
