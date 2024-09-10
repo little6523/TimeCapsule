@@ -1,12 +1,11 @@
 package com.ahi.timecapsule.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +64,20 @@ public class JwtTokenProvider {
   }
 
   public String getUsernameFromJwtToken(String token) {
-    return Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    return Jwts.parser()
+            .setSigningKey(key).
+            build()
+            .parseClaimsJws(token)
+            .getBody().getSubject();
+  }
+
+  public String getAuthoritiesFromJwtToken(String token) {
+    Claims claims = Jwts.parser()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+    return claims.get("roles", String.class);
   }
 
   public boolean validateToken(String authToken) {
@@ -74,19 +86,20 @@ public class JwtTokenProvider {
 
       // 토큰이 유효할 때 true 반환
       return true;
-    } catch (io.jsonwebtoken.ExpiredJwtException e) {
-      System.out.println("JWT 토큰이 만료되었습니다: " + e.getMessage());
-    } catch (io.jsonwebtoken.MalformedJwtException e) {
-      System.out.println("잘못된 JWT 토큰 형식입니다: " + e.getMessage());
-    } catch (io.jsonwebtoken.UnsupportedJwtException e) {
-      System.out.println("지원되지 않는 JWT 토큰입니다: " + e.getMessage());
+    } catch (ExpiredJwtException e) {
+      throw new RuntimeException("JWT 토큰이 만료되었습니다: " + e.getMessage());
+    } catch (MalformedJwtException e) {
+      throw new RuntimeException("잘못된 JWT 토큰 형식입니다: " + e.getMessage());
+    } catch (UnsupportedJwtException e) {
+      throw new RuntimeException("지원되지 않는 JWT 토큰입니다: " + e.getMessage());
     } catch (IllegalArgumentException e) {
-      System.out.println("JWT 토큰이 비어있습니다: " + e.getMessage());
+      throw new RuntimeException("JWT 토큰이 비어있습니다: " + e.getMessage());
+    } catch (SecurityException e) {
+      throw new RuntimeException("JWT 토큰 서명이 잘못되었습니다: " + e.getMessage());
     } catch (Exception e) {
-      System.out.println("JWT 검증 중 알 수 없는 오류 발생: " + e.getMessage());
+      throw new RuntimeException("JWT 검증 중 알 수 없는 오류 발생: " + e.getMessage());
     }
-    // 토큰이 유효하지 않을 때 false 반환
-    return false;
+
   }
 
   public String resolveToken(HttpServletRequest request) {

@@ -10,9 +10,12 @@ import com.ahi.timecapsule.dto.UserSignUpDTO;
 import com.ahi.timecapsule.entity.User;
 import com.ahi.timecapsule.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,6 +71,14 @@ public class UserService {
 
   @Transactional
   public String login(UserLoginDTO userlogindto) {
+    Optional<User> optionalUser = userRepository.findByUserId(userlogindto.getUserId());
+
+    // 사용자가 없거나 비밀번호가 틀린 경우 예외 발생
+    User user = optionalUser.orElseThrow(() -> new BadCredentialsException("아이디 또는 비밀번호가 잘못되었습니다."));
+    if (!passwordencoderconfig.passwordEncoder().matches(userlogindto.getPassword(), user.getPassword())) {
+      throw new BadCredentialsException("아이디 또는 비밀번호가 잘못되었습니다.");
+    }
+
     Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(

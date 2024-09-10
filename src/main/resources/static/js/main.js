@@ -53,9 +53,3 @@ function showLoggedInView(userId) {
     document.getElementById('logged-in').style.display = 'block';
     document.getElementById('user-id').textContent = userId; // 사용자 이름 표시
 }
-
-// // 로그아웃 버튼 클릭 시 JWT 토큰 삭제
-// document.getElementById('logoutButton')?.addEventListener('click', () => {
-//     localStorage.removeItem('jwtToken'); // 토큰 삭제
-//     window.location.href = '/login'; // 로그인 페이지로 리다이렉트
-// });

@@ -8,6 +8,7 @@ import com.ahi.timecapsule.dto.UserSignUpDTO;
 import com.ahi.timecapsule.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -76,22 +77,28 @@ public class UserController {
   @ResponseBody
   public ResponseEntity<?> login(
       @RequestBody UserLoginDTO userLogin, HttpServletResponse response, Model model) {
-    System.out.println("왔는데?");
-    String token = userService.login(userLogin);
-    System.out.println(token);
-    if (token != null) {
-      System.out.println("JWT 토큰 발급 성공");
+//    System.out.println("왔는데?");
+//    String token = userService.login(userLogin);
+//    System.out.println(token);
+//    if (token != null) {
+//      System.out.println("JWT 토큰 발급 성공");
+//
+//      response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+//
+//      // 응답 본문에 성공 메시지와 함께 토큰을 반환할 필요가 없다면 생략 가능
+//      return ResponseEntity.ok().build();
+//
+//    } else {
+//      model.addAttribute("errorMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
+//      return new ResponseEntity<>("아이디 또는 비밀번호가 잘못되었습니다.", HttpStatus.UNAUTHORIZED);
+//    }
 
+      // 로그인 로직 수행
+      String token = userService.login(userLogin);
+
+      // 로그인 성공 시 토큰을 응답 헤더에 추가
       response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-      // HttpOnly 쿠키로 JWT 토큰 설정
-
-      // 응답 본문에 성공 메시지와 함께 토큰을 반환할 필요가 없다면 생략 가능
       return ResponseEntity.ok().build();
-
-    } else {
-      model.addAttribute("error", "아이디 또는 비밀번호가 잘못되었습니다.");
-      return new ResponseEntity<>("로그인 실패", HttpStatus.UNAUTHORIZED);
-    }
   }
 
   // 메인 페이지 이동
@@ -111,8 +118,9 @@ public class UserController {
             ? authorizationHeader.substring(7)
             : null;
     System.out.println("valid-token " + accessToken);
+
     if (accessToken == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Access Token이 제공되지 않았습니다.");
+      throw new RuntimeException("Access Token이 제공되지 않았습니다.");
     }
 
     // Access Token에서 사용자 이름 추출
@@ -121,39 +129,45 @@ public class UserController {
     // Redis에서 Refresh Token 가져오기
     String refreshToken = redisService.getRefreshToken(username);
 
-    try {
-      // Access Token 검증 및 필요한 경우 재발급
-      String validAccessToken =
-          userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+    // Access Token 검증 및 필요한 경우 재발급
+    String validAccessToken =
+        userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+    String role = jwtTokenProvider.getAuthoritiesFromJwtToken(validAccessToken);
 
+    if(role.contains("ROLE_USER")) {
       // 유효한 Access Token으로 사용자 정보 추출
       response.addHeader("X-User-Id", username); // 사용자 정보 추가
       response.addHeader(
-          HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
+              HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
 
       return ResponseEntity.ok().build();
-
-    } catch (RuntimeException e) {
-      // 토큰이 유효하지 않은 경우 예외 처리
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰");
+    } else {
+      throw new RuntimeException("권한이 없습니다.");
     }
+
+
   }
 
   @PostMapping("/logout")
   public ResponseEntity<?> logout(
       @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-    System.out.println("로그아웃 " + authorizationHeader.substring(7));
-    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-      String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
-      System.out.println("logout " + token);
-      // 토큰이 유효한지 검증
-      if (jwtTokenProvider.validateToken(token)) {
-        // 토큰을 블랙리스트에 추가하여 무효화
-        redisService.addToBlacklist(token);
-        return ResponseEntity.ok("로그아웃 성공");
-      }
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      // 토큰이 제공되지 않았거나 잘못된 형식일 때 예외를 던짐
+      throw new RuntimeException("Access Token이 제공되지 않았습니다.");
     }
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰");
+
+    String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
+    System.out.println("로그아웃 " + token);
+
+    // 토큰이 유효한지 검증
+    if (!jwtTokenProvider.validateToken(token)) {
+      // 토큰이 유효하지 않을 때 예외를 던짐
+      throw new RuntimeException("유효하지 않은 토큰");
+    }
+
+    // 토큰을 블랙리스트에 추가하여 무효화
+    redisService.addToBlacklist(token);
+    return ResponseEntity.ok("로그아웃 성공");
   }
 
   // 아이디, 이메일, 닉네임 중복 확인

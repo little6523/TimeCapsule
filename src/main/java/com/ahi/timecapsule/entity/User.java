@@ -47,8 +47,7 @@ public class User {
       String password,
       String email,
       String nickname,
-      Integer role,
-      Integer sharelistId) {
+      Integer role) {
     this.userId = userId;
     this.password = password;
     this.email = email;

@@ -5,8 +5,6 @@ if (logoutButton) {
         event.preventDefault(); // 기본 링크 동작 방지
         console.log("로그아웃 버튼 눌림!");
 
-        // 로컬 스토리지에서 토큰 삭제
-        localStorage.removeItem('jwtToken');
 
         // 서버에 로그아웃 요청 전송
         try {
@@ -20,10 +18,13 @@ if (logoutButton) {
             });
 
             if (response.ok) {
+                // 로컬 스토리지에서 토큰 삭제
+                localStorage.removeItem('jwtToken');
                 alert('로그아웃 되었습니다.');
                 window.location.href = '/login'; // 로그아웃 후 리다이렉트할 페이지 설정
             } else {
-                alert('로그아웃에 실패했습니다.');
+                const errorMessage = await response.text();
+                alert(errorMessage);
             }
         } catch (error) {
             console.error('로그아웃 중 오류 발생:', error);

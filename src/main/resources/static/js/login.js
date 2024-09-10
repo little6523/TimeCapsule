@@ -1,11 +1,11 @@
-// document.addEventListener('DOMContentLoaded', () => {
-//     const token = localStorage.getItem('jwtToken');
-//     if (token) {
-//         alert("이미 로그인 되어있습니다!");
-//         window.location.href = '/main';
-//         return;
-//     }
-// });
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+        alert("이미 로그인 되어있습니다!");
+        window.location.href = '/main';
+        return;
+    }
+});
 
 document.getElementById('loginForm').addEventListener('submit', async function (event) {
     event.preventDefault(); // 폼의 기본 제출 동작을 막음
@@ -47,11 +47,22 @@ document.getElementById('loginForm').addEventListener('submit', async function (
                 throw new Error('토큰을 찾을 수 없습니다.');
             }
         } else {
-// 로그인 실패 처리
-            document.getElementById('error-message').style.display = 'block';
+            // 아이디, 비밀번호 불일치
+            const errorMessage = await response.text();
+            showError(errorMessage);
         }
     } catch (error) {
+        showError("로그인 요청 중 오류 발생");
         console.error('로그인 요청 중 오류 발생:', error);
-        document.getElementById('error-message').style.display = 'block';
     }
 });
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: '입력 오류',
+        text: message,
+        confirmButtonText: '확인'
+    });
+}
+  // 페이지 로드 시 showError 함수 실행
