@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem('jwtToken');
-    console.log('저장된 JWT 토큰:', token);
 
     if (!token) {
         showNotLoggedInView();
