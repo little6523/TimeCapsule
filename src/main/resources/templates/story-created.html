@@ -51,21 +51,13 @@
             <span><button id="edit" class="create-story-button">스토리 수정</button></span>
             <span><button id="cancel" class="create-story-button">스토리 취소</button></span>
         </div>
+        <input type="hidden" name="userId" id="userId">
     </form>
     <div id="shareModal">
         <div id="shareModalContent">
             <div id="keyword">검색한 키워드</div>
             <div id="searchedList">
-                <div class="searchedUser">사과</div>
-                <div class="searchedUser">포도</div>
-                <div class="searchedUser">배</div>
-                <div class="searchedUser">수박</div>
-                <div class="searchedUser">참외</div>
-                <div class="searchedUser">딸기</div>
-                <div class="searchedUser">사과</div>
-                <div class="searchedUser">사과</div>
-                <div class="searchedUser">사과</div>
-                <div class="searchedUser">사과</div>
+                <div class="searchedUser"></div>
             </div>
             <div id="modalSharedList"></div>
         </div>
@@ -80,7 +72,12 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/story-modal.js}"></script>
 <script th:src="@{/js/image-upload.js}"></script>
+<!--<script type="text/javascript" th:src="@{/js/auth.js}"></script>-->
 <!--<script th:src="@{/js/story.js}"></script>-->
+
+<script>
+    document.getElementById('userId').value = userId;
+</script>
 <script>
     document.getElementById('createForm').addEventListener('submit', function() {
         // div의 내용을 숨겨진 필드에 복사
@@ -115,6 +112,5 @@
         }
     });
 </script>
-<script th:src="@{/js/auth.js}"></script>
 </body>
 </html>

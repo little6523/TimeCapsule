@@ -14,9 +14,6 @@ public class FindImageResponseDTO {
 
   // Entity -> DTO 변환 메서드
   public static FindImageResponseDTO fromEntity(Image image) {
-    return FindImageResponseDTO.builder()
-            .id(image.getId())
-            .url(image.getUrl())
-            .build();
+    return FindImageResponseDTO.builder().id(image.getId()).url(image.getUrl()).build();
   }
 }

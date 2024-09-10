@@ -38,7 +38,7 @@ public class UserService {
   private final Integer role_user = 1;
 
   private static final String CHARS =
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // 대문자나 소문자, 숫자 중 2개를 포함한
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // 대문자나 소문자, 숫자 중 2개를 포함한
   // 6-20자리
   private static final SecureRandom RANDOM = new SecureRandom(); // 임시 비밀번호 생성을 위한 랜덤 객체
 
@@ -59,13 +59,13 @@ public class UserService {
 
     // User 객체로 빌딩
     User user =
-            User.builder()
-                    .userId(usersignupdto.getUserId())
-                    .email(usersignupdto.getEmail())
-                    .nickname(usersignupdto.getNickname())
-                    .password(password)
-                    .role(role_user)
-                    .build();
+        User.builder()
+            .userId(usersignupdto.getUserId())
+            .email(usersignupdto.getEmail())
+            .nickname(usersignupdto.getNickname())
+            .password(password)
+            .role(role_user)
+            .build();
 
     return UserDTO.fromEntity(userRepository.save(user));
   }
@@ -78,9 +78,9 @@ public class UserService {
   @Transactional
   public String login(UserLoginDTO userlogindto) {
     Authentication authentication =
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            userlogindto.getUserId(), userlogindto.getPassword()));
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                userlogindto.getUserId(), userlogindto.getPassword()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String accessToken = jwtTokenProvider.generateAccessToken(authentication);
     String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
@@ -122,17 +122,17 @@ public class UserService {
       if (redisService.validateRefreshToken(username, refreshToken)) {
         // User 객체 가져오기
         User user =
-                userRepository
-                        .findByUserId(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
+            userRepository
+                .findByUserId(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
 
         // 숫자 권한을 GrantedAuthority로 변환
         List<GrantedAuthority> authorities =
-                AuthorityUtils.convertRolesToAuthorities(user.getRole());
+            AuthorityUtils.convertRolesToAuthorities(user.getRole());
 
         // Authentication 객체 생성
         Authentication authentication =
-                new UsernamePasswordAuthenticationToken(user, null, authorities);
+            new UsernamePasswordAuthenticationToken(user, null, authorities);
 
         // 새로운 Access Token 발급
         String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
@@ -182,9 +182,9 @@ public class UserService {
   @Transactional(readOnly = true)
   public UserDTO getUserInfo(String id) {
     User user =
-            userRepository
-                    .findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("ID가 있는 사용자를 찾을 수 없습니다 : " + id));
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("ID가 있는 사용자를 찾을 수 없습니다 : " + id));
     return UserDTO.fromEntity(user);
   }
 
@@ -192,21 +192,21 @@ public class UserService {
   public ApiResponse<Void> issueTemporaryPassword(TemporaryPasswordDTO temporaryPasswordDTO) {
     try {
       User user =
-              userRepository
-                      .findByUserIdAndEmail(temporaryPasswordDTO.getId(), temporaryPasswordDTO.getEmail())
-                      .orElseThrow(() -> new EntityNotFoundException("일치 하는 계정 정보가 없습니다."));
+          userRepository
+              .findByUserIdAndEmail(temporaryPasswordDTO.getId(), temporaryPasswordDTO.getEmail())
+              .orElseThrow(() -> new EntityNotFoundException("일치 하는 계정 정보가 없습니다."));
 
       // 임시 비밀번호 생성
       String tempPassword = createRandomPassword();
 
       User newUserPassword =
-              User.builder()
-                      .userId(user.getUserId())
-                      .password(passwordencoderconfig.passwordEncoder().encode(tempPassword))
-                      .email(user.getEmail())
-                      .nickname(user.getNickname())
-                      .role(user.getRole())
-                      .build();
+          User.builder()
+              .userId(user.getUserId())
+              .password(passwordencoderconfig.passwordEncoder().encode(tempPassword))
+              .email(user.getEmail())
+              .nickname(user.getNickname())
+              .role(user.getRole())
+              .build();
 
       // 임시 비밀번호 저장
       userRepository.save(newUserPassword);
@@ -227,29 +227,29 @@ public class UserService {
   public ApiResponse<String> updateUser(UserUpdateDTO userUpdateDTO) {
     try {
       User user =
-              userRepository
-                      .findById(userUpdateDTO.getId())
-                      .orElseThrow(() -> new EntityNotFoundException("요청하신 사용자 정보를 찾을 수 없습니다."));
+          userRepository
+              .findById(userUpdateDTO.getId())
+              .orElseThrow(() -> new EntityNotFoundException("요청하신 사용자 정보를 찾을 수 없습니다."));
 
       User.UserBuilder userUpdateBuilder =
-              User.builder()
-                      .userId(user.getUserId())
-                      .password(user.getPassword())
-                      .email(userUpdateDTO.getEmail())
-                      .nickname(userUpdateDTO.getNickname())
-                      .provider(user.getProvider())
-                      .role(user.getRole());
+          User.builder()
+              .userId(user.getUserId())
+              .password(user.getPassword())
+              .email(userUpdateDTO.getEmail())
+              .nickname(userUpdateDTO.getNickname())
+              .provider(user.getProvider())
+              .role(user.getRole());
 
       // 비밀번호 수정일 경우
       if (userUpdateDTO.getPassword() != null && userUpdateDTO.getNewPassword() != null) {
         // 사용자가 입력한 비밀번호와 DB의 비밀번호와 비교
         if (!passwordencoderconfig
-                .passwordEncoder()
-                .matches(userUpdateDTO.getPassword(), user.getPassword())) {
+            .passwordEncoder()
+            .matches(userUpdateDTO.getPassword(), user.getPassword())) {
           return new ApiResponse<>(false, "기존 비밀번호가 일치하지 않습니다.");
         }
         userUpdateBuilder.password(
-                passwordencoderconfig.passwordEncoder().encode(userUpdateDTO.getNewPassword()));
+            passwordencoderconfig.passwordEncoder().encode(userUpdateDTO.getNewPassword()));
       }
 
       User updateUser = userUpdateBuilder.build();
@@ -277,12 +277,12 @@ public class UserService {
   public ApiResponse<Void> deleteUser(UserWithdrawalDTO userWithdrawalDTO) {
     try {
       User user =
-              userRepository
-                      .findById(userWithdrawalDTO.getId())
-                      .orElseThrow(() -> new EntityNotFoundException("요청하신 사용자 정보를 찾을 수 없습니다."));
+          userRepository
+              .findById(userWithdrawalDTO.getId())
+              .orElseThrow(() -> new EntityNotFoundException("요청하신 사용자 정보를 찾을 수 없습니다."));
 
       if (user.getProvider() == null
-              && !passwordencoderconfig
+          && !passwordencoderconfig
               .passwordEncoder()
               .matches(userWithdrawalDTO.getPassword(), user.getPassword())) {
         return new ApiResponse<>(false, "기존 비밀번호가 일치하지 않습니다.");
@@ -307,8 +307,12 @@ public class UserService {
   public String createRandomPassword() {
     int length = RANDOM.nextInt(15) + 6; // 6-20자리
     return RANDOM
-            .ints(length, 0, CHARS.length())
-            .mapToObj(i -> String.valueOf(CHARS.charAt(i)))
-            .collect(Collectors.joining());
+        .ints(length, 0, CHARS.length())
+        .mapToObj(i -> String.valueOf(CHARS.charAt(i)))
+        .collect(Collectors.joining());
+  }
+
+  public List<User> searchUsersByNickname(String keyword) {
+    return userRepository.findByNicknameContaining(keyword);
   }
 }

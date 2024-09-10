@@ -54,45 +54,45 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
   private User findOrCreateUser(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
     return usersRepository
-            .findByEmail(oAuth2UserInfo.getEmail())
-            .map(
-                    existingUser -> {
-                      String provider = existingUser.getProvider();
-                      String upperCaseRegistrationId = registrationId.toUpperCase();
+        .findByEmail(oAuth2UserInfo.getEmail())
+        .map(
+            existingUser -> {
+              String provider = existingUser.getProvider();
+              String upperCaseRegistrationId = registrationId.toUpperCase();
 
-                      if (provider == null || !provider.equals(upperCaseRegistrationId)) {
-                        throw new EmailAlreadyExistsException(
-                                "이미 "
-                                        + (provider != null ? provider : "기존")
-                                        + " 계정으로 가입된 이메일입니다: "
-                                        + oAuth2UserInfo.getEmail());
-                      }
+              if (provider == null || !provider.equals(upperCaseRegistrationId)) {
+                throw new EmailAlreadyExistsException(
+                    "이미 "
+                        + (provider != null ? provider : "기존")
+                        + " 계정으로 가입된 이메일입니다: "
+                        + oAuth2UserInfo.getEmail());
+              }
 
-                      return updateExistingUser(existingUser, oAuth2UserInfo);
-                    })
-            .orElseGet(() -> createNewUser(oAuth2UserInfo, registrationId));
+              return updateExistingUser(existingUser, oAuth2UserInfo);
+            })
+        .orElseGet(() -> createNewUser(oAuth2UserInfo, registrationId));
   }
 
   // OAuth2.0 계정 업데이트(이미지, 닉네임)
   private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
     return User.builder()
-            .userId(existingUser.getUserId())
-            .email(existingUser.getEmail())
-            .role(existingUser.getRole())
-            .provider(existingUser.getProvider())
-            .nickname(existingUser.getNickname())
-            .build();
+        .userId(existingUser.getUserId())
+        .email(existingUser.getEmail())
+        .role(existingUser.getRole())
+        .provider(existingUser.getProvider())
+        .nickname(existingUser.getNickname())
+        .build();
   }
 
   // OAuth2.0 계정 저장
   private User createNewUser(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
     return User.builder()
-            .userId(oAuth2UserInfo.getId())
-            .email(oAuth2UserInfo.getEmail())
-            .nickname(generateUniqueNickname(oAuth2UserInfo.getName(), null))
-            .provider(registrationId.toUpperCase())
-            .role(1)
-            .build();
+        .userId(oAuth2UserInfo.getId())
+        .email(oAuth2UserInfo.getEmail())
+        .nickname(generateUniqueNickname(oAuth2UserInfo.getName(), null))
+        .provider(registrationId.toUpperCase())
+        .role(1)
+        .build();
   }
 
   // OAuth2.0 계정 생성 시 중복된 닉네임 처리

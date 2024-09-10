@@ -27,9 +27,9 @@ public class StoryDTO {
 
   private boolean isShared;
 
-//  private List<StoryShareDTO> storyShares = new ArrayList<>();
+  //  private List<StoryShareDTO> storyShares = new ArrayList<>();
 
-//  private List<ImageDTO> images = new ArrayList<>();
+  //  private List<ImageDTO> images = new ArrayList<>();
 
   public Story toEntity() {
 
@@ -39,8 +39,6 @@ public class StoryDTO {
         .content(content)
         .dialect(dialect)
         .speaker(speaker)
-        .createdAt(createdAt)
-        .updatedAt(updatedAt)
         .soundFile(soundFile)
         .isShared(isShared)
         .build();
@@ -48,15 +46,15 @@ public class StoryDTO {
 
   public static StoryDTO fromEntity(Story story) {
     return StoryDTO.builder()
-            .userDTO(UserDTO.fromEntity(story.getUser()))
-            .title(story.getTitle())
-            .content(story.getContent())
-            .dialect(story.getDialect())
-            .speaker(story.getSpeaker())
-            .createdAt(story.getCreatedAt())
-            .updatedAt(story.getUpdatedAt())
-            .soundFile(story.getSoundFile())
-            .isShared(story.isShared())
-            .build();
+        .userDTO(UserDTO.fromEntity(story.getUser()))
+        .title(story.getTitle())
+        .content(story.getContent())
+        .dialect(story.getDialect())
+        .speaker(story.getSpeaker())
+        .createdAt(story.getCreatedAt())
+        .updatedAt(story.getUpdatedAt())
+        .soundFile(story.getSoundFile())
+        .isShared(story.isShared())
+        .build();
   }
 }

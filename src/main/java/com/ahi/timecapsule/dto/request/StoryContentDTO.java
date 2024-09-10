@@ -1,9 +1,8 @@
 package com.ahi.timecapsule.dto.request;
 
 import com.ahi.timecapsule.dto.ImageDTO;
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Getter
 @Setter
@@ -12,7 +11,7 @@ import java.util.List;
 @Builder
 public class StoryContentDTO {
 
-  private Long userId;
+  private String userId;
 
   private String title;
 
@@ -26,13 +25,21 @@ public class StoryContentDTO {
 
   @Override
   public String toString() {
-    return "StoryContentDTO{" +
-            "userId=" + userId +
-            ", title='" + title + '\'' +
-            ", content='" + content + '\'' +
-            ", isShared=" + isShared +
-            ", sharedUsers=" + sharedUsers +
-            ", imageFiles=" + imageFiles +
-            '}';
+    return "StoryContentDTO{"
+        + "userId="
+        + userId
+        + ", title='"
+        + title
+        + '\''
+        + ", content='"
+        + content
+        + '\''
+        + ", isShared="
+        + isShared
+        + ", sharedUsers="
+        + sharedUsers
+        + ", imageFiles="
+        + imageFiles
+        + '}';
   }
 }

@@ -50,7 +50,6 @@
                             th:selected="${speaker == '선택 안함'}"></option>
                 </select>
             </div>
-            <input type="hidden" id="userId">
             <button type="submit" id="create-story-button" class="create-story-button">스토리 생성</button>
         </div>
     </form>
@@ -61,8 +60,5 @@
 <script th:src="@{/js/record.js}"></script>
 <script th:src="@{/js/story-config.js}"></script>
 <script th:src="@{/js/auth.js}"></script>
-<script>
-    document.getElementById('userId').value = userId;
-</script>
 </body>
 </html>

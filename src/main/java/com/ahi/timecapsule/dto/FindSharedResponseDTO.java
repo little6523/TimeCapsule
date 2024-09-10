@@ -14,7 +14,7 @@ public class FindSharedResponseDTO {
   // Entity -> DTO 변환 메서드
   public static FindSharedResponseDTO fromEntity(StoryShare storyShare) {
     return FindSharedResponseDTO.builder()
-            .sharedWithUser(StoryUserResponseDTO.fromEntity(storyShare.getUser()))
-            .build();
+        .sharedWithUser(StoryUserResponseDTO.fromEntity(storyShare.getUser()))
+        .build();
   }
 }

@@ -22,8 +22,8 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
   @Override
   public void onAuthenticationSuccess(
-          HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-          throws IOException {
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      throws IOException {
     CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
     String accessToken = jwtTokenProvider.generateOAuth2AccessToken(oAuth2User);
@@ -52,10 +52,10 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
     redisService.saveOneTimeCode(oneTimeCode, oAuth2User, provider, 300);
 
     String targetUrl =
-            UriComponentsBuilder.fromUriString("/login")
-                    .queryParam("code", oneTimeCode)
-                    .build()
-                    .toUriString();
+        UriComponentsBuilder.fromUriString("/login")
+            .queryParam("code", oneTimeCode)
+            .build()
+            .toUriString();
 
     getRedirectStrategy().sendRedirect(request, response, targetUrl);
   }

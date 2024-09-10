@@ -1,4 +1,3 @@
 package com.ahi.timecapsule.repository;
 
-public interface NoticeRepository {
-}
+public interface NoticeRepository {}

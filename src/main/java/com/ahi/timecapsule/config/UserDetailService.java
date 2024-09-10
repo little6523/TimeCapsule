@@ -16,20 +16,20 @@ public class UserDetailService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
     User user =
-            userRepository
-                    .findByUserId(userId)
-                    .orElseThrow(
-                            () -> new IllegalArgumentException("User not found with username: " + userId));
+        userRepository
+            .findByUserId(userId)
+            .orElseThrow(
+                () -> new IllegalArgumentException("User not found with username: " + userId));
 
     // UserDetails 객체로 변환
     return org.springframework.security.core.userdetails.User.withUsername(user.getUserId())
-            //						.password(user.getPassword())
-            .password(user.getPassword() != null ? user.getPassword() : "") // 추가
-            .authorities("ROLE_USER") // 역할 설정 필요 시 수정
-            .accountExpired(false)
-            .accountLocked(false)
-            .credentialsExpired(false)
-            .disabled(false)
-            .build();
+        //						.password(user.getPassword())
+        .password(user.getPassword() != null ? user.getPassword() : "") // 추가
+        .authorities("ROLE_USER") // 역할 설정 필요 시 수정
+        .accountExpired(false)
+        .accountLocked(false)
+        .credentialsExpired(false)
+        .disabled(false)
+        .build();
   }
 }
