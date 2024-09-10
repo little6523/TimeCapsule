@@ -92,14 +92,11 @@ public class UserService {
                     new UsernamePasswordAuthenticationToken(
                             userlogindto.getUserId(), userlogindto.getPassword()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
-    System.out.println("authentication " + authentication);
     String accessToken = jwtTokenProvider.generateAccessToken(authentication);
     String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
-    System.out.println("accessToken 발급" + accessToken);
 
     // Refresh Token을 Redis에 저장 (유효 기간 설정)
     redisService.saveRefreshToken(userlogindto.getUserId(), refreshToken);
-    System.out.println("redis에 저장");
     return accessToken;
   }
 
@@ -121,7 +118,6 @@ public class UserService {
   // Access Token 검증 및 필요한 경우 자동 재발급 메서드
   public String validateAndRefreshAccessToken(String accessToken, String refreshToken) {
     // Access Token 유효성 검사
-    System.out.println(jwtTokenProvider.validateToken(accessToken));
     if (jwtTokenProvider.validateToken(accessToken)) {
       // Access Token이 유효하면 기존 토큰 반환
       return accessToken;

@@ -76,21 +76,6 @@ public class UserController {
   @ResponseBody
   public ResponseEntity<?> login(
       @RequestBody UserLoginDTO userLogin, HttpServletResponse response, Model model) {
-    //    System.out.println("왔는데?");
-//    String token = userService.login(userLogin);
-//    System.out.println(token);
-//    if (token != null) {
-//      System.out.println("JWT 토큰 발급 성공");
-//
-//      response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-//
-//      // 응답 본문에 성공 메시지와 함께 토큰을 반환할 필요가 없다면 생략 가능
-//      return ResponseEntity.ok().build();
-//
-//    } else {
-//      model.addAttribute("errorMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
-//      return new ResponseEntity<>("아이디 또는 비밀번호가 잘못되었습니다.", HttpStatus.UNAUTHORIZED);
-//    }
 
     // 로그인 로직 수행
     String token = userService.login(userLogin);
@@ -128,7 +113,6 @@ public class UserController {
             authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
                     ? authorizationHeader.substring(7)
                     : null;
-    System.out.println("valid-token " + accessToken);
 
     if (accessToken == null) {
       throw new RuntimeException("Access Token이 제공되지 않았습니다.");
@@ -166,7 +150,6 @@ public class UserController {
     }
 
     String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
-    System.out.println("로그아웃 " + token);
 
     // 토큰이 유효한지 검증
     if (!jwtTokenProvider.validateToken(token)) {

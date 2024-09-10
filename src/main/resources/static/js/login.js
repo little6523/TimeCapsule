@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
-        alert("이미 로그인 되어있습니다!");
+        showError("이미 로그인 되어있습니다!");
         window.location.href = '/main';
         return;
     }
