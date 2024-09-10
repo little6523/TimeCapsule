@@ -30,7 +30,7 @@
                 </p>
                 <p th:unless="${currentURI.contains('/stories/shared')}">공유자 |
                     <span th:each="shared, iterStat : ${story.sharedStories}">
-                        <span th:text="${shared.sharedWithUser.nickname}"></span><span th:if="${!iterStat.last}">,</span>
+                        <span th:text="${shared.userDTO.nickname}"></span><span th:if="${!iterStat.last}">,</span>
                     </span>
                 </p>
             </div>

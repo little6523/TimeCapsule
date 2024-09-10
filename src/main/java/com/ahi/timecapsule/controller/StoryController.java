@@ -1,7 +1,7 @@
 package com.ahi.timecapsule.controller;
 
-import com.ahi.timecapsule.dto.FindImageResponseDTO;
 import com.ahi.timecapsule.dto.FindStoryResponseDTO;
+import com.ahi.timecapsule.dto.ImageDTO;
 import com.ahi.timecapsule.dto.UpdateStoryRequestDTO;
 import com.ahi.timecapsule.exception.StoryNotFoundException;
 import com.ahi.timecapsule.exception.UserNotFoundException;
@@ -158,7 +158,7 @@ public class StoryController {
     FindStoryResponseDTO story = storyService.getStoryById(id);
     Map<Long, String> encodedImages = new HashMap<>();
     String imageUrl;
-    for (FindImageResponseDTO image : story.getImages()) {
+    for (ImageDTO image : story.getImages()) {
       try {
         byte[] imageBytes = Files.readAllBytes(Paths.get(image.getUrl()));
         imageUrl = Base64.getEncoder().encodeToString(imageBytes);
