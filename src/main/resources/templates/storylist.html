@@ -18,20 +18,20 @@
 
 <main>
     <div class="main-header">
-        <h1 th:unless="${currentURI.contains('/stories/shared')}">마이 스토리</h1>
-        <h1 th:if="${currentURI.contains('/stories/shared')}">공유된 스토리</h1>
+        <h1 th:if="${tab == 'myStories'}">마이 스토리</h1>
+        <h1 th:if="${tab == 'sharedStories'}">공유된 스토리</h1>
+        <h1 th:if="${tab == 'community'}">커뮤니티</h1>
             <img src="/images/timecapsulelogo.png" alt="로고">
     </div>
 
-
-    <div class="tabs">
+    <div class="tabs" th:unless="${currentURI.contains('')}">
         <a th:classappend="${tab == 'myStories'} ? 'active'" th:href="@{/stories}" class="tab-btn"
            style="background-color: #E5C1C1">마이 스토리</a>
         <a th:classappend="${tab == 'sharedStories'} ? 'active'" th:href="@{/stories/shared}" class="tab-btn"
            style="background-color: #E7DEDE">공유 받은 스토리</a>
     </div>
 
-    <form th:action="@{${tab == 'myStories' ? '/stories' : '/stories/shared'}}" method="get"
+    <form th:action="@{${tab == 'myStories' ? '/stories' : (tab == 'community' ? '/community/stories' : '/stories/shared')}}" method="get"
           class="search-container">
         <label for="keyword" class="visually-hidden">검색어</label>
         <input type="text" id="keyword" name="keyword" placeholder="제목, 내용으로 검색해주세요" class="search-input">
@@ -50,7 +50,7 @@
         <tbody>
         <tr th:each="story, stat : ${storyPage.content}">
             <td th:text="${(storyPage.number * storyPage.size) + stat.index + 1}"></td>
-            <td><a th:href="@{${tab == 'myStories' ? '/stories/{id}' : '/stories/shared/{id}'}(id=${story.id})}"
+            <td><a th:href="@{${tab == 'myStories' ? '/stories/{id}' : (tab == 'community' ? '/community/stories/{id}' : '/stories/shared/{id}')}(id=${story.id})}"
                    th:text="${story.title}"></a></td>
             <td th:text="${story.author.nickname}"></td>
             <td th:text="${#temporals.format(story.createdAt, 'yyyy-MM-dd')}"></td>

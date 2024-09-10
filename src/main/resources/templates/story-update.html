@@ -68,7 +68,7 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
-        const currentUserId = /*[[${story.getAuthor().id}]]*/ ''; // 본인 ID
+        const currentUser = /*[[${story.getAuthor().nickname}]]*/ ''; // 본인 ID
 
         // 공유자 ID를 태그 형태로 추가 및 삭제
         const tagInputContainer = document.querySelector('.tag-input-container');
@@ -80,8 +80,8 @@
                 const newSharedUser = tagInput.value.trim();
 
                 // 본인 ID와 동일한 공유자 ID일 경우
-                if(newSharedUser === currentUserId) {
-                    alert('본인 ID에는 공유할 수 없습니다.');
+                if(newSharedUser === currentUser) {
+                    alert('본인에게는 공유할 수 없습니다.');
                     tagInput.value = '';
                     return;
                 }
@@ -114,8 +114,8 @@
         // 기존 공유자 리스트를 태그 형태로 출력
         const existingSharedList = /*[[${story.sharedStories}]]*/ [];
         existingSharedList.forEach(function (shared) {
-            addTag(shared.sharedWithUser.id);
-            sharedList.push(shared.sharedWithUser.id); // sharedList 배열에 추가
+            addTag(shared.userDTO.nickname);
+            sharedList.push(shared.userDTO.nickname); // sharedList 배열에 추가
         });
 
 
@@ -235,6 +235,8 @@
                 contentEditableDiv.removeChild(imageContainer);
             });
         }
+
+        console.log(sharedList);
 
         // 폼 데이터를 PUT 요청으로 서버로 전송
         window.submitForm = function () {

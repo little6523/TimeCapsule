@@ -7,7 +7,6 @@ import com.ahi.timecapsule.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

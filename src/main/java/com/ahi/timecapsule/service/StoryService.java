@@ -6,10 +6,10 @@ import com.ahi.timecapsule.entity.StoryShare;
 import com.ahi.timecapsule.entity.User;
 import com.ahi.timecapsule.exception.StoryNotFoundException;
 import com.ahi.timecapsule.exception.UserNotFoundException;
-import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
 import com.ahi.timecapsule.repository.StoryShareRepository;
 import com.ahi.timecapsule.repository.UserRepository;
+import org.hibernate.annotations.processing.Find;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -28,17 +28,13 @@ import java.util.List;
 public class StoryService {
   private final StoryRepository storyRepository;
   private final UserRepository userRepository;
-  private final ImageRepository imageRepository;
   private final StoryShareRepository storyShareRepository;
 
-  public StoryService(StoryRepository storyRepository, UserRepository userRepository, ImageRepository imageRepository, StoryShareRepository storyShareRepository) {
+  public StoryService(StoryRepository storyRepository, UserRepository userRepository, StoryShareRepository storyShareRepository) {
     this.storyRepository = storyRepository;
     this.userRepository = userRepository;
-    this.imageRepository = imageRepository;
     this.storyShareRepository = storyShareRepository;
   }
-
-
 
 
   private final List<String> soundFileExtensions =
@@ -73,6 +69,15 @@ public class StoryService {
     });
   }
 
+  // 커뮤니티 스토리 목록 조회
+  @Transactional(readOnly = true)
+  public Page<FindStoryResponseDTO> findCommunityStories(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Story> storyPage = storyRepository.findByIsSharedTrue(pageable);
+
+    return storyPage.map(FindStoryResponseDTO::fromEntity);
+  }
+
   // 스토리 상세 조회
   @Transactional(readOnly = true)
   public FindStoryResponseDTO getStoryById(Long storyId) {
@@ -88,9 +93,13 @@ public class StoryService {
     Story existingStory = storyRepository.findById(id)
             .orElseThrow(() -> new StoryNotFoundException(id));
 
+//    List<User> users = storyRequestDTO.getSharedWithUsers().stream()
+//            .map(userId -> userRepository.findById(userId)
+//                    .orElseThrow(() -> new UserNotFoundException(userId)))
+//            .toList();
     List<User> users = storyRequestDTO.getSharedWithUsers().stream()
-            .map(userId -> userRepository.findById(userId)
-                    .orElseThrow(() -> new UserNotFoundException(userId)))
+            .map(nickname -> userRepository.findByNickname(nickname)
+                    .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다. 닉네임: "+ nickname)))
             .toList();
 
     storyRequestDTO.toEntity(existingStory, users);
@@ -123,6 +132,14 @@ public class StoryService {
       Story story = storyShare.getStory();
       return FindStoryResponseDTO.fromEntity(story);
     });
+  }
+
+  @Transactional(readOnly = true)
+  public Page<FindStoryResponseDTO> findCommunityStoriesByKeyword(String keyword, int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Story> storyPage = storyRepository.findByIsSharedTrueAndTitleContainsOrContentContains(keyword, pageable);
+
+    return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 
   // 스토리 생성 시 필요한 인터뷰(사운드), 사진(이미지)파일 저장 메소드

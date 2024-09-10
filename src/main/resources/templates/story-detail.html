@@ -17,8 +17,9 @@
 <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
 <main>
-    <h1 th:unless="${currentURI.contains('/stories/shared')}">마이 스토리</h1>
+    <h1 th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}">마이 스토리</h1>
     <h1 th:if="${currentURI.contains('/stories/shared')}" th:text="${story.author.nickname + '의 스토리'}"></h1>
+    <h1 th:if="${currentURI.contains('/community')}">커뮤니티</h1>
 
     <article>
         <div class="story-header">
@@ -28,9 +29,9 @@
                     <span th:text="${#temporals.format(story.createdAt, 'yyyy.MM.dd')}">YYYY.MM.DD</span> |
                     <span th:text="${story.isShared() ? '공개' : '비공개'}"></span>
                 </p>
-                <p th:unless="${currentURI.contains('/stories/shared')}">공유자 |
+                <p th:th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}">공유자 |
                     <span th:each="shared, iterStat : ${story.sharedStories}">
-                        <span th:text="${shared.sharedWithUser.nickname}"></span><span th:if="${!iterStat.last}">,</span>
+                        <span th:text="${shared.userDTO.nickname}"></span><span th:if="${!iterStat.last}">,</span>
                     </span>
                 </p>
             </div>
@@ -121,7 +122,13 @@
     // 페이지 번호를 유지한 스토리 목록 페이지로 이동하는 함수
     function goToStoryList() {
         const pageNumber = sessionStorage.getItem('currentPage') || 1;
-        window.location.href = `/stories?page=${pageNumber}`;
+        const currentPath = window.location.pathname;
+
+        if (currentPath.startsWith('/community/stories')) {
+            window.location.href = `/community/stories?page=${pageNumber}`;
+        } else {
+            window.location.href = `/stories?page=${pageNumber}`;
+        }
     }
 </script>
 </body>
