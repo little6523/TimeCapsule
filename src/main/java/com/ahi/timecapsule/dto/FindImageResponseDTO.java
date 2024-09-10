@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class FindImageResponseDTO {
-  private int id;
+  private Long id;
   private FindStoryResponseDTO story;
   private String url;
 

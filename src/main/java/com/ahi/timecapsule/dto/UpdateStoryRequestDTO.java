@@ -18,7 +18,7 @@ public class UpdateStoryRequestDTO {
 
   private String title;
   private String content;
-  private List<String> imageUrls;
+//  private List<String> imageUrls;
   private List<String> sharedWithUsers;
 
   @JsonProperty("isShared")
@@ -33,9 +33,9 @@ public class UpdateStoryRequestDTO {
    */
   public Story toEntity(Story existingStory, List<User> users) {
 
-    List<Image> images = imageUrls.stream()
-            .map(url -> Image.builder().story(existingStory).url(url).build())
-            .toList();
+//    List<Image> images = imageUrls.stream()
+//            .map(url -> Image.builder().story(existingStory).url(url).build())
+//            .toList();
 
     List<StoryShare> storyShares = users.stream()
             .map(user -> StoryShare.builder().story(existingStory).user(user).build())
@@ -45,8 +45,8 @@ public class UpdateStoryRequestDTO {
             this.title,
             this.content,
             this.isShared,
-            storyShares,
-            images
+            storyShares
+//            images
     );
 
     return existingStory;
