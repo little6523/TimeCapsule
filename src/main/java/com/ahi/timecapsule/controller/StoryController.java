@@ -12,9 +12,7 @@ import com.ahi.timecapsule.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,7 +33,8 @@ public class StoryController {
   private final String[] dialects = {"선택 안함", "강원도", "충청도", "경상도", "전라도", "제주도"};
   private final String[] speakers = {"선택 안함", "할머니", "할아버지", "어머니", "아버지", "손자", "손녀"};
 
-  public StoryController(UserService userService, StoryService storyService, ImageService imageService) {
+  public StoryController(
+      UserService userService, StoryService storyService, ImageService imageService) {
     this.userService = userService;
     this.storyService = storyService;
     this.imageService = imageService;
@@ -53,9 +52,9 @@ public class StoryController {
   // 음성 파일 업로드 및 화자, 사투리 설정
   @PostMapping("/form")
   public String uploadFile(
-          @RequestPart MultipartFile file,
-          @ModelAttribute StoryOptionDTO storyOptionDTO,
-          HttpSession session)
+      @RequestPart MultipartFile file,
+      @ModelAttribute StoryOptionDTO storyOptionDTO,
+      HttpSession session)
       throws IOException {
 
     System.out.println(file.getOriginalFilename());
@@ -73,7 +72,7 @@ public class StoryController {
 
   @GetMapping("/complete-form")
   public String getCreateStoryForm(
-          @ModelAttribute("StoryOptionDTO") StoryOptionDTO storyOptionDTO) {
+      @ModelAttribute("StoryOptionDTO") StoryOptionDTO storyOptionDTO) {
 
     return "story-created";
   }
@@ -87,15 +86,15 @@ public class StoryController {
 
   @PostMapping
   public String createStory(
-          @RequestPart(value = "images", required = false) List<MultipartFile> files,
-          @ModelAttribute StoryContentDTO storyContentDTO,
-          @ModelAttribute("userId") String userId,
-          HttpSession session
-  ) throws IOException {
+      @RequestPart(value = "images", required = false) List<MultipartFile> files,
+      @ModelAttribute StoryContentDTO storyContentDTO,
+      @ModelAttribute("userId") String userId,
+      HttpSession session)
+      throws IOException {
 
     List<String> filesPath = new ArrayList<>();
     if (files != null && !files.isEmpty()) {
-       filesPath = storyService.saveFiles(files);
+      filesPath = storyService.saveFiles(files);
     }
 
     System.out.println("id = " + userId);
@@ -104,19 +103,20 @@ public class StoryController {
 
     storyService.save(storyOptionDTO, storyContentDTO, filesPath, userId);
 
-//    return "redirect:story-created/" + storyDTO.getUser();
+    //    return "redirect:story-created/" + storyDTO.getUser();
     return "redirect:stories/complete-form";
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<String> updateStory(@PathVariable("id") Long id,
-                                            @RequestParam("storyId") Long storyId,
-                                            @RequestParam("title") String title,
-                                            @RequestParam("content") String content,
-                                            @RequestParam("isShared") boolean isShared,
-                                            @RequestParam("sharedWithUsers") List<String> sharedWithUsers,
-                                            @RequestParam("deletedImages") List<Long> deletedImages,
-                                            @RequestParam("images") List<MultipartFile> images) {
+  public ResponseEntity<String> updateStory(
+      @PathVariable("id") Long id,
+      @RequestParam("storyId") Long storyId,
+      @RequestParam("title") String title,
+      @RequestParam("content") String content,
+      @RequestParam("isShared") boolean isShared,
+      @RequestParam("sharedWithUsers") List<String> sharedWithUsers,
+      @RequestParam("deletedImages") List<Long> deletedImages,
+      @RequestParam("images") List<MultipartFile> images) {
 
     List<String> imageUrls = new ArrayList<>();
     try {
@@ -125,13 +125,15 @@ public class StoryController {
         imageUrls.addAll(newImageUrls);
       }
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("이미지 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
 
     imageService.updateImages(deletedImages, imageUrls, storyId);
 
     try {
-      UpdateStoryRequestDTO storyRequestDTO = UpdateStoryRequestDTO.builder()
+      UpdateStoryRequestDTO storyRequestDTO =
+          UpdateStoryRequestDTO.builder()
               .title(title)
               .content(content)
               .sharedWithUsers(sharedWithUsers)
@@ -144,7 +146,7 @@ public class StoryController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .body("스토리 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+          .body("스토리 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   }
 }

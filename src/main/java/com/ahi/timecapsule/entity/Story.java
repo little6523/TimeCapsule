@@ -1,10 +1,9 @@
 package com.ahi.timecapsule.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "stories")
@@ -68,6 +67,7 @@ public class Story extends BaseEntity {
       image.setStoryInternal(this); // image에 스토리 추가
     }
   }
+
   public void removeImage(Image image) {
     if (images.contains(image)) {
       images.remove(image);
@@ -76,8 +76,8 @@ public class Story extends BaseEntity {
   }
 
   // 스토리를 업데이트 하는 메서드
-  public void updateStory(String newTitle, String newContent, Boolean newIsShared,
-                          List<StoryShare> newStoryShares) {
+  public void updateStory(
+      String newTitle, String newContent, Boolean newIsShared, List<StoryShare> newStoryShares) {
     this.title = newTitle != null ? newTitle : this.title;
     this.content = newContent != null ? newContent : this.content;
     this.isShared = newIsShared != null ? newIsShared : this.isShared;

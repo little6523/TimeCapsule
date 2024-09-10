@@ -12,20 +12,17 @@ import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
 import com.ahi.timecapsule.repository.StoryShareRepository;
 import com.ahi.timecapsule.repository.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -75,17 +72,18 @@ public class StoryService {
     Pageable pageable = PageRequest.of(page, size);
     Page<StoryShare> storyShares = storyShareRepository.findByUser_UserId(userId, pageable);
 
-    return storyShares.map(storyShare -> {
-      Story story = storyShare.getStory();
-      return FindStoryResponseDTO.fromEntity(story);
-    });
+    return storyShares.map(
+        storyShare -> {
+          Story story = storyShare.getStory();
+          return FindStoryResponseDTO.fromEntity(story);
+        });
   }
 
   // 스토리 상세 조회
   @Transactional(readOnly = true)
   public FindStoryResponseDTO getStoryById(Long storyId) {
-    Story story = storyRepository.findById(storyId)
-            .orElseThrow(() -> new StoryNotFoundException(storyId));
+    Story story =
+        storyRepository.findById(storyId).orElseThrow(() -> new StoryNotFoundException(storyId));
 
     return FindStoryResponseDTO.fromEntity(story);
   }
@@ -93,12 +91,16 @@ public class StoryService {
   // 특정 스토리 수정
   @Transactional
   public void updateStory(Long id, UpdateStoryRequestDTO storyRequestDTO) {
-    Story existingStory = storyRepository.findById(id)
-            .orElseThrow(() -> new StoryNotFoundException(id));
+    Story existingStory =
+        storyRepository.findById(id).orElseThrow(() -> new StoryNotFoundException(id));
 
-    List<User> users = storyRequestDTO.getSharedWithUsers().stream()
-            .map(userId -> userRepository.findById(userId)
-                    .orElseThrow(() -> new UserNotFoundException(userId)))
+    List<User> users =
+        storyRequestDTO.getSharedWithUsers().stream()
+            .map(
+                userId ->
+                    userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new UserNotFoundException(userId)))
             .toList();
 
     storyRequestDTO.toEntity(existingStory, users);
@@ -114,23 +116,29 @@ public class StoryService {
 
   // 특정 키워드가 제목, 내용에 포함된 마이 스토리 목록 조회
   @Transactional(readOnly = true)
-  public Page<FindStoryResponseDTO> findMyStoriesByKeyword(String userId, String keyword, int page, int size) {
+  public Page<FindStoryResponseDTO> findMyStoriesByKeyword(
+      String userId, String keyword, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
-    Page<Story> storyPage = storyRepository.findByUser_IdAndTitleContainsOrContentContains(userId, keyword, pageable);
+    Page<Story> storyPage =
+        storyRepository.findByUser_IdAndTitleContainsOrContentContains(userId, keyword, pageable);
 
     return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 
   // 특정 키워드가 제목, 내용에 포함된 공유된 스토리 목록 조회
   @Transactional(readOnly = true)
-  public Page<FindStoryResponseDTO> findSharedStoriesByKeyword(String userId, String keyword, int page, int size) {
+  public Page<FindStoryResponseDTO> findSharedStoriesByKeyword(
+      String userId, String keyword, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
-    Page<StoryShare> storyShares = storyShareRepository.findByUser_IdAndStory_TitleContainsOrStory_ContentContains(userId, keyword, pageable);
+    Page<StoryShare> storyShares =
+        storyShareRepository.findByUser_IdAndStory_TitleContainsOrStory_ContentContains(
+            userId, keyword, pageable);
 
-    return storyShares.map(storyShare -> {
-      Story story = storyShare.getStory();
-      return FindStoryResponseDTO.fromEntity(story);
-    });
+    return storyShares.map(
+        storyShare -> {
+          Story story = storyShare.getStory();
+          return FindStoryResponseDTO.fromEntity(story);
+        });
   }
 
   @Transactional

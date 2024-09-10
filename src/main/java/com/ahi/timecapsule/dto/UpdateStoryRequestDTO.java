@@ -4,9 +4,8 @@ import com.ahi.timecapsule.entity.Story;
 import com.ahi.timecapsule.entity.StoryShare;
 import com.ahi.timecapsule.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

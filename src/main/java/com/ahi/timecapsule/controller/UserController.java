@@ -37,9 +37,9 @@ public class UserController {
 
   @PostMapping("/signUp")
   public String signUp(
-          @Valid @ModelAttribute("userSignUp") UserSignUpDTO userSignUp,
-          BindingResult bindingResult,
-          Model model) {
+      @Valid @ModelAttribute("userSignUp") UserSignUpDTO userSignUp,
+      BindingResult bindingResult,
+      Model model) {
 
     // 비밀번호 일치 여부 확인
     if (!userService.isPasswordMatching(userSignUp)) {
@@ -75,7 +75,7 @@ public class UserController {
   @PostMapping("/login")
   @ResponseBody
   public ResponseEntity<?> login(
-          @RequestBody UserLoginDTO userLogin, HttpServletResponse response, Model model) {
+      @RequestBody UserLoginDTO userLogin, HttpServletResponse response, Model model) {
     String token = userService.login(userLogin);
     if (token != null) {
 
@@ -112,13 +112,13 @@ public class UserController {
   // 페이지 접속 시, 토큰 유효성 검사
   @GetMapping("/valid-token")
   public ResponseEntity<?> validateToken(
-          @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
-          HttpServletResponse response) {
+      @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+      HttpServletResponse response) {
     // Access Token 추출
     String accessToken =
-            authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-                    ? authorizationHeader.substring(7)
-                    : null;
+        authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+            ? authorizationHeader.substring(7)
+            : null;
     if (accessToken == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Access Token이 제공되지 않았습니다.");
     }
@@ -132,12 +132,12 @@ public class UserController {
     try {
       // Access Token 검증 및 필요한 경우 재발급
       String validAccessToken =
-              userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+          userService.validateAndRefreshAccessToken(accessToken, refreshToken);
 
       // 유효한 Access Token으로 사용자 정보 추출
       response.addHeader("X-User-Id", username); // 사용자 정보 추가
       response.addHeader(
-              HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
+          HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
 
       return ResponseEntity.ok().build();
 
@@ -149,7 +149,7 @@ public class UserController {
 
   @PostMapping("/logout")
   public ResponseEntity<?> logout(
-          @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+      @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
       String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
       // 토큰이 유효한지 검증
@@ -187,13 +187,13 @@ public class UserController {
   // 임시 비밀번호 발급
   @PostMapping("/users/password/temporary")
   public ResponseEntity<ApiResponse<Void>> issueTemporaryPassword(
-          @Valid @RequestBody TemporaryPasswordDTO temporaryPasswordDTO, BindingResult bindingResult) {
+      @Valid @RequestBody TemporaryPasswordDTO temporaryPasswordDTO, BindingResult bindingResult) {
     // 유효성 검사(첫번쨰 오류 메시지만 담아서 사용자에게 반환)
     if (bindingResult.hasErrors()) {
       FieldError fieldError = bindingResult.getFieldError();
       if (fieldError != null) {
         return ResponseEntity.badRequest()
-                .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
+            .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
       }
     }
 
@@ -215,12 +215,12 @@ public class UserController {
   // 회원 수정
   @PatchMapping("/users/update")
   public ResponseEntity<ApiResponse<String>> updateUser(
-          @Valid @RequestBody UserUpdateDTO userUpdateDTO, BindingResult bindingResult) {
+      @Valid @RequestBody UserUpdateDTO userUpdateDTO, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       FieldError fieldError = bindingResult.getFieldError();
       if (fieldError != null) {
         return ResponseEntity.badRequest()
-                .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
+            .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
       }
     }
 
@@ -249,13 +249,13 @@ public class UserController {
   // 회원 탈퇴
   @DeleteMapping("/users/delete")
   public ResponseEntity<ApiResponse<Void>> deleteUser(
-          @Valid @RequestBody UserWithdrawalDTO userWithdrawalDTO, BindingResult bindingResult) {
+      @Valid @RequestBody UserWithdrawalDTO userWithdrawalDTO, BindingResult bindingResult) {
     // 유효성 검사
     if (bindingResult.hasErrors()) {
       FieldError fieldError = bindingResult.getFieldError();
       if (fieldError != null) {
         return ResponseEntity.badRequest()
-                .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
+            .body(new ApiResponse<>(false, fieldError.getDefaultMessage()));
       }
     }
 

@@ -64,19 +64,11 @@ public class JwtTokenProvider {
   }
 
   public String getUsernameFromJwtToken(String token) {
-    return Jwts.parser()
-            .setSigningKey(key).
-            build()
-            .parseClaimsJws(token)
-            .getBody().getSubject();
+    return Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
   }
 
   public String getAuthoritiesFromJwtToken(String token) {
-    Claims claims = Jwts.parser()
-            .setSigningKey(key)
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+    Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
     return claims.get("roles", String.class);
   }
 
