@@ -6,16 +6,16 @@ plugins {
 }
 
 spotless {
-	java {
-		// 사용하지 않는 import 제거
-		removeUnusedImports()
-		// 구글 자바 포맷 적용
-		googleJavaFormat()
-		// 공백 제거
-		trimTrailingWhitespace()
-		// 끝부분 New Line 처리
-		endWithNewline()
-	}
+    java {
+        // 사용하지 않는 import 제거
+        removeUnusedImports()
+        // 구글 자바 포맷 적용
+        googleJavaFormat()
+        // 공백 제거
+        trimTrailingWhitespace()
+        // 끝부분 New Line 처리
+        endWithNewline()
+    }
 }
 
 group = 'com.ahi'
@@ -44,7 +44,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -59,8 +58,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 
-	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-
+	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 

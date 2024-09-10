@@ -6,13 +6,15 @@ import com.ahi.timecapsule.entity.Story;
 import com.ahi.timecapsule.exception.NotFoundException;
 import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import org.springframework.stereotype.Service;
+import java.util.Map;
 
 @Service
 public class ImageService {
@@ -23,6 +25,7 @@ public class ImageService {
     this.imageRepository = imageRepository;
     this.storyRepository = storyRepository;
   }
+
 
   public String encodeImageToBase64(String imagePath) throws IOException {
     System.out.println("저장된 이미지 주소: " + imagePath);
@@ -39,7 +42,10 @@ public class ImageService {
 
     Story story = storyRepository.findById(storyId).orElseThrow(NotFoundException::new);
     for (String addedImage : addedImages) {
-      Image image = Image.builder().story(story).url(addedImage).build();
+      Image image = Image.builder()
+              .story(story)
+              .url(addedImage)
+              .build();
       imageRepository.save(image);
     }
   }

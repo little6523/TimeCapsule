@@ -1,11 +1,14 @@
 package com.ahi.timecapsule.dto;
 
+import com.ahi.timecapsule.entity.Image;
 import com.ahi.timecapsule.entity.Story;
 import com.ahi.timecapsule.entity.StoryShare;
 import com.ahi.timecapsule.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +39,7 @@ public class UpdateStoryRequestDTO {
 
     List<StoryShare> storyShares =
         users.stream()
+    List<StoryShare> storyShares = users.stream()
             .map(user -> StoryShare.builder().story(existingStory).user(user).build())
             .toList();
 
@@ -43,6 +47,12 @@ public class UpdateStoryRequestDTO {
         this.title, this.content, this.isShared, storyShares
         //            images
         );
+            this.title,
+            this.content,
+            this.isShared,
+            storyShares
+//            images
+    );
 
     return existingStory;
   }

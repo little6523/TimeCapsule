@@ -10,18 +10,25 @@ import lombok.*;
 @Builder
 public class ImageDTO {
 
+  private Long id;
+
   private String url;
 
   private StoryDTO storyDTO;
 
   public Image toEntity() {
-    return Image.builder().story(storyDTO.toEntity()).url(url).build();
+    return Image.builder()
+            .story(storyDTO.toEntity())
+            .id(id)
+            .url(url)
+            .build();
   }
 
   public static ImageDTO fromEntity(Image image) {
     return ImageDTO.builder()
-        .storyDTO(StoryDTO.fromEntity(image.getStory()))
-        .url(image.getUrl())
-        .build();
+            .storyDTO(StoryDTO.fromEntity(image.getStory()))
+            .id(image.getId())
+            .url(image.getUrl())
+            .build();
   }
 }
