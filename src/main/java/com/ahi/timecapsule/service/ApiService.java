@@ -3,12 +3,11 @@ package com.ahi.timecapsule.service;
 import com.ahi.timecapsule.api.AlanAPI;
 import com.ahi.timecapsule.api.STTAPI;
 import com.ahi.timecapsule.dto.request.StoryOptionDTO;
+import java.io.IOException;
+import java.util.List;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.io.IOException;
-import java.util.List;
 
 @Service
 public class ApiService {
@@ -21,8 +20,8 @@ public class ApiService {
     this.sttAPI = sttAPI;
   }
 
-  public SseEmitter createContent(List<String> contents) {
-    return alanAPI.get(contents);
+  public SseEmitter createContent(List<String> contents, StoryOptionDTO storyOptionDTO) {
+    return alanAPI.get(contents, storyOptionDTO);
   }
 
   public void auth() throws Exception {

@@ -1,15 +1,6 @@
 package com.ahi.timecapsule.api;
 
-import com.ahi.timecapsule.dto.request.StoryOptionDTO;
 import com.ahi.timecapsule.util.FileUtil;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,6 +10,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 @Component
 public class STTAPI {
@@ -45,7 +43,8 @@ public class STTAPI {
 
   public STTAPI() throws Exception {
     this.JWTFilePath = Paths.get(System.getProperty("user.home"), "files", "JWT.txt").toString();
-    this.audioFilePath = Paths.get(System.getProperty("user.home"), "files") + "/sounds/recording.ogg";
+    this.audioFilePath =
+        Paths.get(System.getProperty("user.home"), "files") + "/sounds/recording.ogg";
 
     File file = new File(JWTFilePath);
     if (file.exists()) {

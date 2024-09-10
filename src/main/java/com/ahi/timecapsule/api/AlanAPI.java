@@ -1,5 +1,6 @@
 package com.ahi.timecapsule.api;
 
+import com.ahi.timecapsule.dto.request.StoryOptionDTO;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,19 +24,25 @@ public class AlanAPI {
   @Value("${Alan.API-KEY}")
   private String CLIENT_ID;
 
-  public AlanAPI() {
-
-  }
+  public AlanAPI() {}
 
   // ExecutorService 생성: 고정된 스레드 풀 사용
   private final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-  public SseEmitter get(List<String> contents) {
+  public SseEmitter get(List<String> contents, StoryOptionDTO storyOptionDTO) {
     SseEmitter emitter = new SseEmitter();
     StringBuilder content = new StringBuilder();
     for (String s : contents) {
       content.append(s);
     }
+
+    if (storyOptionDTO != null) {
+      content.append("사투리: ").append(storyOptionDTO.getDialect());
+      content.append("화자: ").append(storyOptionDTO.getSpeaker());
+      content.append("위 글의 내용을 해당 화자가 해당 사투리로 말하는 것처럼해서 하나의 스토리로 작성해줘. 변경한 내용의 글 이외에는 필요없어");
+    }
+
+    content.append("위 글의 내용을 하나의 스토리로 작성해줘. 변경한 내용의 글 이외에는 필요없어");
 
     webClient = WebClient.builder().baseUrl(ALAN_API_URL).build();
 

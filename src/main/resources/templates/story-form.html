@@ -16,16 +16,16 @@
 
 <main>
     <h1>스토리 생성</h1>
-    <form th:object="${StoryOptionDTO}" th:action="@{/stories/form}" method="post" id="upload-form"
+    <form th:action="@{/stories/form}" method="post" id="upload-form"
           enctype="multipart/form-data">
         <div class="create-story-container">
             <div id="upload-container">
                 <img th:src="@{/images/FileIcon.png}" alt="파일 아이콘" class="story-file-icon">
                 <p id="upload-text">
                     당신의 소중한 이야기와 추억을 여기에 담아주세요.<br>
-                    (인터뷰 파일 필수, 사진 파일 선택 사항)
+                    (인터뷰 파일 필수, 1개의 파일만 업로드 가능)
                 </p>
-                <input type="file" name="files" id="file-upload">
+                <input type="file" name="file" id="file-upload">
             </div>
             <div id="record">
                 <input type="button" id="record-button">
@@ -35,7 +35,7 @@
         <div class="story-submit-container">
             <div class="story-option-container">
                 사투리 설정
-                <select name="dialect">
+                <select id="dialect" name="dialect">
                     <option th:each="dialect : ${dialects}"
                             th:value="${dialect}"
                             th:text="${dialect}"
@@ -43,14 +43,15 @@
                 </select>
 
                 화자 설정
-                <select name="speaker">
+                <select id="speaker" name="speaker">
                     <option th:each="speaker : ${speakers}"
                             th:value="${speaker}"
                             th:text="${speaker}"
                             th:selected="${speaker == '선택 안함'}"></option>
                 </select>
             </div>
-            <button type="submit" class="create-story-button">스토리 생성</button>
+            <input type="hidden" id="userId">
+            <button type="submit" id="create-story-button" class="create-story-button">스토리 생성</button>
         </div>
     </form>
 </main>
@@ -58,5 +59,10 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/file-upload.js}"></script>
 <script th:src="@{/js/record.js}"></script>
+<script th:src="@{/js/story-config.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+<script>
+    document.getElementById('userId').value = userId;
+</script>
 </body>
 </html>

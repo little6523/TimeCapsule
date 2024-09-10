@@ -1,11 +1,10 @@
 package com.ahi.timecapsule.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "stories")
@@ -16,7 +15,7 @@ import java.util.List;
 public class Story {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
@@ -29,11 +28,13 @@ public class Story {
   @Column(nullable = false)
   private String content;
 
-  @Column
-  private LocalDateTime createdAt;
+  private String dialect;
 
-  @Column
-  private LocalDateTime updatedAt;
+  private String speaker;
+
+  @Column private LocalDateTime createdAt;
+
+  @Column private LocalDateTime updatedAt;
 
   @Column(nullable = false)
   private String soundFile;
