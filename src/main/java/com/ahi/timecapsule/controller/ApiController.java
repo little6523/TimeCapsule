@@ -21,22 +21,25 @@ public class ApiController {
     this.apiService = apiService;
   }
 
-//  @PostMapping("/story")
-//  public ResponseEntity<Void> postStoryOptionDTO(@ModelAttribute StoryOptionDTO storyOptionDTO) {
-//    this.storyOptionDTO = storyOptionDTO;
-//
-//    return ResponseEntity.status(201).build();
-//  }
+  @PostMapping("/story")
+  public ResponseEntity<Void> postStoryOptionDTO(@RequestBody StoryOptionDTO storyOptionDTO) {
+    this.storyOptionDTO = storyOptionDTO;
+    System.out.println(storyOptionDTO.getDialect());
+    System.out.println(storyOptionDTO.getSpeaker());
+
+    return ResponseEntity.status(201).build();
+  }
 
   @GetMapping(path = "/story", produces = "text/event-stream")
-  public ResponseEntity<SseEmitter> createStory() throws IOException, ParseException, InterruptedException {
+  public ResponseEntity<SseEmitter> createStory()
+      throws IOException, ParseException, InterruptedException {
     apiService.post();
 
     List<String> contents = apiService.get();
 
     System.out.println(contents.get(0));
 
-    return ResponseEntity.ok(apiService.createContent(contents));
+    return ResponseEntity.ok(apiService.createContent(contents, storyOptionDTO));
   }
 
   @GetMapping("/stt/auth")
