@@ -39,8 +39,6 @@ public class StoryDTO {
         .content(content)
         .dialect(dialect)
         .speaker(speaker)
-        .createdAt(createdAt)
-        .updatedAt(updatedAt)
         .soundFile(soundFile)
         .isShared(isShared)
         .build();

@@ -13,36 +13,60 @@ const sharedListInput = document.getElementById('sharedList');
 shareSearchButton.addEventListener('click', function () {
     if (shareSearchButton.innerText === '검색') {
         shareModal.style.display = 'flex';
-        shareSearchButton.innerText = '확인'
 
-        document.getElementById('keyword').innerText = sharedListInput.value;
+        document.getElementById('keyword').innerText
+            = "검색한 키워드: " + sharedListInput.value;
         console.log(sharedListInput.innerText);
     } else {
         shareModal.style.display = 'none';
-        shareSearchButton.innerText = '검색'
         shareButton.style.display = 'none';
     }
 });
 
-let hoveredUser = null;
+shareSearchButton.addEventListener('click', function () {
+    const keyword = document.getElementById('sharedList').value;
+    const searchedList = document.getElementById('searchedList');
 
-// 모든 searchedUser에 마우스 오버 이벤트 추가
-const searchedUsers = document.querySelectorAll('.searchedUser');
-searchedUsers.forEach(function (searchedUser) {
-    searchedUser.addEventListener('mouseover', function() {
-        // 마우스가 오버된 searchedUser의 좌표를 계산
-        const searchedUserRect = searchedUser.getBoundingClientRect();
-        const absoluteTop = searchedUserRect.top - shareModal.getBoundingClientRect().top - 41;
-        const absoluteLeft = searchedUserRect.left - shareModal.getBoundingClientRect().left + 10;
+    // 이전 검색 결과를 비우기
+    searchedList.innerHTML = '';
 
-        // 공유 버튼 위치 업데이트
-        shareButton.style.display = 'block';
-        shareButton.style.top = `${absoluteTop}px`;
-        shareButton.style.left = `${absoluteLeft}px`;
+    // AJAX 요청을 통해 검색된 결과 가져오기
+    fetch(`http://localhost:8080/stories/search?keyword=${keyword}`)
+        .then(response => response.json())
+        .then(users => {
+            console.log(users); // 응답 데이터 형식 확인
 
-        // 현재 마우스 오버된 요소를 저장
-        hoveredUser = searchedUser;
-    });
+            // 검색된 유저 목록을 배열로 처리
+            if (Array.isArray(users)) {
+                users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('searchedUser');
+                    userDiv.textContent = user.nickname;  // 검색된 닉네임을 추가
+
+                    // searchedList에 div 추가
+                    searchedList.appendChild(userDiv);
+
+                    // 여기서 마우스 오버 이벤트 추가
+                    userDiv.addEventListener('mouseover', function () {
+                        // 마우스가 오버된 searchedUser의 좌표를 계산
+                        const searchedUserRect = userDiv.getBoundingClientRect();
+                        const absoluteTop = searchedUserRect.top - shareModal.getBoundingClientRect().top - 41;
+                        const absoluteLeft = searchedUserRect.left - shareModal.getBoundingClientRect().left + 10;
+
+                        // 공유 버튼 위치 업데이트
+                        shareButton.style.display = 'block';
+                        shareButton.style.top = `${absoluteTop}px`;
+                        shareButton.style.left = `${absoluteLeft}px`;
+
+                        // 현재 마우스 오버된 요소를 저장
+                        hoveredUser = userDiv;
+                    });
+                });
+            } else {
+                console.error('응답이 배열 형식이 아닙니다.', users);
+            }
+        })
+        .catch(error => console.error('Error:', error));
 });
 
 const modalSharedList = document.getElementById('modalSharedList');

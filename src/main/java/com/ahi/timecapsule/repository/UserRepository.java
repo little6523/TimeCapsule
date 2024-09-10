@@ -1,6 +1,8 @@
 package com.ahi.timecapsule.repository;
 
 import com.ahi.timecapsule.entity.User;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, String> {
   boolean existsByNickname(final String nickname);
 
   Optional<User> findByUserIdAndEmail(String id, String email);
+
+  List<User> findByNicknameContaining(String keyword);
 }

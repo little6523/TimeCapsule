@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 public class StoryContentDTO {
 
-  private Long userId;
+  private String userId;
 
   private String title;
 
