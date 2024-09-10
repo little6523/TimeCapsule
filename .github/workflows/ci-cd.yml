@@ -3,7 +3,8 @@ name: Java CI/CD with Gradle
 # 동작 조건 설정 : main 브랜치에 push 가 발생할 경우 동작
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 permissions:
   contents: read
