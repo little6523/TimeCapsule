@@ -9,11 +9,6 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/story-detail.css}">
-
-    <style>
-
-
-    </style>
 </head>
 
 <body>
@@ -22,20 +17,23 @@
 <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
 <main>
-    <h1 th:unless="${currentURI.contains('/stories/shared')}">마이 스토리</h1>
+    <h1 th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}">마이 스토리</h1>
     <h1 th:if="${currentURI.contains('/stories/shared')}" th:text="${story.author.nickname + '의 스토리'}"></h1>
+    <h1 th:if="${currentURI.contains('/community')}">커뮤니티</h1>
 
     <article>
         <div class="story-header">
             <div class="story-metadata">
                 <h2 th:text="${story.title}">스토리 제목</h2>
-                <p>작성일 | <span th:text="${#temporals.format(story.createdAt, 'yyyy.MM.dd')}">YYYY.MM.DD</span></p>
-                <p th:unless="${currentURI.contains('/stories/shared')}">공유자 |
+                <p> <span th:text="${story.getAuthor().nickname}">작성자</span> |
+                    <span th:text="${#temporals.format(story.createdAt, 'yyyy.MM.dd')}">YYYY.MM.DD</span> |
+                    <span th:text="${story.isShared() ? '공개' : '비공개'}"></span>
+                </p>
+                <p th:th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}">공유자 |
                     <span th:each="shared, iterStat : ${story.sharedStories}">
-                        <span th:text="${shared.sharedWithUser.nickname}"></span><span th:if="${!iterStat.last}">,</span>
+                        <span th:text="${shared.userDTO.nickname}"></span><span th:if="${!iterStat.last}">,</span>
                     </span>
                 </p>
-                <p>커뮤니티 | <span th:text="${story.isShared() ? '공개' : '비공개'}"></span></p>
             </div>
 
             <div th:unless="${currentURI.contains('/stories/shared')}" class="download-buttons">
@@ -51,8 +49,8 @@
         <hr>
 
         <div class="story-images">
-            <div th:each="image : ${story.images}">
-                <img th:src="@{${image.url}}" alt="첨부된 이미지">
+            <div th:each="image : ${images}">
+                <img th:if="${!image.isEmpty()}" class="icon-img" th:src="'data:image;base64,'+${image}" alt="첨부된 이미지">
             </div>
         </div>
 
@@ -61,13 +59,14 @@
         </div>
 
         <div th:unless="${currentURI.contains('/stories/shared')}" class="story-buttons">
-            <button class="back-btn" onclick="history.back()">목록</button>
-            <button class="edit-btn" th:data-url="@{/stories/{id}/edit(id=${story.id})}" onclick="location.href=this.getAttribute('data-url')">수정</button>
+            <button class="back-btn" onclick=goToStoryList()>목록</button>
+            <button class="edit-btn" th:data-url="@{/stories/{id}/edit(id=${story.id})}"
+                    onclick="location.href=this.getAttribute('data-url')">수정</button>
             <button class="delete-btn" id="deleteBtn">삭제</button>
         </div>
 
         <div th:if="${currentURI.contains('/stories/shared')}" class="shared-version-btn">
-            <button class="back-btn" onclick="history.back()">목록</button>
+            <button class="back-btn" onclick=goToStoryList()>목록</button>
         </div>
     </article>
 
@@ -109,6 +108,7 @@
                 })
                 .catch(error => {
                     console.error('Error: ', error);
+                    alert("삭제에 실패했습니다. 다시 시도해주세요.");
                 });
         }
     });
@@ -118,6 +118,18 @@
         modal.style.display = "none";
         window.location.href = "/stories";
     });
+
+    // 페이지 번호를 유지한 스토리 목록 페이지로 이동하는 함수
+    function goToStoryList() {
+        const pageNumber = sessionStorage.getItem('currentPage') || 1;
+        const currentPath = window.location.pathname;
+
+        if (currentPath.startsWith('/community/stories')) {
+            window.location.href = `/community/stories?page=${pageNumber}`;
+        } else {
+            window.location.href = `/stories?page=${pageNumber}`;
+        }
+    }
 </script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.ahi.timecapsule.dto;
 
+import com.ahi.timecapsule.entity.Image;
 import com.ahi.timecapsule.entity.Story;
 import lombok.*;
 
@@ -11,15 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class FindStoryResponseDTO {
-  private int id;
+  private Long id;
   private String title;
   private String content;
   private LocalDateTime createdAt;
   private String soundFile;
   private boolean isShared;
   private StoryUserResponseDTO author;
-  private List<FindImageResponseDTO> images;
-  private List<FindSharedResponseDTO> sharedStories;
+  private List<ImageDTO> images;
+  private List<StoryShareDTO> sharedStories;
 
   // Entity -> DTO 변환 메서드
   public static FindStoryResponseDTO fromEntity(Story story) {
@@ -32,10 +33,10 @@ public class FindStoryResponseDTO {
             .isShared(story.isShared())
             .author(StoryUserResponseDTO.fromEntity(story.getUser()))
             .images(story.getImages().stream()
-                    .map(FindImageResponseDTO::fromEntity)
+                    .map(ImageDTO::fromEntity)
                     .toList())
             .sharedStories(story.getStoryShares().stream()
-                    .map(FindSharedResponseDTO::fromEntity)
+                    .map(StoryShareDTO::fromEntity)
                     .toList())
             .build();
   }

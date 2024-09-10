@@ -8,213 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/story-detail.css}">
-
-    <style>
-        .edit-container {
-            width: 80%;
-            min-height: 300px;
-            margin: 0 auto 30px auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            box-sizing: border-box;
-
-        }
-
-        .visually-hidden {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            margin: -1px;
-            padding: 0;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        .form-group {
-            width: 100%;
-            height: 35px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            border: none;
-        }
-
-        .form-group label {
-            font-size: 14px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .form-group label:not(.switch) {
-            min-width: 60px;
-        }
-
-        .form-group input {
-            width: 100%;
-            height: 100%;
-            font-size: 16px;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        .form-group.content-group {
-            height: auto;
-        }
-
-        .tag {
-            display: flex;
-            align-items: center;
-            background-color: #EAE1E1;
-            border-radius: 20px;
-            padding: 3px 10px;
-            font-size: 14px;
-            color: #333;
-            margin-right: 5px;
-            white-space: nowrap;
-        }
-
-        .tag i {
-            margin-left: 8px;
-            cursor: pointer;
-        }
-
-        .tag-input-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            width: 100%;
-            height: 100%;
-            border: 1px solid #ccc;
-            padding: 0 5px;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        .tag-input {
-            border: none;
-            outline: none;
-            flex-grow: 1;
-            font-size: 16px;
-            padding: 5px;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 35px;
-            height: 18px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 12px;
-            width: 12px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #E5C1C1;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(15px);
-        }
-
-        .hidden-file-input {
-            display: none;
-        }
-
-        .image-upload-container {
-            display: flex;
-            height: 35px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .upload-btn {
-            display: flex;
-            align-items: center;
-            border: none;
-            border-radius: 4px;
-            padding: 4px;
-            cursor: pointer;
-            white-space: nowrap;
-            width: auto;
-        }
-
-        .upload-btn img {
-            height: 15px;
-            margin-right: 5px;
-        }
-
-        .upload-btn:hover {
-            filter: brightness(0.8);
-        }
-
-        .content {
-            width: 100%;
-            height: 300px;
-            resize: none;
-            overflow-y: auto;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 5px;
-        }
-
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-
-        .btn-container button {
-            padding: 8px 16px;
-            color: black;
-            border-radius: 4px;
-            border: none;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 110px;
-            background-color: #E7DEDE;
-        }
-
-        .btn-container button:hover {
-            filter: brightness(0.8);
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/story-update.css}">
 </head>
 
 <body>
@@ -226,18 +20,6 @@
     <h1>마이 스토리</h1>
 
     <div class="edit-container">
-        <div class="form-group">
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" style="border: 1px solid #ccc;" th:value="${story.title}"
-                   placeholder="제목을 입력하세요.">
-        </div>
-
-        <div class="form-group">
-            <label for="sharedList">공유자</label>
-            <div class="tag-input-container">
-                <input type="text" id="sharedList" class="tag-input">
-            </div>
-        </div>
 
         <div style="display: flex; justify-content: space-between">
             <div class="form-group">
@@ -256,9 +38,22 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="title" class="hidden-file-input">제목</label>
+            <input type="text" id="title" name="title" style="border: 1px solid #ccc;" th:value="${story.title}"
+                   placeholder="제목을 입력하세요.">
+        </div>
+
         <div class="form-group content-group">
             <label for="content" class="visually-hidden">내용</label>
             <div id="content" name="content" contenteditable="true" class="content"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="sharedList">공유자</label>
+            <div class="tag-input-container">
+                <input type="text" id="sharedList" class="tag-input">
+            </div>
         </div>
 
         <div class="btn-container">
@@ -273,6 +68,7 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
+        const currentUser = /*[[${story.getAuthor().nickname}]]*/ ''; // 본인 ID
 
         // 공유자 ID를 태그 형태로 추가 및 삭제
         const tagInputContainer = document.querySelector('.tag-input-container');
@@ -282,6 +78,14 @@
             if (e.key === 'Enter' && tagInput.value.trim() !== '') {
                 e.preventDefault();
                 const newSharedUser = tagInput.value.trim();
+
+                // 본인 ID와 동일한 공유자 ID일 경우
+                if(newSharedUser === currentUser) {
+                    alert('본인에게는 공유할 수 없습니다.');
+                    tagInput.value = '';
+                    return;
+                }
+
                 addTag(newSharedUser);
                 // 새로운 공유자를 sharedList에 추가
                 sharedList.push(newSharedUser);
@@ -310,8 +114,8 @@
         // 기존 공유자 리스트를 태그 형태로 출력
         const existingSharedList = /*[[${story.sharedStories}]]*/ [];
         existingSharedList.forEach(function (shared) {
-            addTag(shared.sharedWithUser.id);
-            sharedList.push(shared.sharedWithUser.id); // sharedList 배열에 추가
+            addTag(shared.userDTO.nickname);
+            sharedList.push(shared.userDTO.nickname); // sharedList 배열에 추가
         });
 
 
@@ -320,15 +124,15 @@
         const uploadBtn = document.getElementById('uploadBtn');
 
         // 기존 이미지, 콘텐츠 로드
-        const existingImages = /*[[${story.images}]]*/ [];
+        const existingImages = /*[[${images}]]*/ {};
         const content = /*[[${story.content}]]*/ '';
-        const images = [];
+        const deletedImages = [];
 
         let beforeEditContent = `<p>${content}</p>`;
 
-        existingImages.forEach(function (image) {
-            insertImage(image.url);
-            images.push(image.url);
+        Object.entries(existingImages).forEach(([key, value]) => {
+            insertImage(value, true);
+            console.log(`Key: ${key}, Value: ${value}`);
         });
 
         contentEditableDiv.innerHTML += beforeEditContent;
@@ -343,37 +147,46 @@
             const files = Array.from(imageUploadInput.files);
 
             files.forEach(file => {
-                const formData = new FormData();
-                formData.append('image', file);
-
-                // Data Url -> 상대 경로
-                fetch('/upload-image', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.text())
-                    .then(relativeUrl => {
-                        images.push(relativeUrl);
-                        insertImage(relativeUrl);
-                    })
-                    .catch(error => console.error('파일 업로드 중 오류 발생: ', error));
-            });
+                const reader = new FileReader();
+                reader.onload = e => insertImage(e.target.result, false);
+                reader.readAsDataURL(file);
+            })
         });
 
-        // 이미지 및 삭제 버튼 삽입 함수
-        function insertImage(src) {
-            const imageContainer = document.createElement('div');
-            imageContainer.style.position = 'relative';
-            imageContainer.style.display = 'inline-block';
-            imageContainer.style.marginBottom = '10px';
+        // 페이지 로드 시 기존 이미지에 삭제 버튼 추가
+        window.onload = function() {
+            const images = contentEditableDiv.querySelectorAll('img');
+            images.forEach(function(img) {
+                const imageContainer = img.parentElement;
 
-            const img = document.createElement('img');
-            img.src = src;
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '400px';
-            img.style.display = 'block';
-            imageContainer.appendChild(img);
+                // 기존 이미지 삭제 버튼 추가
+                const removeButton = createRemoveButton(); // 아래에 removeButton 생성 함수
+                imageContainer.appendChild(removeButton);
 
+                // 삭제 버튼 클릭 이벤트 등록
+                removeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    contentEditableDiv.removeChild(imageContainer); // 이미지 컨테이너 제거
+                    const imgSrc = img.src; // 이미지의 src 값 가져오기
+                    const key = findKeyByValue(existingImages, imgSrc.substring(18));
+                    console.log(existingImages);
+                    console.log(key);
+                    deletedImages.push(key);
+                });
+            });
+        };
+
+        function findKeyByValue(obj, value) {
+            const values = Object.values(obj);  // 객체의 값 배열
+            const index = values.indexOf(value);  // 값의 인덱스 찾기
+            if (index !== -1) {
+                return Object.keys(obj)[index];  // 인덱스를 기반으로 키 반환
+            }
+            return null;
+        }
+
+// 이미지 삭제 버튼 생성 함수
+        function createRemoveButton() {
             const removeButton = document.createElement('button');
             removeButton.className = 'remove-button';
             removeButton.style.position = 'absolute';
@@ -392,30 +205,38 @@
             removeIcon.style.opacity = '1';
 
             removeButton.appendChild(removeIcon);
+
+            return removeButton;
+        }
+
+        function insertImage(src, isExisted) {
+            const imageContainer = document.createElement('div');
+            imageContainer.style.position = 'relative';
+            imageContainer.style.display = 'inline-block';
+            imageContainer.style.marginBottom = '10px';
+
+            const img = document.createElement('img');
+            if(isExisted) {
+                img.src = `data:image;base64,${src}`;
+            } else {
+                img.src = src;
+            }
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '400px';
+            img.style.display = 'block';
+            imageContainer.appendChild(img);
+
+            const removeButton = createRemoveButton();
             imageContainer.appendChild(removeButton);
 
             contentEditableDiv.appendChild(imageContainer);
+
+            removeButton.addEventListener('click', function(e) {
+                contentEditableDiv.removeChild(imageContainer);
+            });
         }
 
-        // 절대 경로 -> 상대 경로
-        function getRelativePath(absoluteUrl) {
-            const url = new URL(absoluteUrl, window.location.origin);
-            return url.pathname + url.search + url.hash;
-        }
-
-        contentEditableDiv.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-button')) {
-                // 삭제 버튼 클릭 이벤트 감지
-                const imageContainer = e.target.closest('div');
-                const imgElement = imageContainer.querySelector('img').src;
-                const imgSrc = getRelativePath(imgElement);
-                const index = images.findIndex(image => image === imgSrc);
-                if (index > -1) {
-                    images.splice(index, 1);
-                }
-                imageContainer.remove();
-            }
-        });
+        console.log(sharedList);
 
         // 폼 데이터를 PUT 요청으로 서버로 전송
         window.submitForm = function () {
@@ -423,31 +244,61 @@
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').innerText;
             const isCommunityPost = document.getElementById('communityToggle').checked;
+            const files = imageUploadInput.files;
 
-            const storyData = {
-                title: title,
-                content: content,
-                images: images,
-                sharedWithUsers: sharedList,
-                isShared: true,
-            };
+            // 제목을 입력하지 않을 시 오류 발생
+            if (!title || title.trim() === "") {
+                alert("제목을 입력해 주세요.");
+                return;
+            }
+
+            // 수정 요청할 데이터 추가
+            const formData = new FormData();
+            formData.append("storyId", storyId);
+            formData.append("title", title);
+            formData.append("content", content);
+            formData.append("isShared", isCommunityPost);
+
+            if (sharedList.length > 0) {
+                sharedList.forEach(sharedUser => {
+                    formData.append('sharedWithUsers', sharedUser);
+                });
+            } else {
+                formData.append('sharedWithUsers', []);
+            }
+
+            if (deletedImages.length > 0) {
+                deletedImages.forEach(image => {
+                    formData.append('deletedImages', image);
+                });
+            } else {
+                formData.append('deletedImages', []);
+            }
+
+            if (files.length > 0) {
+                Array.from(files).forEach(file => {
+                    formData.append('images', file);
+                });
+            } else {
+                formData.append('images', new Blob());
+            }
 
             fetch(`/stories/${storyId}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(storyData)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert('스토리가 성공적으로 수정되었습니다.');
-                        window.location.href = `/stories/${storyId}`;
-                    } else {
-                        alert('스토리 수정에 실패했습니다. 다시 시도해주세요.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                body: formData
+            }).then(async response => {
+                const message = await response.text();
+                if (response.ok) {
+                    alert(message);
+                    window.location.href = `/stories/${storyId}`;
+                } else {
+                    alert(message);
+                    console.log(message);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('스토리 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+            });
         };
     });
 </script>
