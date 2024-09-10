@@ -60,17 +60,17 @@ public class StoryController {
     return "test";
   }
 
-  @ResponseBody
-  @GetMapping(path = "/story", produces = "text/event-stream")
-  public ResponseEntity<SseEmitter> createStory() throws IOException, ParseException, InterruptedException {
-    apiService.post();
-
-    List<String> contents = apiService.get();
-
-    System.out.println(contents.get(0));
-
-    return ResponseEntity.ok(apiService.createContent(contents));
-  }
+//  @ResponseBody
+//  @GetMapping(path = "/story", produces = "text/event-stream")
+//  public ResponseEntity<SseEmitter> createStory() throws IOException, ParseException, InterruptedException {
+//    apiService.post();
+//
+//    List<String> contents = apiService.get();
+//
+//    System.out.println(contents.get(0));
+//
+//    return ResponseEntity.ok(apiService.createContent(contents));
+//  }
 
   @ResponseBody
   @GetMapping("/stt/auth")
