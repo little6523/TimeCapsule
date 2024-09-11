@@ -9,12 +9,12 @@ public class AuthorityUtils {
   public static List<GrantedAuthority> convertRolesToAuthorities(int role) {
     // 예: 숫자 1은 ROLE_USER, 2는 ROLE_ADMIN으로 매핑
     String roleName =
-            switch (role) {
-              case 1 -> "ROLE_USER";
-              case 2 -> "ROLE_ADMIN";
-              // 필요한 다른 권한 추가 가능
-              default -> throw new IllegalArgumentException("잘못된 권한 값: " + role);
-            };
+        switch (role) {
+          case 1 -> "ROLE_USER";
+          case 2 -> "ROLE_ADMIN";
+            // 필요한 다른 권한 추가 가능
+          default -> throw new IllegalArgumentException("잘못된 권한 값: " + role);
+        };
     return List.of(new SimpleGrantedAuthority(roleName));
   }
 }

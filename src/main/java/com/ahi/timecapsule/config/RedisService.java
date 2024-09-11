@@ -50,8 +50,8 @@ public class RedisService {
     // 토큰 만료 시간을 기준으로 블랙리스트에 저장
     long expiration = jwtTokenProvider.getExpiration(accessToken);
     redisTemplate
-            .opsForValue()
-            .set("blacklist:" + accessToken, "true", Duration.ofMillis(expiration));
+        .opsForValue()
+        .set("blacklist:" + accessToken, "true", Duration.ofMillis(expiration));
   }
 
   // Access Token이 블랙리스트에 있는지 확인
@@ -61,7 +61,7 @@ public class RedisService {
 
   // 일회성 코드의 key로  OAuth2 사용자 정보와 제공자 정보를 Redis에 저장
   public void saveOneTimeCode(
-          String oneTimeCode, CustomOAuth2User oAuth2User, String provider, long expirationTime) {
+      String oneTimeCode, CustomOAuth2User oAuth2User, String provider, long expirationTime) {
     try {
       Map<String, Object> userMap = new HashMap<>();
       userMap.put("provider", provider);
@@ -69,8 +69,8 @@ public class RedisService {
 
       String userJson = objectMapper.writeValueAsString(userMap);
       redisTemplate
-              .opsForValue()
-              .set("OTC:" + oneTimeCode, userJson, expirationTime, TimeUnit.SECONDS);
+          .opsForValue()
+          .set("OTC:" + oneTimeCode, userJson, expirationTime, TimeUnit.SECONDS);
     } catch (JsonProcessingException e) {
       throw new RuntimeException("Failed to serialize CustomOAuth2User", e);
     }

@@ -19,15 +19,15 @@ public class UserDTO {
 
   public static UserDTO fromEntity(User user) {
     return UserDTO.builder()
-            .userId(user.getUserId())
-            .email(user.getEmail())
-            .nickname(user.getNickname())
-            .password(user.getPassword())
-            .role(user.getRole())
-            .createdAt(user.getCreatedAt())
-            .updatedAt(user.getUpdatedAt())
-            .provider(user.getProvider()) // 추가
-            .build();
+        .userId(user.getUserId())
+        .email(user.getEmail())
+        .nickname(user.getNickname())
+        .password(user.getPassword())
+        .role(user.getRole())
+        .createdAt(user.getCreatedAt())
+        .updatedAt(user.getUpdatedAt())
+        .provider(user.getProvider()) // 추가
+        .build();
   }
 
   public User toEntity() {

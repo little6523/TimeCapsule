@@ -32,37 +32,37 @@ public class JwtTokenProvider {
   private Key getSigningKey() {
     byte[] keyBytes = Base64.getDecoder().decode(key); // Base64 인코딩된 키를 디코딩
     return new SecretKeySpec(
-            keyBytes, SignatureAlgorithm.HS512.getJcaName()); // HS512 알고리즘을 위한 키 생성
+        keyBytes, SignatureAlgorithm.HS512.getJcaName()); // HS512 알고리즘을 위한 키 생성
   }
 
   public String generateAccessToken(Authentication authentication) {
     User userPrincipal = (User) authentication.getPrincipal();
 
     String authorities =
-            authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.joining(","));
+        authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
 
     return Jwts.builder()
-            .setSubject(userPrincipal.getUsername())
-            .claim("roles", authorities) // 권한 정보 포함
-            .setIssuedAt(new Date())
-            .setExpiration(new Date((new Date()).getTime() + accessTokenExpirationMs))
-            .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-            //                .signWith(jwtSecret)
-            .compact();
+        .setSubject(userPrincipal.getUsername())
+        .claim("roles", authorities) // 권한 정보 포함
+        .setIssuedAt(new Date())
+        .setExpiration(new Date((new Date()).getTime() + accessTokenExpirationMs))
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        //                .signWith(jwtSecret)
+        .compact();
   }
 
   public String generateRefreshToken(Authentication authentication) {
     User userPrincipal = (User) authentication.getPrincipal();
 
     return Jwts.builder()
-            .setSubject(userPrincipal.getUsername())
-            .setIssuedAt(new Date())
-            .setExpiration(
-                    new Date((new Date()).getTime() + refreshTokenExpirationMs)) // Refresh Token 유효 기간
-            .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-            .compact();
+        .setSubject(userPrincipal.getUsername())
+        .setIssuedAt(new Date())
+        .setExpiration(
+            new Date((new Date()).getTime() + refreshTokenExpirationMs)) // Refresh Token 유효 기간
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        .compact();
   }
 
   public String getUsernameFromJwtToken(String token) {
@@ -107,26 +107,26 @@ public class JwtTokenProvider {
   // OAuth2.0 로그인 시 AccessToken 생성
   public String generateOAuth2AccessToken(CustomOAuth2User oAuth2User) {
     String authorities =
-            oAuth2User.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.joining(","));
+        oAuth2User.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
 
     return Jwts.builder()
-            .setSubject(oAuth2User.getId())
-            .claim("roles", authorities)
-            .setIssuedAt(new Date())
-            .setExpiration(new Date((new Date()).getTime() + accessTokenExpirationMs))
-            .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-            .compact();
+        .setSubject(oAuth2User.getId())
+        .claim("roles", authorities)
+        .setIssuedAt(new Date())
+        .setExpiration(new Date((new Date()).getTime() + accessTokenExpirationMs))
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        .compact();
   }
 
   // OAuth2.0 로그인 시 RefreshToken 생성
   public String generateOAuth2RefreshToken(CustomOAuth2User oAuth2User) {
     return Jwts.builder()
-            .setSubject(oAuth2User.getId())
-            .setIssuedAt(new Date())
-            .setExpiration(new Date((new Date()).getTime() + refreshTokenExpirationMs))
-            .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-            .compact();
+        .setSubject(oAuth2User.getId())
+        .setIssuedAt(new Date())
+        .setExpiration(new Date((new Date()).getTime() + refreshTokenExpirationMs))
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        .compact();
   }
 }

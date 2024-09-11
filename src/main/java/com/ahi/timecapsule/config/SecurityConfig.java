@@ -37,49 +37,49 @@ public class SecurityConfig {
     //        http.formLogin(cnf ->
     // cnf.loginPage("/login").usernameParameter("userId").passwordParameter("password").permitAll());
     http.csrf(csrf -> csrf.disable()) // CSRF 비활성화
-            .exceptionHandling(
-                    exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler)) // 예외 처리 설정
-            .sessionManagement(
-                    session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안함
-            .authorizeHttpRequests(
-                    authorize ->
-                            authorize
-                                    .requestMatchers(
-                                            "/login",
-                                            "/signUpPage",
-                                            "/signUp",
-                                            "/api/users/**",
-                                            "/users/**",
-                                            "/valid-token",
-                                            "/oauth/login")
-                                    .permitAll() // 특정 경로 허용
-                                    .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**")
-                                    .permitAll()
-                                    .anyRequest()
-                                    .permitAll() // 나머지 요청 전부 허용
+        .exceptionHandling(
+            exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler)) // 예외 처리 설정
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안함
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers(
+                        "/login",
+                        "/signUpPage",
+                        "/signUp",
+                        "/api/users/**",
+                        "/users/**",
+                        "/valid-token",
+                        "/oauth/login")
+                    .permitAll() // 특정 경로 허용
+                    .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**")
+                    .permitAll()
+                    .anyRequest()
+                    .permitAll() // 나머지 요청 전부 허용
             )
-            .oauth2Login(
-                    oauth2Login ->
-                            oauth2Login
-                                    .loginPage("/login")
-                                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                                    .successHandler(customOAuth2SuccessHandler)
-                                    .failureHandler(customOAuth2FailureHandler))
-            .addFilterBefore(
-                    jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
+        .oauth2Login(
+            oauth2Login ->
+                oauth2Login
+                    .loginPage("/login")
+                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                    .successHandler(customOAuth2SuccessHandler)
+                    .failureHandler(customOAuth2FailureHandler))
+        .addFilterBefore(
+            jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
     http.headers(
-            headers ->
-                    headers
-                            .addHeaderWriter(
-                                    new StaticHeadersWriter(
-                                            "X-XSS-Protection", "1; mode=block")) // XSS 필터 활성화 및 차단 모드 설정
-                            //                .addHeaderWriter(new
-                            // StaticHeadersWriter("Content-Security-Policy", "default-src 'self'; script-src
-                            // 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri
-                            // 'self';")) // CSP 설정
-                            .addHeaderWriter(
-                                    new StaticHeadersWriter("X-Content-Type-Options", "nosniff")) // MIME 타입 스니핑 방지
-    );
+        headers ->
+            headers
+                .addHeaderWriter(
+                    new StaticHeadersWriter(
+                        "X-XSS-Protection", "1; mode=block")) // XSS 필터 활성화 및 차단 모드 설정
+                //                .addHeaderWriter(new
+                // StaticHeadersWriter("Content-Security-Policy", "default-src 'self'; script-src
+                // 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri
+                // 'self';")) // CSP 설정
+                .addHeaderWriter(
+                    new StaticHeadersWriter("X-Content-Type-Options", "nosniff")) // MIME 타입 스니핑 방지
+        );
     return http.build();
   }
 
@@ -93,7 +93,7 @@ public class SecurityConfig {
 
   @Bean
   public AuthenticationManager authenticationManager(
-          AuthenticationConfiguration authenticationConfiguration) throws Exception {
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
     return authenticationConfiguration.getAuthenticationManager();
   }
 }
