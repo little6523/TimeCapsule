@@ -1,4 +1,4 @@
-const isLoggedIn = localStorage.getItem('jwtToken');
+const isLoggedIn = sessionStorage.getItem('jwtToken');
 
 if(!isLoggedIn) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -22,7 +22,7 @@ if(!isLoggedIn) {
             .then(data => {
                 if (data.accessToken) {
                     // 액세스 토큰을 로컬 스토리지에 저장
-                    localStorage.setItem('jwtToken', data.accessToken);
+                    sessionStorage.setItem('jwtToken', data.accessToken);
 
                     // 메인 페이지로 리다이렉트
                     window.location.href = '/main';

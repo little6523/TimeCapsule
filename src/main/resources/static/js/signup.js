@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('jwtToken');
+    const token = sessionStorage.getItem('jwtToken');
     if (token) {
         showError("이미 로그인 되어있습니다!");
         history.back();

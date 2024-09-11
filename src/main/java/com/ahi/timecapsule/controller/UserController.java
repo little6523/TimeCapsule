@@ -112,7 +112,7 @@ public class UserController {
         authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
             ? authorizationHeader.substring(7)
             : null;
-    System.out.println("accessToken " + accessToken);
+
     if (accessToken == null) {
       throw new RuntimeException("Access Token이 제공되지 않았습니다.");
     }
@@ -127,7 +127,7 @@ public class UserController {
     String validAccessToken = userService.validateAndRefreshAccessToken(accessToken, refreshToken);
     String role = jwtTokenProvider.getAuthoritiesFromJwtToken(validAccessToken);
 
-    if (role.contains("ROLE_USER")) {
+    if (role.contains("ROLE_USER") || role.contains("ROLE_ADMIN")) {
       // 유효한 Access Token으로 사용자 정보 추출
       response.addHeader("X-User-Id", username); // 사용자 정보 추가
       response.addHeader(
