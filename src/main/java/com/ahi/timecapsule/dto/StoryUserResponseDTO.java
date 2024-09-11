@@ -13,9 +13,6 @@ public class StoryUserResponseDTO {
 
   // Entity -> DTO 변환 메서드
   public static StoryUserResponseDTO fromEntity(User user) {
-    return StoryUserResponseDTO.builder()
-            .id(user.getId())
-            .nickname(user.getNickname())
-            .build();
+    return StoryUserResponseDTO.builder().id(user.getUserId()).nickname(user.getNickname()).build();
   }
 }

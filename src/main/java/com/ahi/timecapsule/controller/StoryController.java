@@ -1,5 +1,7 @@
 package com.ahi.timecapsule.controller;
 
+import com.ahi.timecapsule.dto.FindStoryResponseDTO;
+import com.ahi.timecapsule.dto.ImageDTO;
 import com.ahi.timecapsule.dto.UpdateStoryRequestDTO;
 import com.ahi.timecapsule.dto.request.StoryContentDTO;
 import com.ahi.timecapsule.dto.request.StoryOptionDTO;
@@ -9,10 +11,13 @@ import com.ahi.timecapsule.exception.UserNotFoundException;
 import com.ahi.timecapsule.service.ImageService;
 import com.ahi.timecapsule.service.StoryService;
 import com.ahi.timecapsule.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -51,19 +56,23 @@ public class StoryController {
 
   // 공유된 스토리 상세 조회
   @GetMapping("/stories/shared/{id}")
-  public String findSharedStoryDetail(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
+  public String findSharedStoryDetail(
+      @PathVariable("id") Long id, Model model, HttpServletRequest request) {
     FindStoryResponseDTO story = storyService.getStoryById(id);
 
-    List<String> encodedImages = story.getImages().stream()
-            .map(image -> {
-              try {
-                String encodedImage = imageService.encodeImageToBase64(image.getUrl());
-                return encodedImage;
-              } catch (IOException e) {
-                e.printStackTrace();
-                return "";
-              }
-            }).toList();
+    List<String> encodedImages =
+        story.getImages().stream()
+            .map(
+                image -> {
+                  try {
+                    String encodedImage = imageService.encodeImageToBase64(image.getUrl());
+                    return encodedImage;
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                    return "";
+                  }
+                })
+            .toList();
 
     model.addAttribute("images", encodedImages);
     model.addAttribute("story", story);
@@ -85,11 +94,12 @@ public class StoryController {
         imageUrl = null;
       }
       encodedImages.put(image.getId(), imageUrl);
-    };
+    }
+    ;
 
-    model.addAttribute("images",encodedImages);
-    model.addAttribute("story",story);
-    return"story-update";
+    model.addAttribute("images", encodedImages);
+    model.addAttribute("story", story);
+    return "story-update";
   }
 
   // 음성 파일 업로드 및 화자, 사투리 설정
@@ -115,14 +125,15 @@ public class StoryController {
 
   // 특정 스토리 수정
   @PutMapping("/stories/{id}")
-  public ResponseEntity<String> updateStory(@PathVariable("id") Long id,
-                                            @RequestParam("storyId") Long storyId,
-                                            @RequestParam("title") String title,
-                                            @RequestParam("content") String content,
-                                            @RequestParam("isShared") boolean isShared,
-                                            @RequestParam("sharedWithUsers") List<String> sharedWithUsers,
-                                            @RequestParam("deletedImages") List<Long> deletedImages,
-                                            @RequestParam("images") List<MultipartFile> images) {
+  public ResponseEntity<String> updateStory(
+      @PathVariable("id") Long id,
+      @RequestParam("storyId") Long storyId,
+      @RequestParam("title") String title,
+      @RequestParam("content") String content,
+      @RequestParam("isShared") boolean isShared,
+      @RequestParam("sharedWithUsers") List<String> sharedWithUsers,
+      @RequestParam("deletedImages") List<Long> deletedImages,
+      @RequestParam("images") List<MultipartFile> images) {
 
     List<String> imageUrls = new ArrayList<>();
     try {
@@ -131,13 +142,15 @@ public class StoryController {
         imageUrls.addAll(newImageUrls);
       }
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("이미지 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
 
     imageService.updateImages(deletedImages, imageUrls, storyId);
 
     try {
-      UpdateStoryRequestDTO storyRequestDTO = UpdateStoryRequestDTO.builder()
+      UpdateStoryRequestDTO storyRequestDTO =
+          UpdateStoryRequestDTO.builder()
               .title(title)
               .content(content)
               .sharedWithUsers(sharedWithUsers)
@@ -150,7 +163,7 @@ public class StoryController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .body("스토리 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+          .body("스토리 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   }
 
@@ -175,11 +188,12 @@ public class StoryController {
 
   // 커뮤니티 스토리 목록 조회(전체/검색)
   @GetMapping("/community/stories")
-  public String getCommunityStoryList(@RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
-                                      @RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "10") int size,
-                                      HttpServletRequest request,
-                                      Model model) {
+  public String getCommunityStoryList(
+      @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      HttpServletRequest request,
+      Model model) {
     Page<FindStoryResponseDTO> storyPage;
 
     if (searchKeyword.isEmpty()) {
@@ -196,19 +210,23 @@ public class StoryController {
 
   // 커뮤니티 스토리 상세 조회
   @GetMapping("/community/stories/{id}")
-  public String findCommunityStoryDetail(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
+  public String findCommunityStoryDetail(
+      @PathVariable("id") Long id, Model model, HttpServletRequest request) {
     FindStoryResponseDTO story = storyService.getStoryById(id);
 
-    List<String> encodedImages = story.getImages().stream()
-            .map(image -> {
-              try {
-                String encodedImage = imageService.encodeImageToBase64(image.getUrl());
-                return encodedImage;
-              } catch (IOException e) {
-                e.printStackTrace();
-                return "";
-              }
-            }).toList();
+    List<String> encodedImages =
+        story.getImages().stream()
+            .map(
+                image -> {
+                  try {
+                    String encodedImage = imageService.encodeImageToBase64(image.getUrl());
+                    return encodedImage;
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                    return "";
+                  }
+                })
+            .toList();
 
     model.addAttribute("images", encodedImages);
     model.addAttribute("story", story);
@@ -251,48 +269,5 @@ public class StoryController {
 
     //    return "redirect:story-created/" + storyDTO.getUser();
     return "redirect:stories/complete-form";
-  }
-
-  @PutMapping("/{id}")
-  public ResponseEntity<String> updateStory(
-      @PathVariable("id") Long id,
-      @RequestParam("storyId") Long storyId,
-      @RequestParam("title") String title,
-      @RequestParam("content") String content,
-      @RequestParam("isShared") boolean isShared,
-      @RequestParam("sharedWithUsers") List<String> sharedWithUsers,
-      @RequestParam("deletedImages") List<Long> deletedImages,
-      @RequestParam("images") List<MultipartFile> images) {
-
-    List<String> imageUrls = new ArrayList<>();
-    try {
-      if (!images.isEmpty() && !images.get(0).isEmpty()) {
-        List<String> newImageUrls = storyService.saveFiles(images);
-        imageUrls.addAll(newImageUrls);
-      }
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("이미지 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
-    }
-
-    imageService.updateImages(deletedImages, imageUrls, storyId);
-
-    try {
-      UpdateStoryRequestDTO storyRequestDTO =
-          UpdateStoryRequestDTO.builder()
-              .title(title)
-              .content(content)
-              .sharedWithUsers(sharedWithUsers)
-              .isShared(isShared)
-              .build();
-
-      storyService.updateStory(id, storyRequestDTO);
-      return ResponseEntity.ok("스토리가 성공적으로 수정되었습니다.");
-    } catch (StoryNotFoundException | UserNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("스토리 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
-    }
   }
 }

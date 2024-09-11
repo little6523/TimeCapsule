@@ -1,7 +1,5 @@
 package com.ahi.timecapsule.repository;
 
-import com.ahi.timecapsule.dto.StoryShareDTO;
-import com.ahi.timecapsule.entity.Story;
 import com.ahi.timecapsule.entity.StoryShare;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

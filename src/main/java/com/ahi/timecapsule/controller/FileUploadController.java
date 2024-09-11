@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,24 +12,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 @RestController
 public class FileUploadController {
 
   // 외부 경로 설정
   private final String externalPath =
-          Paths.get(System.getProperty("user.home"), "files").toString();
+      Paths.get(System.getProperty("user.home"), "files").toString();
 
   // 이미지 업로드 시 상대 경로 변환 함수
   @PostMapping("/upload-image")
   public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file) {
     try {
-      // 저장 디렉토리 설정
-      String uploadDir = "src/main/resources/static/images/uploads/";
-      String fileName = file.getOriginalFilename();
-      Path path = Paths.get(uploadDir + fileName);
-//      String uploadDir = "src/main/resources/static/images/uploads/";
+      //      String uploadDir = "src/main/resources/static/images/uploads/";
       String originalFileName = file.getOriginalFilename();
       String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 

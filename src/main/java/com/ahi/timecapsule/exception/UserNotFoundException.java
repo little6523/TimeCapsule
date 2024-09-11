@@ -11,7 +11,7 @@ public class UserNotFoundException extends NotFoundException {
     super(message);
   }
 
-//  public UserNotFoundException(String userId) {
-//    super(DEFAULT_MESSAGE + " ID: " + userId);
-//  }
+  //  public UserNotFoundException(String userId) {
+  //    super(DEFAULT_MESSAGE + " ID: " + userId);
+  //  }
 }
