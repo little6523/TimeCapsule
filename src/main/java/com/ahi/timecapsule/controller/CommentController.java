@@ -1,13 +1,11 @@
 package com.ahi.timecapsule.controller;
 
 import com.ahi.timecapsule.dto.CommentDTO;
-import com.ahi.timecapsule.dto.UserDTO;
 import com.ahi.timecapsule.service.CommentService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,8 +29,7 @@ public class CommentController {
   }
 
   @PostMapping
-  public ResponseEntity<CommentDTO> createComment(
-      @RequestBody CommentDTO commentDto) {
+  public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDto) {
 
     if (commentDto.getUserId() == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -55,7 +52,8 @@ public class CommentController {
     }
 
     try {
-      CommentDTO updatedComment = commentService.updateComment(id, commentDto, commentDto.getUserId());
+      CommentDTO updatedComment =
+          commentService.updateComment(id, commentDto, commentDto.getUserId());
       return ResponseEntity.ok(updatedComment);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -64,9 +62,8 @@ public class CommentController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteComment(
-          @PathVariable Long id,
-          @RequestHeader("User-Id") String userId // 헤더에서 User-Id 값을 추출
-  ) {
+      @PathVariable Long id, @RequestHeader("User-Id") String userId // 헤더에서 User-Id 값을 추출
+      ) {
     try {
       // userId와 commentId를 이용하여 댓글 삭제 처리
       commentService.deleteComment(id, userId);

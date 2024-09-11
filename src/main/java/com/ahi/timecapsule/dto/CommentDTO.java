@@ -3,7 +3,6 @@ package com.ahi.timecapsule.dto;
 import com.ahi.timecapsule.entity.Comment;
 import com.ahi.timecapsule.entity.Story;
 import com.ahi.timecapsule.entity.User;
-import jakarta.annotation.Nullable;
 import java.time.LocalDateTime;
 import lombok.*;
 
