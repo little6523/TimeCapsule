@@ -1,0 +1,164 @@
+main {
+    display: flex;
+    flex-direction: column;
+    padding-right: 70px;
+}
+
+.main-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.main-header img {
+    width: 150px;
+    display: block;
+    margin: 0 auto;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.tabs {
+    margin-left: auto;
+}
+
+.tab-btn {
+    display: block;
+    width: 160px;
+    height: 40px;
+    padding: 10px 10px;
+    color: black;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    font-weight: bold;
+    text-align: center;
+    box-sizing: border-box;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.tab-btn:hover {
+    filter: brightness(0.8);
+}
+
+.search-container {
+    position: relative;
+    margin-left: auto;
+    width: 250px;
+    padding: 20px 0;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+    border-radius: 4px;
+    border: 3px solid #F9F1F1;
+    box-sizing: border-box;
+}
+
+.search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.search-btn img {
+    width: 17px;
+}
+
+.story-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.story-table th, .story-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border: none;
+}
+
+.story-table th {
+    background-color: #F4EEEE;
+    font-weight: bold;
+
+}
+
+.story-table tr {
+    background-color: #FBFBFB;
+}
+
+.story-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.story-table td a {
+    color: #333;
+    text-decoration: none;
+}
+
+.story-table td a:hover {
+    text-decoration: underline;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.pagination a {
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: black;
+    display: flex;
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.pagination a:hover {
+    background-color: #f1f1f1;
+    border-color: #999;
+}
+
+.pagination .current {
+    background-color: #e7dede;
+    color: #333;
+    border-color: #e7dede;
+    font-weight: bold;
+}
+
+.pagination span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 22px;
+    height: 22px;
+    margin: 0 3px;
+}
+
+.pagination img {
+    width: 10px;
+    height: 10px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
