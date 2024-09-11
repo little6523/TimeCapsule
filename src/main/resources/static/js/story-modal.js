@@ -36,35 +36,40 @@ shareSearchButton.addEventListener('click', function () {
         .then(users => {
             console.log(users); // 응답 데이터 형식 확인
 
-            // 검색된 유저 목록을 배열로 처리
-            if (Array.isArray(users)) {
-                users.forEach(user => {
-                    const userDiv = document.createElement('div');
-                    userDiv.classList.add('searchedUser');
-                    userDiv.textContent = user.nickname;  // 검색된 닉네임을 추가
-
-                    // searchedList에 div 추가
-                    searchedList.appendChild(userDiv);
-
-                    // 여기서 마우스 오버 이벤트 추가
-                    userDiv.addEventListener('mouseover', function () {
-                        // 마우스가 오버된 searchedUser의 좌표를 계산
-                        const searchedUserRect = userDiv.getBoundingClientRect();
-                        const absoluteTop = searchedUserRect.top - shareModal.getBoundingClientRect().top - 41;
-                        const absoluteLeft = searchedUserRect.left - shareModal.getBoundingClientRect().left + 10;
-
-                        // 공유 버튼 위치 업데이트
-                        shareButton.style.display = 'block';
-                        shareButton.style.top = `${absoluteTop}px`;
-                        shareButton.style.left = `${absoluteLeft}px`;
-
-                        // 현재 마우스 오버된 요소를 저장
-                        hoveredUser = userDiv;
-                    });
-                });
-            } else {
-                console.error('응답이 배열 형식이 아닙니다.', users);
+            if (users === null) {
+                return;
             }
+
+            if (!Array.isArray(users)) {
+                users = [users]; // 배열이 아니면 배열로 변환
+            }
+
+            // 검색된 유저 목록을 배열로 처리
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.classList.add('searchedUser');
+                userDiv.textContent = user;  // 검색된 닉네임을 추가
+
+                // searchedList에 div 추가
+                searchedList.appendChild(userDiv);
+
+                // 여기서 마우스 오버 이벤트 추가
+                userDiv.addEventListener('mouseover', function () {
+                    // 마우스가 오버된 searchedUser의 좌표를 계산
+                    const searchedUserRect = userDiv.getBoundingClientRect();
+                    const absoluteTop = searchedUserRect.top - shareModal.getBoundingClientRect().top - 41;
+                    const absoluteLeft = searchedUserRect.left - shareModal.getBoundingClientRect().left + 10;
+
+                    // 공유 버튼 위치 업데이트
+                    shareButton.style.display = 'block';
+                    shareButton.style.top = `${absoluteTop}px`;
+                    shareButton.style.left = `${absoluteLeft}px`;
+
+                    // 현재 마우스 오버된 요소를 저장
+                    hoveredUser = userDiv;
+                });
+            });
+
         })
         .catch(error => console.error('Error:', error));
 });

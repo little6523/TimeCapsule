@@ -240,24 +240,24 @@ input:checked + .slider:before {
     height: 400px;
     min-height: 400px;
     display: none;
-    border-collapse: collapse;
 }
 
 #shareModalContent {
     height: fit-content;
     width: 70%;
-    border: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 
 #keyword {
     text-align: center;
     line-height: 40px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 #searchedList {
     height: 80%;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
     overflow-y: auto;
 }
 
@@ -272,6 +272,7 @@ input:checked + .slider:before {
     min-height: 10%;
     line-height: 40px;
     overflow-y: auto;
+    border-bottom: 1px solid black;
 }
 
 #searched {
