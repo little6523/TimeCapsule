@@ -28,7 +28,6 @@ h1 {
 
 .share-list {
     width: 100%;
-    text-align: right;
     display: flex;
     justify-content: space-between;
 }
@@ -81,12 +80,14 @@ h1 {
 }
 
 .tag-input-container {
+    padding-left: 3px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
 .tag-input {
-    border: none;
+    width: 94%;
+    border: 10px;
     outline: none;
     flex-grow: 1;
     font-size: 16px;
@@ -249,7 +250,7 @@ input:checked + .slider:before {
     border-right: 1px solid black;
 }
 
-#keyword {
+#result {
     text-align: center;
     line-height: 40px;
     border-top: 1px solid black;
