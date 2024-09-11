@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem('jwtToken');
-    console.log('저장된 JWT 토큰:', token);
 
     if (!token) {
         showNotLoggedInView();
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const newAccessToken = response.headers.get('Authorization').split(' ')[1];
                 if (newAccessToken) {
                     // 새로운 Access Token을 로컬 스토리지나 메모리에 저장
-                    localStorage.setItem('accessToken', newAccessToken);
+                    localStorage.setItem('jwtToken', newAccessToken);
                 }
                 console.log(response.headers);
                 const userId = response.headers.get('X-User-Id');
@@ -43,18 +42,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function showNotLoggedInView() {
-    document.getElementById('not-logged-in').style.display = 'block';
-    document.getElementById('logged-in').style.display = 'none';
+    // document.getElementById('not-logged-in').style.display = 'block';
+    // document.getElementById('logged-in').style.display = 'none';
 }
 
 function showLoggedInView(userId) {
-    document.getElementById('not-logged-in').style.display = 'none';
-    document.getElementById('logged-in').style.display = 'block';
-    document.getElementById('user-id').textContent = userId; // 사용자 이름 표시
+    // document.getElementById('not-logged-in').style.display = 'none';
+    // document.getElementById('logged-in').style.display = 'block';
+    // document.getElementById('user-id').textContent = userId; // 사용자 이름 표시
 }
-
-// // 로그아웃 버튼 클릭 시 JWT 토큰 삭제
-// document.getElementById('logoutButton')?.addEventListener('click', () => {
-//     localStorage.removeItem('jwtToken'); // 토큰 삭제
-//     window.location.href = '/login'; // 로그인 페이지로 리다이렉트
-// });

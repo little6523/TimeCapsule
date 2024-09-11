@@ -5,8 +5,6 @@ if (logoutButton) {
         event.preventDefault(); // 기본 링크 동작 방지
         console.log("로그아웃 버튼 눌림!");
 
-        // 로컬 스토리지에서 토큰 삭제
-        localStorage.removeItem('jwtToken');
 
         // 서버에 로그아웃 요청 전송
         try {
@@ -20,16 +18,44 @@ if (logoutButton) {
             });
 
             if (response.ok) {
-                alert('로그아웃 되었습니다.');
-                window.location.href = '/login'; // 로그아웃 후 리다이렉트할 페이지 설정
+                // 로컬 스토리지에서 토큰 삭제
+                localStorage.removeItem('jwtToken');
+                showSuccess('로그아웃 되었습니다.', '/login');
+
+                // alert("로그아웃 되었습니다.");
+                // window.location.href = '/login'; // 로그아웃 후 리다이렉트할 페이지 설정
             } else {
-                alert('로그아웃에 실패했습니다.');
+                const errorMessage = await response.text();
+                showError(errorMessage);
             }
         } catch (error) {
             console.error('로그아웃 중 오류 발생:', error);
-            alert('로그아웃 중 오류가 발생했습니다.');
+            showError('로그아웃 중 오류가 발생했습니다.');
         }
     });
 } else {
     console.error('로그아웃 버튼을 찾을 수 없습니다.');
+}
+
+function showSuccess(message, redirectUrl) {
+    Swal.fire({
+        icon: 'success',
+        title: '성공',
+        text: message,
+        confirmButtonText: '확인'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 확인 버튼이 눌리면 페이지 이동
+            window.location.href = redirectUrl;
+        }
+    });
+}
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: '입력 오류',
+        text: message,
+        confirmButtonText: '확인'
+    });
 }
