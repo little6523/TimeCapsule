@@ -7,8 +7,8 @@ public class UserNotFoundException extends NotFoundException {
     super(DEFAULT_MESSAGE);
   }
 
-  public UserNotFoundException(String message) {
-    super(message);
+  public UserNotFoundException(String userNickname) {
+    super("사용자를 찾을 수 없습니다." + userNickname);
   }
 
   //  public UserNotFoundException(String userId) {

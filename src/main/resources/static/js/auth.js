@@ -1,5 +1,3 @@
-let userId;
-
 // JWT 토큰을 로컬 스토리지에서 가져오는 함수
 function getJwtToken() {
     return localStorage.getItem('jwtToken');

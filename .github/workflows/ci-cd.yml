@@ -1,0 +1,121 @@
+name: Java CI/CD with Gradle
+
+# 동작 조건 설정 : main 브랜치에 push 가 발생할 경우 동작
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  # Spring Boot 애플리케이션을 빌드하여 해당 이미지를 도커허브에 푸시하는 과정
+  build-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # 1. Java 17 세팅
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 2. Yaml 파일 세팅
+      - name: Set Yaml
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_SECRET_YML }}" | base64 --decode > src/main/resources/application-secret.yml
+          find src
+
+      # # 3. Gradle 캐싱 -> gradle의 의존성을 캐싱해서 매번 gradle을 새로 가져오는 것을 방지하여 빌드시간을 줄이기 위함
+      # - name: Gradle Caching
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/.gradle/caches
+      #       ~/.gradle/wrapper
+      #     key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gradle-
+
+      # 4. gradlew 권한 변경
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 5. Spring Boot 애플리케이션 빌드
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: clean bootJar
+
+      # 6. Docker 이미지 빌드
+      - name: docker image build
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo .
+
+      # 7. DockerHub 로그인
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # 8. Docker Hub 이미지 푸시
+      - name: docker Hub push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
+
+      # 9. 빌드 아티팩트 업로드
+      - name: Upload build artifact for job
+        uses: actions/upload-artifact@v3
+        with:
+          ## 업로드 키 값
+          name: project_artifact
+          path: "./docker-compose.yml"
+
+  # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행시키는 과정
+  run-docker-image-on-ec2:
+    # build-docker-image (위)과정이 완료되어야 실행됩니다.
+    needs: build-docker-image
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 아티팩트 전송을 위한 임시 공간
+      - name: Create distribute
+        run: mkdir ~/dist
+
+      # 2. 빌드 한 아티팩트 다운로드
+      - name: Download build artifact for job
+        uses: actions/download-artifact@v3
+        with:
+          name: project_artifact
+          path: dist
+
+      # 3. 다운 받은 아티팩트 확인
+      - name: Show structure of downloaded files
+        run: |
+          ls -alh dist
+
+      # 4. docker-compose.yml 전송
+      - name: transfer docker-compose.yml
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.AWS_HOST}}
+          username: ${{ secrets.AWS_USERNAME}}
+          key: ${{ secrets.AWS_PRIVATE_KEY}}
+          source: "dist/docker-compose.yml"
+          target: "/home/ubuntu"
+
+      # 5. 최신 이미지를 컨테이너화하여 실행 및 사용하지 않는 이미지 제거
+      - name: docker run new container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AWS_HOST}}
+          username: ${{ secrets.AWS_USERNAME}}
+          key: ${{ secrets.AWS_PRIVATE_KEY}}
+          script: |
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
+            sudo docker-compose down
+            sudo docker system prune -f
+            sudo docker-compose up -d

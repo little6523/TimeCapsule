@@ -9,12 +9,12 @@
 
 document.getElementById('loginForm').addEventListener('submit', async function (event) {
     event.preventDefault(); // 폼의 기본 제출 동작을 막음
-    // const token = localStorage.getItem('jwtToken');
-    // if (token) {
-    //     alert("이미 로그인 되어있습니다!");
-    //     window.location.href = '/main';
-    //     return;
-    // }
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+        alert("이미 로그인 되어있습니다!");
+        window.location.href = '/main';
+        return;
+    }
 // 폼 데이터 수집
     const userId = document.getElementById('username').value;
     const password = document.getElementById('password').value;
