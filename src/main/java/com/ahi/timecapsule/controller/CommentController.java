@@ -32,12 +32,12 @@ public class CommentController {
 
   @PostMapping
   public ResponseEntity<CommentDTO> createComment(
-      @RequestBody CommentDTO commentDto, Authentication authentication) {
-    if (authentication == null || !(authentication.getPrincipal() instanceof UserDTO)) {
+      @RequestBody CommentDTO commentDto) {
+
+    if (commentDto.getUserId() == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-    UserDTO userDTO = (UserDTO) authentication.getPrincipal();
-    commentDto.setUserId(userDTO.getUserId());
+
     try {
       CommentDTO createdComment = commentService.createComment(commentDto);
       return ResponseEntity.ok(createdComment);
@@ -48,13 +48,14 @@ public class CommentController {
 
   @PutMapping("/{id}")
   public ResponseEntity<CommentDTO> updateComment(
-      @PathVariable Long id, @RequestBody CommentDTO commentDto, Authentication authentication) {
-    if (authentication == null || !(authentication.getPrincipal() instanceof UserDTO)) {
+      @PathVariable Long id, @RequestBody CommentDTO commentDto) {
+
+    if (commentDto.getUserId() == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-    UserDTO userDTO = (UserDTO) authentication.getPrincipal();
+
     try {
-      CommentDTO updatedComment = commentService.updateComment(id, commentDto, userDTO.getUserId());
+      CommentDTO updatedComment = commentService.updateComment(id, commentDto, commentDto.getUserId());
       return ResponseEntity.ok(updatedComment);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -62,16 +63,16 @@ public class CommentController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteComment(@PathVariable Long id, Authentication authentication) {
-    if (authentication == null || !(authentication.getPrincipal() instanceof UserDTO)) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-    UserDTO userDTO = (UserDTO) authentication.getPrincipal();
+  public ResponseEntity<?> deleteComment(
+          @PathVariable Long id,
+          @RequestHeader("User-Id") String userId // 헤더에서 User-Id 값을 추출
+  ) {
     try {
-      commentService.deleteComment(id, userDTO.getUserId());
+      // userId와 commentId를 이용하여 댓글 삭제 처리
+      commentService.deleteComment(id, userId);
       return ResponseEntity.ok().build();
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 삭제에 실패했습니다.");
     }
   }
 }

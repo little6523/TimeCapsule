@@ -25,9 +25,11 @@
     </div>
 
     <div class="tabs" th:unless="${tab == 'community'}">
-        <a th:classappend="${tab == 'myStories'} ? 'active'" th:href="@{/stories}" class="tab-btn"
+        <a th:classappend="${tab == 'myStories'} ? 'active'"
+           th:href="@{/stories?userId={userId}(userId = ${userId})}" class="tab-btn"
            style="background-color: #E5C1C1">마이 스토리</a>
-        <a th:classappend="${tab == 'sharedStories'} ? 'active'" th:href="@{/stories/shared}" class="tab-btn"
+        <a th:classappend="${tab == 'sharedStories'} ? 'active'"
+           th:href="@{/stories/shared?userId={userId}(userId=${userId})}"class="tab-btn"
            style="background-color: #E7DEDE">공유 받은 스토리</a>
     </div>
 
@@ -36,6 +38,7 @@
         <label for="keyword" class="visually-hidden">검색어</label>
         <input type="text" id="keyword" name="keyword" placeholder="제목, 내용으로 검색해주세요" class="search-input">
         <button type="submit" class="search-btn"><img src="/images/Search.svg" alt="검색 아이콘"></button>
+        <input type="hidden" name="userId" id="userId">
     </form>
 
     <table class="story-table">
@@ -73,10 +76,8 @@
                 <img src="/images/KeyboardArrowRight.png" alt="다음"></a>
         </span>
     </div>
-    <input type="hidden" name="userId" id="userId">
 </main>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
 <!--<script th:src="@{/js/page.js}"></script>-->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 <script th:src="@{/js/auth.js}"></script>

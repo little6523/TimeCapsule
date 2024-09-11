@@ -13,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CommentDTO {
-  @Nullable private Long id;
+  private Long id;
   private long storyId;
   private String userId;
   private String content;
@@ -37,7 +37,6 @@ public class CommentDTO {
   // DTO -> Entity
   public Comment toEntity(User user, Story story) {
     return Comment.builder()
-        .id(this.id)
         .content(this.content)
         .user(user)
         .story(story)

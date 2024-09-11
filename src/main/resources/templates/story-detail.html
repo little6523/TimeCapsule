@@ -13,7 +13,6 @@
 </head>
 
 <body>
-<input type="hidden" name="userId" id="userId">
 <header th:replace="~{fragments/header :: header}"></header>
 <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
@@ -32,7 +31,8 @@
                 </p>
             </div>
 
-            <div th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}" class="download-buttons">
+            <div th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}"
+                 class="download-buttons">
                 <button class="download-btn" th:onclick="'downloadAudio(' + ${story.id} + ')'"><img
                         alt="MP3 다운로드 버튼" src="/images/soundDownload.png">MP3 다운로드
                 </button>
@@ -61,7 +61,8 @@
             </div>
         </div>
 
-        <div th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}" class="story-buttons">
+        <div th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}"
+             class="story-buttons">
             <button class="back-btn" onclick=goToStoryList()>목록</button>
             <button class="edit-btn" onclick="location.href=this.getAttribute('data-url')"
                     th:data-url="@{/stories/{id}/edit(id=${story.id})}">수정
@@ -69,7 +70,8 @@
             <button class="delete-btn" id="deleteBtn">삭제</button>
         </div>
 
-        <div th:if="${currentURI.contains('/stories/shared') || currentURI.contains('/community')}" class="shared-version-btn">
+        <div th:if="${currentURI.contains('/stories/shared') || currentURI.contains('/community')}"
+             class="shared-version-btn">
             <button class="back-btn" onclick=goToStoryList()>목록</button>
         </div>
     </article>
@@ -80,8 +82,7 @@
             <div class="commentList">
                 <div class="comment-item" th:data-id="${comment.id}" th:each="comment : ${comments}">
                     <div class="comment-header">
-            <span class="comment-author"
-                  th:text="${comment.userNickname + ' | ' + #temporals.format(comment.createdAt, 'yyyy.MM.dd')}"></span>
+                        <span class="comment-author" th:text="${comment.userNickname + ' | ' + #temporals.format(comment.createdAt, 'yyyy.MM.dd')}"></span>
                     </div>
                     <div class="comment-content" th:text="${comment.content}"></div>
                     <div class="comment-edit-form" style="display: none;">
@@ -101,6 +102,7 @@
             <textarea name="content" required></textarea>
             <input name="storyId" th:value="${story.id}" type="hidden">
             <button type="submit">등록</button>
+            <input type="hidden" name="userId" id="userId">
         </form>
     </div>
 
@@ -121,7 +123,6 @@
 <script th:src="@{/js/auth.js}"></script>
 <!-- Footer -->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
-<script th:src="@{/js/auth.js}"></script>
 <script th:inline="javascript">
     // 페이지 번호를 유지한 스토리 목록 페이지로 이동하는 함수
     function goToStoryList() {

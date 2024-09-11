@@ -70,8 +70,6 @@ public class StoryController {
     List<MultipartFile> files = new ArrayList<>();
     files.add(file);
 
-    System.out.println("id = " + userId);
-
     List<String> filePath = storyService.saveFiles(files);
     storyOptionDTO.setSoundFile(filePath.get(0));
 
@@ -95,8 +93,6 @@ public class StoryController {
       @ModelAttribute("StoryOptionDTO") StoryOptionDTO storyOptionDTO,
       @ModelAttribute("userId") String userId) {
 
-    System.out.println("hello: " + userId);
-
     return "story-created";
   }
 
@@ -115,7 +111,6 @@ public class StoryController {
     }
 
     StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
-    System.out.println(storyContentDTO);
 
     StoryDTO storyDTO = storyService.saveStory(storyOptionDTO, storyContentDTO, filesPath, userId);
 
@@ -132,6 +127,8 @@ public class StoryController {
       HttpServletRequest request,
       Model model) {
     Page<FindStoryResponseDTO> storyPage;
+
+    System.out.println("userId" + userId);
 
     if (searchKeyword.isEmpty()) {
       storyPage = storyService.findUserStories(userId, page, size);
@@ -313,7 +310,7 @@ public class StoryController {
   @GetMapping("/community")
   public String getCommunityStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
-      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       HttpServletRequest request,
       Model model) {

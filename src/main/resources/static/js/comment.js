@@ -26,20 +26,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (commentListContainer) {
         commentListContainer.addEventListener('click', function(e) {
+            // 댓글 삭제
             if (e.target.classList.contains('delete-comment')) {
                 if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
                     deleteComment(e.target.closest('.comment-item').dataset.id, storyId);
                 }
-            } else if (e.target.classList.contains('edit-comment') || e.target.classList.contains('cancel-edit')) {
+            }
+            // 댓글 수정 모드 활성화/비활성화
+            else if (e.target.classList.contains('edit-comment') || e.target.classList.contains('cancel-edit')) {
                 toggleEditMode(e.target.closest('.comment-item'));
             }
-        });
-
-        commentListContainer.addEventListener('submit', function(e) {
-            if (e.target.classList.contains('comment-edit-form')) {
-                e.preventDefault();
+            // 수정 완료 버튼 클릭 시
+            else if (e.target.classList.contains('save-edit')) {
                 const commentItem = e.target.closest('.comment-item');
-                const newContent = e.target.querySelector('textarea').value.trim();
+                const newContent = commentItem.querySelector('textarea').value.trim();
                 if (newContent === '') {
                     alert('댓글 내용을 입력해주세요.');
                     return;
@@ -69,7 +69,7 @@ function loadComments(storyId) {
                         <div class="comment-content">${comment.content}</div>
                         <div class="comment-edit-form" style="display: none;">
                             <textarea>${comment.content}</textarea>
-                            <button type="submit" class="save-edit">수정 완료</button>
+                            <button class="save-edit" type="button">수정 완료</button>
                             <button type="button" class="cancel-edit">취소</button>
                         </div>
                         <div class="commentListButtons">
@@ -92,7 +92,11 @@ function submitComment(form, storyId, content) {
     fetch('/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ storyId: storyId, content: content })
+        body: JSON.stringify({
+            storyId: storyId,
+            content: content,
+            userId: document.getElementById('userId').value
+        })
     })
         .then(response => {
             if (!response.ok) throw new Error('댓글 작성에 실패했어요.');
@@ -113,7 +117,10 @@ function updateCommentOnServer(commentId, newContent, storyId) {
     fetch(`/comments/${commentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: newContent })
+        body: JSON.stringify({
+            content: newContent,
+            userId: document.getElementById('userId').value
+        })
     })
         .then(response => {
             if (!response.ok) throw new Error('댓글 수정에 실패했습니다.');
@@ -131,7 +138,11 @@ function updateCommentOnServer(commentId, newContent, storyId) {
 
 function deleteComment(commentId, storyId) {
     fetch(`/comments/${commentId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'User-Id': document.getElementById('userId').value
+        }
     })
         .then(response => {
             if (!response.ok) throw new Error('댓글 삭제에 실패했습니다.');
@@ -147,15 +158,14 @@ function deleteComment(commentId, storyId) {
         });
 }
 
+
 function toggleEditMode(commentItem) {
     const contentElement = commentItem.querySelector('.comment-content');
     const editForm = commentItem.querySelector('.comment-edit-form');
-    const editTextarea = editForm.querySelector('textarea');
     const buttonsElement = commentItem.querySelector('.commentListButtons');
     const cancelButton = commentItem.querySelector('.cancel-edit');
 
     if (contentElement.style.display !== 'none') {
-        editTextarea.value = contentElement.textContent.trim();
         contentElement.style.display = 'none';
         buttonsElement.style.display = 'none';
         editForm.style.display = 'block';
