@@ -42,7 +42,7 @@ h1 {
 }
 
 .story-content {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 .download-btn:hover {
@@ -159,4 +159,83 @@ h1 {
 
 .close:hover {
     filter: brightness(0.8);
+}
+
+.form-group {
+    width: 100%;
+    height: 35px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    border: none;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.shared-list img {
+    display: block;
+    height: 17px;
+    padding: 10px 10px;
+    background-color: #E7E1E1;
+    border-radius: 50%;
+
+}
+
+.shared-list {
+    font-size: 10px;
+    text-align: center;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    background-color: #EAE1E1;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 14px;
+    color: #333;
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+.tag-input-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    max-width: 100%;
+    white-space: nowrap;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #ccc;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.tag-input-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.tag-input-container::-webkit-scrollbar-thumb {
+    background-color: #C1C1C1;
+}
+.tag-input-container::-webkit-scrollbar-thumb:hover {
+    background-color: #A8A8A8;
+}
+
+.tag-input-container::-webkit-scrollbar-track {
+    background-color: #F1F1F1;
+
+}
+
+.tag-input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 16px;
+    padding: 5px;
 }
