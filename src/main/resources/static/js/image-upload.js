@@ -59,7 +59,6 @@ function insertImage(src) {
 
     contentEditableDiv.appendChild(imageContainer);
     images.push(img.src);
-    console.log(images);
 
     removeButton.addEventListener('click', () => {
         contentEditableDiv.removeChild(imageContainer);
