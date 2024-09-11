@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     // 로그인 된 사용자 이름을 표시
                     updateSidebarLinks(userId); //사이드바 처리
                     updateButtons(true); //header 처리
+                    document.getElementById('userId').value = userId;
                 } else {
                     console.log('userId 헤더가 응답에 포함되지 않았습니다.');
                 }
@@ -50,6 +51,7 @@ function getJwtToken() {
 // 로그인 페이지로 리다이렉트하는 함수
 function redirectToLogin() {
     window.location.href = '/login';
+    localStorage.removeItem('jwtToken');
 }
 
 //사이드바 설정

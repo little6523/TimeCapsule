@@ -5,7 +5,6 @@ import com.ahi.timecapsule.dto.ImageDTO;
 import com.ahi.timecapsule.dto.UpdateStoryRequestDTO;
 import com.ahi.timecapsule.dto.request.StoryContentDTO;
 import com.ahi.timecapsule.dto.request.StoryOptionDTO;
-import com.ahi.timecapsule.entity.User;
 import com.ahi.timecapsule.exception.StoryNotFoundException;
 import com.ahi.timecapsule.exception.UserNotFoundException;
 import com.ahi.timecapsule.service.ImageService;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/stories")
@@ -54,8 +54,149 @@ public class StoryController {
     return "story-form";
   }
 
+  // 음성 파일 업로드 및 화자, 사투리 설정
+  @PostMapping("/form")
+  public String uploadFile(
+      @RequestPart MultipartFile file,
+      @ModelAttribute StoryOptionDTO storyOptionDTO,
+      @ModelAttribute("userId") String userId,
+      HttpSession session,
+      RedirectAttributes redirectAttributes)
+      throws IOException {
+
+    System.out.println(file.getOriginalFilename());
+
+    List<MultipartFile> files = new ArrayList<>();
+    files.add(file);
+
+    System.out.println("id = " + userId);
+
+    List<String> filePath = storyService.saveFiles(files);
+    storyOptionDTO.setSoundFile(filePath.get(0));
+
+    session.setAttribute("StoryOptionDTO", storyOptionDTO);
+    redirectAttributes.addFlashAttribute("userId", userId);
+
+    return "redirect:complete-form";
+  }
+
+  // 공유자 검색
+  @GetMapping("/search")
+  @ResponseBody
+  public List<String> searchUsers(@RequestParam("keyword") String keyword) {
+
+    return userService.searchUsersByNickname(keyword);
+  }
+
+  // 스토리 완성 폼 조회
+  @GetMapping("/complete-form")
+  public String getCreateStoryForm(
+      @ModelAttribute("StoryOptionDTO") StoryOptionDTO storyOptionDTO,
+      @ModelAttribute("userId") String userId) {
+
+    System.out.println("hello: " + userId);
+
+    return "story-created";
+  }
+
+  // 스토리 생성
+  @PostMapping
+  public String createStory(
+      @RequestPart(value = "images", required = false) List<MultipartFile> files,
+      @ModelAttribute StoryContentDTO storyContentDTO,
+      @ModelAttribute("userId") String userId,
+      HttpSession session)
+      throws IOException {
+
+    List<String> filesPath = new ArrayList<>();
+    if (files != null && !files.isEmpty()) {
+      filesPath = storyService.saveFiles(files);
+    }
+
+    StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
+    System.out.println(storyContentDTO);
+
+    storyService.save(storyOptionDTO, storyContentDTO, filesPath, userId);
+
+    //    return "redirect:story-created/" + storyDTO.getUser();
+    return "redirect:stories/complete-form";
+  }
+
+  // 마이 스토리 목록 조회(전체/검색)
+  @GetMapping("/stories")
+  public String getStoryList(
+      @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @ModelAttribute("userId") String userId,
+      HttpServletRequest request,
+      Model model) {
+    Page<FindStoryResponseDTO> storyPage;
+
+    if (searchKeyword.isEmpty()) {
+      storyPage = storyService.findUserStories(userId, page, size);
+    } else {
+      storyPage = storyService.findMyStoriesByKeyword(userId, searchKeyword, page, size);
+    }
+
+    model.addAttribute("storyPage", storyPage);
+    model.addAttribute("tab", "myStories");
+    model.addAttribute("currentURI", request.getRequestURI());
+    return "storylist";
+  }
+
+  // 마이 스토리 상세 조회
+  @GetMapping("/{id}")
+  public String findStoryDetail(
+      @PathVariable("id") Long id, Model model, HttpServletRequest request) {
+    FindStoryResponseDTO story = storyService.getStoryById(id);
+
+    List<String> encodedImages =
+        story.getImages().stream()
+            .map(
+                image -> {
+                  try {
+                    String encodedImage = imageService.encodeImageToBase64(image.getUrl());
+                    return encodedImage;
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                    return "";
+                  }
+                })
+            .toList();
+
+    model.addAttribute("images", encodedImages);
+    model.addAttribute("story", story);
+    model.addAttribute("currentURI", request.getRequestURI());
+    return "story-detail";
+  }
+
+  // 공유된 스토리 목록 조회(전체/검색)
+  @GetMapping("/shared")
+  public String getSharedStoryList(
+      @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @ModelAttribute("userId") String userId,
+      HttpServletRequest request,
+      Model model) {
+
+    Page<FindStoryResponseDTO> storyPage;
+
+    if (searchKeyword.isEmpty()) {
+      storyPage = storyService.findSharedStories(userId, page, size);
+    } else {
+      storyPage = storyService.findSharedStoriesByKeyword(userId, searchKeyword, page, size);
+    }
+
+    model.addAttribute("storyPage", storyPage);
+    model.addAttribute("tab", "sharedStories");
+    model.addAttribute("currentURI", request.getRequestURI());
+    return "storylist";
+  }
+
   // 공유된 스토리 상세 조회
-  @GetMapping("/stories/shared/{id}")
+  @GetMapping("/shared/{id}")
   public String findSharedStoryDetail(
       @PathVariable("id") Long id, Model model, HttpServletRequest request) {
     FindStoryResponseDTO story = storyService.getStoryById(id);
@@ -81,7 +222,7 @@ public class StoryController {
   }
 
   // 수정 폼 조회
-  @GetMapping("/stories/{id}/edit")
+  @GetMapping("/{id}/edit")
   public String getUpdateStoryForm(@PathVariable("id") Long id, Model model) {
     FindStoryResponseDTO story = storyService.getStoryById(id);
     Map<Long, String> encodedImages = new HashMap<>();
@@ -102,29 +243,8 @@ public class StoryController {
     return "story-update";
   }
 
-  // 음성 파일 업로드 및 화자, 사투리 설정
-  @PostMapping("/form")
-  public String uploadFile(
-      @RequestPart MultipartFile file,
-      @ModelAttribute StoryOptionDTO storyOptionDTO,
-      HttpSession session)
-      throws IOException {
-
-    System.out.println(file.getOriginalFilename());
-
-    List<MultipartFile> files = new ArrayList<>();
-    files.add(file);
-
-    List<String> filePath = storyService.saveFiles(files);
-    storyOptionDTO.setSoundFile(filePath.get(0));
-
-    session.setAttribute("StoryOptionDTO", storyOptionDTO);
-
-    return "redirect:complete-form";
-  }
-
   // 특정 스토리 수정
-  @PutMapping("/stories/{id}")
+  @PutMapping("/{id}")
   public ResponseEntity<String> updateStory(
       @PathVariable("id") Long id,
       @RequestParam("storyId") Long storyId,
@@ -168,7 +288,7 @@ public class StoryController {
   }
 
   // 특정 스토리 삭제
-  @DeleteMapping("/stories/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<Map<String, Object>> deleteStory(@PathVariable("id") Long id) {
     Map<String, Object> response = new HashMap<>();
 
@@ -187,7 +307,7 @@ public class StoryController {
   }
 
   // 커뮤니티 스토리 목록 조회(전체/검색)
-  @GetMapping("/community/stories")
+  @GetMapping("/community")
   public String getCommunityStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
       @RequestParam(defaultValue = "0") int page,
@@ -209,7 +329,7 @@ public class StoryController {
   }
 
   // 커뮤니티 스토리 상세 조회
-  @GetMapping("/community/stories/{id}")
+  @GetMapping("/community/{id}")
   public String findCommunityStoryDetail(
       @PathVariable("id") Long id, Model model, HttpServletRequest request) {
     FindStoryResponseDTO story = storyService.getStoryById(id);
@@ -232,40 +352,5 @@ public class StoryController {
     model.addAttribute("story", story);
     model.addAttribute("currentURI", request.getRequestURI());
     return "story-detail";
-  }
-
-  @GetMapping("/complete-form")
-  public String getCreateStoryForm(
-      @ModelAttribute("StoryOptionDTO") StoryOptionDTO storyOptionDTO) {
-
-    return "story-created";
-  }
-
-  @GetMapping("/search")
-  @ResponseBody
-  public List<User> searchUsers(@RequestParam("keyword") String keyword) {
-
-    return userService.searchUsersByNickname(keyword);
-  }
-
-  @PostMapping
-  public String createStory(
-      @RequestPart(value = "images", required = false) List<MultipartFile> files,
-      @ModelAttribute StoryContentDTO storyContentDTO,
-      @ModelAttribute("userId") String userId,
-      HttpSession session)
-      throws IOException {
-
-    List<String> filesPath = new ArrayList<>();
-    if (files != null && !files.isEmpty()) {
-      filesPath = storyService.saveFiles(files);
-    }
-
-    StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
-
-    storyService.save(storyOptionDTO, storyContentDTO, filesPath, userId);
-
-    //    return "redirect:story-created/" + storyDTO.getUser();
-    return "redirect:stories/complete-form";
   }
 }
