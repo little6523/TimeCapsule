@@ -19,7 +19,6 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     const userId = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    console.log(userId, password);
     try {
 // fetch를 사용하여 로그인 요청
         const response = await fetch('/login', {
@@ -39,7 +38,6 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             if (token) {
                 // 로컬 스토리지에 토큰 저장
                 localStorage.setItem('jwtToken', token.replace('Bearer ', ''));
-                console.log(localStorage.getItem('jwtToken'));
                 // 메인 페이지로 리다이렉트
                 window.location.href = '/main';
 
