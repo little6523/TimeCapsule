@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 수정</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/notice.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<main>
+    <div class="container-notice-edit">
+        <h1>공지사항</h1>
+        <form th:action="@{/notices/{id}(id=${noticeForm.id})}" th:object="${noticeForm}" method="post">
+            <div class="group-input">
+                <label for="title"></label>
+                <input type="text" id="title" th:field="*{title}" required>
+                <span class="text-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+            </div>
+            <div class="group-input">
+                <label for="content"></label>
+                <textarea id="content" th:field="*{content}" rows="10" required></textarea>
+                <span class="text-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
+            </div>
+            <div class="actions-form">
+                <button type="submit" class="btn btn-notice-update">수정</button>
+                <a th:href="@{/notices/{id}(id=${noticeForm.id})}" class="btn btn-notice-cancel">뒤로가기</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/form-warning.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+</body>
+</html>
