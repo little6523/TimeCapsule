@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TimeCapsule-스토리 생성</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/story-form.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<main>
+    <h1>스토리 생성</h1>
+    <form th:action="@{/stories/form}" method="post" id="upload-form"
+          enctype="multipart/form-data">
+        <div class="create-story-container">
+            <div id="upload-container">
+                <img th:src="@{/images/FileIcon.png}" alt="파일 아이콘" class="story-file-icon">
+                <p id="upload-text">
+                    당신의 소중한 이야기와 추억을 여기에 담아주세요.<br>
+                    (인터뷰 파일 필수, 1개의 파일만 업로드 가능)
+                </p>
+                <input type="file" name="file" id="file-upload">
+            </div>
+            <div id="record">
+                <input type="button" id="record-button">
+                <div id="record-text">음성 녹음을 시작하려면 버튼을 누르세요.</div>
+            </div>
+        </div>
+        <div class="story-submit-container">
+            <div class="story-option-container">
+                사투리 설정
+                <select id="dialect" name="dialect">
+                    <option th:each="dialect : ${dialects}"
+                            th:value="${dialect}"
+                            th:text="${dialect}"
+                            th:selected="${dialect == '선택 안함'}"></option>
+                </select>
+
+                화자 설정
+                <select id="speaker" name="speaker">
+                    <option th:each="speaker : ${speakers}"
+                            th:value="${speaker}"
+                            th:text="${speaker}"
+                            th:selected="${speaker == '선택 안함'}"></option>
+                </select>
+            </div>
+            <input type="hidden" name="userId" id="userId">
+            <button type="submit" id="create-story-button" class="create-story-button">스토리 생성</button>
+        </div>
+    </form>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/file-upload.js}"></script>
+<script th:src="@{/js/record.js}"></script>
+<script th:src="@{/js/story-config.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+</body>
+</html>

@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,19 +75,13 @@ public class UserController {
   @ResponseBody
   public ResponseEntity<?> login(
       @RequestBody UserLoginDTO userLogin, HttpServletResponse response, Model model) {
+
+    // 로그인 로직 수행
     String token = userService.login(userLogin);
-    if (token != null) {
 
-      response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-      // HttpOnly 쿠키로 JWT 토큰 설정
-
-      // 응답 본문에 성공 메시지와 함께 토큰을 반환할 필요가 없다면 생략 가능
-      return ResponseEntity.ok().build();
-
-    } else {
-      model.addAttribute("error", "아이디 또는 비밀번호가 잘못되었습니다.");
-      return new ResponseEntity<>("로그인 실패", HttpStatus.UNAUTHORIZED);
-    }
+    // 로그인 성공 시 토큰을 응답 헤더에 추가
+    response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+    return ResponseEntity.ok().build();
   }
 
   // OAuth2.0 로그인
@@ -119,8 +112,9 @@ public class UserController {
         authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
             ? authorizationHeader.substring(7)
             : null;
+
     if (accessToken == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Access Token이 제공되지 않았습니다.");
+      throw new RuntimeException("Access Token이 제공되지 않았습니다.");
     }
 
     // Access Token에서 사용자 이름 추출
@@ -129,37 +123,41 @@ public class UserController {
     // Redis에서 Refresh Token 가져오기
     String refreshToken = redisService.getRefreshToken(username);
 
-    try {
-      // Access Token 검증 및 필요한 경우 재발급
-      String validAccessToken =
-          userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+    // Access Token 검증 및 필요한 경우 재발급
+    String validAccessToken = userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+    String role = jwtTokenProvider.getAuthoritiesFromJwtToken(validAccessToken);
 
+    if (role.contains("ROLE_USER") || role.contains("ROLE_ADMIN")) {
       // 유효한 Access Token으로 사용자 정보 추출
       response.addHeader("X-User-Id", username); // 사용자 정보 추가
       response.addHeader(
           HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
 
       return ResponseEntity.ok().build();
-
-    } catch (RuntimeException e) {
-      // 토큰이 유효하지 않은 경우 예외 처리
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰");
+    } else {
+      throw new RuntimeException("권한이 없습니다.");
     }
   }
 
   @PostMapping("/logout")
   public ResponseEntity<?> logout(
       @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-      String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
-      // 토큰이 유효한지 검증
-      if (jwtTokenProvider.validateToken(token)) {
-        // 토큰을 블랙리스트에 추가하여 무효화
-        redisService.addToBlacklist(token);
-        return ResponseEntity.ok("로그아웃 성공");
-      }
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      // 토큰이 제공되지 않았거나 잘못된 형식일 때 예외를 던짐
+      throw new RuntimeException("Access Token이 제공되지 않았습니다.");
     }
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰");
+
+    String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
+
+    // 토큰이 유효한지 검증
+    if (!jwtTokenProvider.validateToken(token)) {
+      // 토큰이 유효하지 않을 때 예외를 던짐
+      throw new RuntimeException("유효하지 않은 토큰");
+    }
+
+    // 토큰을 블랙리스트에 추가하여 무효화
+    redisService.addToBlacklist(token);
+    return ResponseEntity.ok("로그아웃 성공");
   }
 
   // 아이디, 이메일, 닉네임 중복 확인

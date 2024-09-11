@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const token = sessionStorage.getItem('jwtToken');
+    if (token) {
+        showError("이미 로그인 되어있습니다!");
+        history.back();
+        return;
+    }
+});
+
 // 중복 확인 상태를 저장하는 객체
 const isDuplicateCheckPassed = {
     userId: false,

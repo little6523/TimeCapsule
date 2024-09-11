@@ -1,13 +1,12 @@
 package com.ahi.timecapsule.config;
 
 import com.ahi.timecapsule.oauth.CustomOAuth2User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,6 +52,23 @@ public class JwtTokenProvider {
         .compact();
   }
 
+  public String generateAccessToken(String userId, List<GrantedAuthority> roles) {
+    // 권한 목록을 문자열로 변환
+    String authorities =
+        roles.stream()
+            .map(GrantedAuthority::getAuthority) // 각 권한의 이름을 가져옴
+            .collect(Collectors.joining(","));
+
+    // JWT 토큰 생성
+    return Jwts.builder()
+        .setSubject(userId) // userId를 서브젝트로 설정
+        .claim("roles", authorities) // 권한 정보 포함
+        .setIssuedAt(new Date()) // 발급 시간 설정
+        .setExpiration(new Date((new Date()).getTime() + accessTokenExpirationMs)) // 만료 시간 설정
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512) // 서명 알고리즘 및 키 설정
+        .compact(); // 토큰 생성
+  }
+
   public String generateRefreshToken(Authentication authentication) {
     User userPrincipal = (User) authentication.getPrincipal();
 
@@ -65,29 +81,58 @@ public class JwtTokenProvider {
         .compact();
   }
 
+  public String generateRefreshToken(String userId) {
+
+    // JWT 토큰 생성
+    return Jwts.builder()
+        .setSubject(userId)
+        .setIssuedAt(new Date())
+        .setExpiration(
+            new Date((new Date()).getTime() + refreshTokenExpirationMs)) // Refresh Token 유효 기간
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        .compact();
+  }
+
   public String getUsernameFromJwtToken(String token) {
-    return Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    try {
+      // 만료되지 않은 토큰에서 사용자 이름을 추출
+      return Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    } catch (ExpiredJwtException e) {
+      // 만료된 토큰에서 사용자 이름을 추출
+      return e.getClaims().getSubject();
+    }
+  }
+
+  public String getAuthoritiesFromJwtToken(String token) {
+    Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    return claims.get("roles", String.class);
   }
 
   public boolean validateToken(String authToken) {
     try {
       Jwts.parser().setSigningKey(key).build().parseClaimsJws(authToken);
-
       // 토큰이 유효할 때 true 반환
       return true;
-    } catch (io.jsonwebtoken.ExpiredJwtException e) {
-      System.out.println("JWT 토큰이 만료되었습니다: " + e.getMessage());
-    } catch (io.jsonwebtoken.MalformedJwtException e) {
-      System.out.println("잘못된 JWT 토큰 형식입니다: " + e.getMessage());
-    } catch (io.jsonwebtoken.UnsupportedJwtException e) {
-      System.out.println("지원되지 않는 JWT 토큰입니다: " + e.getMessage());
-    } catch (IllegalArgumentException e) {
-      System.out.println("JWT 토큰이 비어있습니다: " + e.getMessage());
-    } catch (Exception e) {
-      System.out.println("JWT 검증 중 알 수 없는 오류 발생: " + e.getMessage());
+    } catch (ExpiredJwtException
+        | MalformedJwtException
+        | SignatureException
+        | UnsupportedJwtException
+        | IllegalArgumentException e) {
+      // 필요한 경우 예외 로그 처리
+      return false;
     }
     // 토큰이 유효하지 않을 때 false 반환
-    return false;
+
+  }
+
+  // Refresh 토큰의 유효성을 검증하는 메서드
+  private boolean isValidRefreshToken(String refreshToken) {
+    try {
+      Jwts.parser().setSigningKey(key).build().parseClaimsJws(refreshToken);
+      return true; // Refresh 토큰이 유효할 때 true 반환
+    } catch (JwtException e) {
+      return false; // Refresh 토큰이 유효하지 않으면 false 반환
+    }
   }
 
   public String resolveToken(HttpServletRequest request) {

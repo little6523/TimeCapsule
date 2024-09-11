@@ -1,15 +1,9 @@
-// JWT 토큰을 로컬 스토리지에서 가져오는 함수
-function getJwtToken() {
-    return localStorage.getItem('jwtToken');
-}
-
 // 메인 페이지로 인증된 사용자만 접근할 수 있도록 하는 함수
 document.addEventListener("DOMContentLoaded", async () => {
     const token = getJwtToken();
 
     if (!token) {
-        showNotLoggedInView();
-        return;
+        redirectToLogin();
     }
 
     // JWT 토큰을 포함하여 /main으로 GET 요청
@@ -24,13 +18,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const newAccessToken = response.headers.get('Authorization').split(' ')[1];
                 if (newAccessToken) {
                     // 새로운 Access Token을 로컬 스토리지나 메모리에 저장
-                    localStorage.setItem('jwtToken', newAccessToken);
+                    sessionStorage.setItem('jwtToken', newAccessToken);
                 }
                 userId = response.headers.get('X-User-Id');
                 if (userId) {
                     // 로그인 된 사용자 이름을 표시
                     updateSidebarLinks(userId); //사이드바 처리
                     updateButtons(true); //header 처리
+                    document.getElementById('userId').value = userId;
                 } else {
                     console.log('userId 헤더가 응답에 포함되지 않았습니다.');
                 }
@@ -48,9 +43,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 });
 
+// JWT 토큰을 로컬 스토리지에서 가져오는 함수
+function getJwtToken() {
+    return sessionStorage.getItem('jwtToken');
+}
+
 // 로그인 페이지로 리다이렉트하는 함수
 function redirectToLogin() {
     window.location.href = '/login';
+    localStorage.removeItem('jwtToken');
 }
 
 //사이드바 설정

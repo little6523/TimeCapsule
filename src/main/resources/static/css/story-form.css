@@ -1,0 +1,113 @@
+main {
+    min-height: 900px;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-top: 100px;
+    font-size: 60px;
+}
+
+select {
+    width: 20%;
+    font-size: 20px;
+    appearance: none;
+    text-align: center;
+    border: black 2px solid;
+}
+
+#upload-form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-story-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: black 1px solid;
+    border-radius: 10px;
+}
+
+#upload-container {
+    width: 70%;
+    height: 40%;
+    margin-top: 50px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: black 1px solid;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#upload-container.active {
+    background: #ddd;
+}
+
+.story-file-icon {
+    width: 20px;
+    height: 25px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.remove-button {
+    width: 15px;
+    height: 15px;
+    border: 0;
+    background-image: url(../images/Remove.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#file-upload {
+    width: 1px;
+    height: 1px;
+}
+
+#record {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#record-button {
+    background: url("../images/BeforeRecording.png") no-repeat center;
+    background-size: contain;
+    width: 150px;
+    height: 100px;
+    border: 0;
+}
+
+.story-submit-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: right;
+    font-size: 15px;
+
+    gap: 20px;
+}
+
+.story-option-container {
+    width: 70%;
+    text-align: right;
+}
+
+.create-story-button {
+    width: 25%;
+    height: 70px;
+    font-weight: bold;
+    font-size: 30px;
+    background-color: #EFDDDD;
+    border: 0;
+    border-radius: 10px;
+}
+
