@@ -7,7 +7,6 @@ import lombok.*;
 @Entity
 @Table(name = "comments")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -40,5 +39,9 @@ public class Comment {
   @PreUpdate
   protected void onUpdate() {
     updatedAt = LocalDateTime.now();
+  }
+
+  public void updateContent(String content) {
+    this.content = content;
   }
 }

@@ -139,9 +139,11 @@ public class StoryController {
       storyPage = storyService.findMyStoriesByKeyword(userId, searchKeyword, page, size);
     }
 
+    model.addAttribute("userId", userId);
     model.addAttribute("storyPage", storyPage);
     model.addAttribute("tab", "myStories");
     model.addAttribute("currentURI", request.getRequestURI());
+
     return "storylist";
   }
 
@@ -189,6 +191,7 @@ public class StoryController {
       storyPage = storyService.findSharedStoriesByKeyword(userId, searchKeyword, page, size);
     }
 
+    model.addAttribute("userId", userId);
     model.addAttribute("storyPage", storyPage);
     model.addAttribute("tab", "sharedStories");
     model.addAttribute("currentURI", request.getRequestURI());
@@ -316,10 +319,12 @@ public class StoryController {
       Model model) {
     Page<FindStoryResponseDTO> storyPage;
 
+    int actualPage = page - 1;
+
     if (searchKeyword.isEmpty()) {
-      storyPage = storyService.findCommunityStories(page, size);
+      storyPage = storyService.findCommunityStories(actualPage, size);
     } else {
-      storyPage = storyService.findCommunityStoriesByKeyword(searchKeyword, page, size);
+      storyPage = storyService.findCommunityStoriesByKeyword(searchKeyword, actualPage, size);
     }
 
     model.addAttribute("storyPage", storyPage);

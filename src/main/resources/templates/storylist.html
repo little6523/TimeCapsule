@@ -72,11 +72,12 @@
                 <img src="/images/KeyboardArrowRight.png" alt="다음"></a>
         </span>
     </div>
-
+    <input type="hidden" name="userId" id="userId">
 </main>
 
 <!-- Footer -->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:src="@{/js/auth.js}"></script>
 <script>
     // 현재 URL의 페이지 번호를 sessionStorage에 저장
     window.onload = function() {

@@ -62,7 +62,7 @@ public class CommentService {
       throw new IllegalArgumentException("작성자만 본인 댓글을 수정할 수 있습니다.");
     }
 
-    comment.setContent(commentDTO.getContent());
+    comment.updateContent(commentDTO.getContent());
     Comment updatedComment = commentRepository.save(comment);
     return CommentDTO.fromComment(updatedComment);
   }
