@@ -3,9 +3,8 @@ package com.ahi.timecapsule.dto;
 import com.ahi.timecapsule.entity.Comment;
 import com.ahi.timecapsule.entity.Story;
 import com.ahi.timecapsule.entity.User;
-import java.time.LocalDateTime;
-
 import jakarta.annotation.Nullable;
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Getter
@@ -14,8 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CommentDTO {
-  @Nullable
-  private Long id;
+  @Nullable private Long id;
   private long storyId;
   private String userId;
   private String content;

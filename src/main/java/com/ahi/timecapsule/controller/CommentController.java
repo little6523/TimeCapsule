@@ -3,13 +3,12 @@ package com.ahi.timecapsule.controller;
 import com.ahi.timecapsule.dto.CommentDTO;
 import com.ahi.timecapsule.dto.UserDTO;
 import com.ahi.timecapsule.service.CommentService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/comments")
@@ -32,7 +31,8 @@ public class CommentController {
   }
 
   @PostMapping
-  public ResponseEntity<CommentDTO> createComment(@RequestBody CommentDTO commentDto, Authentication authentication) {
+  public ResponseEntity<CommentDTO> createComment(
+      @RequestBody CommentDTO commentDto, Authentication authentication) {
     if (authentication == null || !(authentication.getPrincipal() instanceof UserDTO)) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -47,7 +47,8 @@ public class CommentController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<CommentDTO> updateComment(@PathVariable Long id, @RequestBody CommentDTO commentDto, Authentication authentication) {
+  public ResponseEntity<CommentDTO> updateComment(
+      @PathVariable Long id, @RequestBody CommentDTO commentDto, Authentication authentication) {
     if (authentication == null || !(authentication.getPrincipal() instanceof UserDTO)) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
