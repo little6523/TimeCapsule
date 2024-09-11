@@ -42,13 +42,13 @@ public class User {
 
   @Builder
   public User(
-          String userId,
-          String password,
-          String email,
-          String nickname,
-          Integer role,
-          Integer sharelistId,
-          String provider) { // 추가
+      String userId,
+      String password,
+      String email,
+      String nickname,
+      Integer role,
+      Integer sharelistId,
+      String provider) { // 추가
     this.userId = userId;
     this.password = password;
     this.email = email;

@@ -1,16 +1,14 @@
 package com.ahi.timecapsule.service;
 
-import com.ahi.timecapsule.dto.request.StoryOptionDTO;
 import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class StoryService {

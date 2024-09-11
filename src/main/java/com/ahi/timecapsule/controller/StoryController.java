@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Controller
 @RequestMapping("/stories")
@@ -33,7 +32,7 @@ public class StoryController {
   // 스토리 생성 폼 조회
   @GetMapping("/form")
   public String getStoryForm(Model model) {
-//    model.addAttribute("StoryOptionDTO", new StoryOptionDTO());
+    //    model.addAttribute("StoryOptionDTO", new StoryOptionDTO());
     model.addAttribute("dialects", dialects);
     model.addAttribute("speakers", speakers);
 
@@ -60,17 +59,18 @@ public class StoryController {
     return "test";
   }
 
-//  @ResponseBody
-//  @GetMapping(path = "/story", produces = "text/event-stream")
-//  public ResponseEntity<SseEmitter> createStory() throws IOException, ParseException, InterruptedException {
-//    apiService.post();
-//
-//    List<String> contents = apiService.get();
-//
-//    System.out.println(contents.get(0));
-//
-//    return ResponseEntity.ok(apiService.createContent(contents));
-//  }
+  //  @ResponseBody
+  //  @GetMapping(path = "/story", produces = "text/event-stream")
+  //  public ResponseEntity<SseEmitter> createStory() throws IOException, ParseException,
+  // InterruptedException {
+  //    apiService.post();
+  //
+  //    List<String> contents = apiService.get();
+  //
+  //    System.out.println(contents.get(0));
+  //
+  //    return ResponseEntity.ok(apiService.createContent(contents));
+  //  }
 
   @ResponseBody
   @GetMapping("/stt/auth")

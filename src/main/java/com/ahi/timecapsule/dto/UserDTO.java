@@ -32,11 +32,11 @@ public class UserDTO {
 
   public User toEntity() {
     return User.builder()
-            .userId(userId)
-            .email(email)
-            .nickname(nickname)
-            .password(password)
-            .role(role)
-            .build();
+        .userId(userId)
+        .email(email)
+        .nickname(nickname)
+        .password(password)
+        .role(role)
+        .build();
   }
 }
