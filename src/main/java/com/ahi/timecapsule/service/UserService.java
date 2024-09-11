@@ -7,6 +7,7 @@ import com.ahi.timecapsule.oauth.CustomOAuth2User;
 import com.ahi.timecapsule.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -316,7 +317,11 @@ public class UserService {
         .collect(Collectors.joining());
   }
 
-  public List<User> searchUsersByNickname(String keyword) {
-    return userRepository.findByNicknameContaining(keyword);
+  public List<String> searchUsersByNickname(String keyword) {
+    List<String> userNicknames = new ArrayList<>();
+    for (User user : userRepository.findByNicknameContaining(keyword)) {
+      userNicknames.add(user.getNickname());
+    }
+    return userNicknames;
   }
 }
