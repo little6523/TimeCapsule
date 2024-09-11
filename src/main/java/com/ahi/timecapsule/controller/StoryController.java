@@ -2,6 +2,7 @@ package com.ahi.timecapsule.controller;
 
 import com.ahi.timecapsule.dto.FindStoryResponseDTO;
 import com.ahi.timecapsule.dto.ImageDTO;
+import com.ahi.timecapsule.dto.StoryDTO;
 import com.ahi.timecapsule.dto.UpdateStoryRequestDTO;
 import com.ahi.timecapsule.dto.request.StoryContentDTO;
 import com.ahi.timecapsule.dto.request.StoryOptionDTO;
@@ -116,14 +117,13 @@ public class StoryController {
     StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
     System.out.println(storyContentDTO);
 
-    storyService.save(storyOptionDTO, storyContentDTO, filesPath, userId);
+    StoryDTO storyDTO = storyService.saveStory(storyOptionDTO, storyContentDTO, filesPath, userId);
 
-    //    return "redirect:story-created/" + storyDTO.getUser();
-    return "redirect:stories/complete-form";
+    return "redirect:/stories/" + storyDTO.getId();
   }
 
   // 마이 스토리 목록 조회(전체/검색)
-  @GetMapping("/stories")
+  @GetMapping
   public String getStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
       @RequestParam(defaultValue = "0") int page,
@@ -139,9 +139,11 @@ public class StoryController {
       storyPage = storyService.findMyStoriesByKeyword(userId, searchKeyword, page, size);
     }
 
+    model.addAttribute("userId", userId);
     model.addAttribute("storyPage", storyPage);
     model.addAttribute("tab", "myStories");
     model.addAttribute("currentURI", request.getRequestURI());
+
     return "storylist";
   }
 
@@ -189,6 +191,7 @@ public class StoryController {
       storyPage = storyService.findSharedStoriesByKeyword(userId, searchKeyword, page, size);
     }
 
+    model.addAttribute("userId", userId);
     model.addAttribute("storyPage", storyPage);
     model.addAttribute("tab", "sharedStories");
     model.addAttribute("currentURI", request.getRequestURI());
@@ -316,10 +319,12 @@ public class StoryController {
       Model model) {
     Page<FindStoryResponseDTO> storyPage;
 
+    int actualPage = page - 1;
+
     if (searchKeyword.isEmpty()) {
-      storyPage = storyService.findCommunityStories(page, size);
+      storyPage = storyService.findCommunityStories(actualPage, size);
     } else {
-      storyPage = storyService.findCommunityStoriesByKeyword(searchKeyword, page, size);
+      storyPage = storyService.findCommunityStoriesByKeyword(searchKeyword, actualPage, size);
     }
 
     model.addAttribute("storyPage", storyPage);

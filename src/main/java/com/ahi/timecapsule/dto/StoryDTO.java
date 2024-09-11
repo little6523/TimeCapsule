@@ -9,6 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class StoryDTO {
+
+  private Long id;
+
   private UserDTO userDTO;
 
   private String title;
@@ -46,6 +49,7 @@ public class StoryDTO {
 
   public static StoryDTO fromEntity(Story story) {
     return StoryDTO.builder()
+        .id(story.getId())
         .userDTO(UserDTO.fromEntity(story.getUser()))
         .title(story.getTitle())
         .content(story.getContent())

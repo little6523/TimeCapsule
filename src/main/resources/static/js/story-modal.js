@@ -8,47 +8,51 @@ const confirmButton = document.getElementById('storyModalButton');
 const shareModal = document.getElementById('shareModal');
 const shareButton = document.getElementById('share');
 const shareSearchButton = document.getElementById('shareSearchButton');
-const sharedListInput = document.getElementById('sharedList');
+const search = document.getElementById('search');
+const result = document.getElementById('result');
+const searchedList = document.getElementById('searchedList');
 
-shareSearchButton.addEventListener('click', function () {
-    if (shareSearchButton.innerText === '검색') {
-        shareModal.style.display = 'flex';
-
-        document.getElementById('keyword').innerText
-            = "검색한 키워드: " + sharedListInput.value;
-        console.log(sharedListInput.innerText);
-    } else {
-        shareModal.style.display = 'none';
-        shareButton.style.display = 'none';
+shareSearchButton.addEventListener('click', searchUsers);
+search.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        searchUsers();
     }
 });
 
-shareSearchButton.addEventListener('click', function () {
-    const keyword = document.getElementById('sharedList').value;
-    const searchedList = document.getElementById('searchedList');
-
-    // 이전 검색 결과를 비우기
+function searchUsers() {
+    // 이전 검색 결과 비우기
     searchedList.innerHTML = '';
 
+    result.innerText = "검색 결과";
+    result.style.backgroundColor = 'gray';
+
     // AJAX 요청을 통해 검색된 결과 가져오기
-    fetch(`http://localhost:8080/stories/search?keyword=${keyword}`)
+    fetch(`http://localhost:8080/stories/search?keyword=${search.value}`)
         .then(response => response.json())
         .then(users => {
-            console.log(users); // 응답 데이터 형식 확인
 
-            if (users === null) {
+            if (users === null || users.length === 0) {
+                const userDiv = document.createElement('div');
+                userDiv.classList.add('searchedUser');
+                userDiv.textContent = '검색 결과 없음';
+                searchedList.appendChild(userDiv);
+
                 return;
             }
 
+            shareModal.style.display = 'flex';
+
+            // 배열이 아니면 배열로 변환
             if (!Array.isArray(users)) {
-                users = [users]; // 배열이 아니면 배열로 변환
+                users = [users];
             }
 
             // 검색된 유저 목록을 배열로 처리
             users.forEach(user => {
                 const userDiv = document.createElement('div');
                 userDiv.classList.add('searchedUser');
-                userDiv.textContent = user;  // 검색된 닉네임을 추가
+                userDiv.textContent = user;
 
                 // searchedList에 div 추가
                 searchedList.appendChild(userDiv);
@@ -65,14 +69,14 @@ shareSearchButton.addEventListener('click', function () {
                     shareButton.style.top = `${absoluteTop}px`;
                     shareButton.style.left = `${absoluteLeft}px`;
 
-                    // 현재 마우스 오버된 요소를 저장
+                    // 현재 커서가 위치한 요소를 저장
                     hoveredUser = userDiv;
                 });
             });
 
         })
         .catch(error => console.error('Error:', error));
-});
+}
 
 const modalSharedList = document.getElementById('modalSharedList');
 let sharedList = [];
@@ -112,13 +116,13 @@ function addTag(text) {
 
 // 숨겨진 input 필드에 리스트 형태로 사용자 추가
 function updateHiddenInputs() {
-    sharedListInput.innerHTML = '';
+    search.innerHTML = '';
     sharedList.forEach(user => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = 'sharedUsers[]'; // 배열 형태로 전송
         input.value = user;
-        sharedListInput.appendChild(input);
+        search.appendChild(input);
     });
 }
 
