@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 목록</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/notice.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<main>
+    <div class="container-notice">
+        <h1>공지사항</h1>
+        <a th:href="@{/notices}">
+            <img th:src="@{/images/timecapsulelogo.png}" alt="TimeCapsule 로고" class="img-logo-notice">
+        </a>
+        <div class="container-search">
+            <form th:action="@{/notices}" method="get">
+                <div class="wrapper-input-search">
+                    <input type="text" name="searchTerm" th:value="${searchTerm}" placeholder="제목, 내용으로 입력해주세요">
+                    <button type="submit" class="button-search">
+                        <img th:src="@{/images/searchicon.png}" alt="검색버튼" class="img-icon-search">
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <ul class="list-notice">
+                <li class="item-header-notice">
+                    <span class="text-no">NO</span>
+                    <span class="text-title">공지 제목</span>
+                    <span class="text-author">작성자</span>
+                    <span class="text-date">작성일</span>
+                </li>
+                <li class="item-notice" th:each="notice, stat : ${notices.content}">
+                    <span class="text-no" th:text="${notices.number * notices.size + stat.index + 1}"></span>
+                    <span class="text-title">
+                        <a th:href="@{/notices/{id}(id=${notice.id})}" th:text="${notice.title}"></a>
+                    </span>
+                    <span class="text-author" th:text="${notice.userNickname != null ? notice.userNickname : ''}"></span>
+                    <span class="text-date" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}"></span>
+                </li>
+            </ul>
+        </div>
+        <div class="container-button" sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/notices/form}" class="button-write">공지사항 작성</a>
+        </div>
+        <nav th:if="${notices.totalElements > 0}">
+            <ul class="list-pagination">
+                <li th:each="pageNumber : ${#numbers.sequence(0, notices.totalPages - 1)}"
+                    th:classappend="${pageNumber == notices.number} ? 'active'">
+                    <a th:href="@{/notices(page=${pageNumber}, size=${notices.size}, searchTerm=${searchTerm})}"
+                       th:text="${pageNumber + 1}"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/auth.js}"></script>
+</body>
+</html>
