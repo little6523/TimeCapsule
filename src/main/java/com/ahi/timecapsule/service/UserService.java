@@ -315,4 +315,8 @@ public class UserService {
         .mapToObj(i -> String.valueOf(CHARS.charAt(i)))
         .collect(Collectors.joining());
   }
+
+  public List<User> searchUsersByNickname(String keyword) {
+    return userRepository.findByNicknameContaining(keyword);
+  }
 }

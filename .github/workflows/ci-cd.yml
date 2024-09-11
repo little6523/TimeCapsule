@@ -30,16 +30,16 @@ jobs:
           echo "${{ secrets.APPLICATION_SECRET_YML }}" | base64 --decode > src/main/resources/application-secret.yml
           find src
 
-      # 3. Gradle 캐싱 -> gradle의 의존성을 캐싱해서 매번 gradle을 새로 가져오는 것을 방지하여 빌드시간을 줄이기 위함
-      - name: Gradle Caching
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      # # 3. Gradle 캐싱 -> gradle의 의존성을 캐싱해서 매번 gradle을 새로 가져오는 것을 방지하여 빌드시간을 줄이기 위함
+      # - name: Gradle Caching
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/.gradle/caches
+      #       ~/.gradle/wrapper
+      #     key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gradle-
 
       # 4. gradlew 권한 변경
       - name: Grant execute permission for gradlew

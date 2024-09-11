@@ -29,4 +29,14 @@ public class UserDTO {
         .provider(user.getProvider()) // 추가
         .build();
   }
+
+  public User toEntity() {
+    return User.builder()
+        .userId(userId)
+        .email(email)
+        .nickname(nickname)
+        .password(password)
+        .role(role)
+        .build();
+  }
 }
