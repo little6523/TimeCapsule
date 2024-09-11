@@ -2,6 +2,7 @@ package com.ahi.timecapsule.controller;
 
 import com.ahi.timecapsule.dto.FindStoryResponseDTO;
 import com.ahi.timecapsule.dto.ImageDTO;
+import com.ahi.timecapsule.dto.StoryDTO;
 import com.ahi.timecapsule.dto.UpdateStoryRequestDTO;
 import com.ahi.timecapsule.dto.request.StoryContentDTO;
 import com.ahi.timecapsule.dto.request.StoryOptionDTO;
@@ -116,14 +117,13 @@ public class StoryController {
     StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
     System.out.println(storyContentDTO);
 
-    storyService.save(storyOptionDTO, storyContentDTO, filesPath, userId);
+    StoryDTO storyDTO = storyService.saveStory(storyOptionDTO, storyContentDTO, filesPath, userId);
 
-    //    return "redirect:story-created/" + storyDTO.getUser();
-    return "redirect:stories/complete-form";
+    return "redirect:/stories/" + storyDTO.getId();
   }
 
   // 마이 스토리 목록 조회(전체/검색)
-  @GetMapping("/stories")
+  @GetMapping
   public String getStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
       @RequestParam(defaultValue = "0") int page,
