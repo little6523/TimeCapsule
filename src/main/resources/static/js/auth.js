@@ -1,15 +1,9 @@
-// JWT 토큰을 로컬 스토리지에서 가져오는 함수
-function getJwtToken() {
-    return localStorage.getItem('jwtToken');
-}
-
 // 메인 페이지로 인증된 사용자만 접근할 수 있도록 하는 함수
 document.addEventListener("DOMContentLoaded", async () => {
     const token = getJwtToken();
 
     if (!token) {
-        showNotLoggedInView();
-        return;
+        redirectToLogin();
     }
 
     // JWT 토큰을 포함하여 /main으로 GET 요청
@@ -47,6 +41,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateButtons(false); //header 처리
         });
 });
+
+// JWT 토큰을 로컬 스토리지에서 가져오는 함수
+function getJwtToken() {
+    return localStorage.getItem('jwtToken');
+}
 
 // 로그인 페이지로 리다이렉트하는 함수
 function redirectToLogin() {
