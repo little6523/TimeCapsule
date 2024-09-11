@@ -12,26 +12,26 @@
 </head>
 
 <body>
-<header th:replace="~{fragments/header :: header}"></header>
+<div th:replace="~{fragments/header :: header}"></div>
 
-<aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
 <main>
     <div class="main-header">
         <h1 th:if="${tab == 'myStories'}">마이 스토리</h1>
         <h1 th:if="${tab == 'sharedStories'}">공유된 스토리</h1>
         <h1 th:if="${tab == 'community'}">커뮤니티</h1>
-            <img src="/images/timecapsulelogo.png" alt="로고">
+        <img src="/images/MainTimecapsuleLogo.png" alt="로고">
     </div>
 
-    <div class="tabs" th:unless="${currentURI.contains('')}">
+    <div class="tabs" th:unless="${tab == 'community'}">
         <a th:classappend="${tab == 'myStories'} ? 'active'" th:href="@{/stories}" class="tab-btn"
            style="background-color: #E5C1C1">마이 스토리</a>
         <a th:classappend="${tab == 'sharedStories'} ? 'active'" th:href="@{/stories/shared}" class="tab-btn"
            style="background-color: #E7DEDE">공유 받은 스토리</a>
     </div>
 
-    <form th:action="@{${tab == 'myStories' ? '/stories' : (tab == 'community' ? '/community/stories' : '/stories/shared')}}" method="get"
+    <form th:action="@{${tab == 'myStories' ? '/stories' : (tab == 'community' ? '/stories/community' : '/stories/shared')}}" method="get"
           class="search-container">
         <label for="keyword" class="visually-hidden">검색어</label>
         <input type="text" id="keyword" name="keyword" placeholder="제목, 내용으로 검색해주세요" class="search-input">
@@ -50,7 +50,7 @@
         <tbody>
         <tr th:each="story, stat : ${storyPage.content}">
             <td th:text="${(storyPage.number * storyPage.size) + stat.index + 1}"></td>
-            <td><a th:href="@{${tab == 'myStories' ? '/stories/{id}' : (tab == 'community' ? '/community/stories/{id}' : '/stories/shared/{id}')}(id=${story.id})}"
+            <td><a th:href="@{${tab == 'myStories' ? '/stories/{id}' : (tab == 'community' ? '/stories/community/{id}' : '/stories/shared/{id}')}(id=${story.id})}"
                    th:text="${story.title}"></a></td>
             <td th:text="${story.author.nickname}"></td>
             <td th:text="${#temporals.format(story.createdAt, 'yyyy-MM-dd')}"></td>
@@ -60,25 +60,28 @@
 
     <div class="pagination">
         <span th:if="${storyPage.hasPrevious()}">
-            <a th:href="@{${currentURI}(page=${storyPage.number - 1})}">
+            <a th:href="@{${currentURI}(page=${storyPage.number})}">
                 <img src="/images/KeyboardArrowLeft.png" alt="이전"></a>
         </span>
         <span th:if="${storyPage.totalPages >= 1}" th:each="i : ${#numbers.sequence(0, storyPage.totalPages - 1)}">
-            <a th:href="@{${currentURI}(page=${i})}" th:text="${i + 1}"
+<!--            <span th:text="${i}"></span>-->
+            <a th:href="@{${currentURI}(page=${i + 1})}" th:text="${i + 1}"
                th:classappend="${i == storyPage.number} ? 'current'"></a>
         </span>
         <span th:if="${storyPage.hasNext()}">
-            <a th:href="@{${currentURI}(page=${storyPage.number + 1})}">
+            <a th:href="@{${currentURI}(page=${storyPage.number + 2})}">
                 <img src="/images/KeyboardArrowRight.png" alt="다음"></a>
         </span>
     </div>
     <input type="hidden" name="userId" id="userId">
 </main>
 
-<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+<!--<script th:src="@{/js/page.js}"></script>-->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
 <script th:src="@{/js/auth.js}"></script>
 <script>
+    // 현재 페이지 번호 유지를 위한 함수
     // 현재 URL의 페이지 번호를 sessionStorage에 저장
     window.onload = function() {
         const params = new URLSearchParams(window.location.search);
