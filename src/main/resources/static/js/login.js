@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('jwtToken');
+    const token = sessionStorage.getItem('jwtToken');
     if (token) {
         showError("이미 로그인 되어있습니다!");
 
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.getElementById('loginForm').addEventListener('submit', async function (event) {
     event.preventDefault(); // 폼의 기본 제출 동작을 막음
-    const token = localStorage.getItem('jwtToken');
+    const token = sessionStorage.getItem('jwtToken');
 
     if (token) {
         showError("이미 로그인 되어있습니다!");
@@ -36,7 +36,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             const token = response.headers.get('Authorization');
             if (token) {
                 // 로컬 스토리지에 토큰 저장
-                localStorage.setItem('jwtToken', token.replace('Bearer ', ''));
+                sessionStorage.setItem('jwtToken', token.replace('Bearer ', ''));
                 // 메인 페이지로 리다이렉트
                 window.location.href = '/main';
 

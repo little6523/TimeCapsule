@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const newAccessToken = response.headers.get('Authorization').split(' ')[1];
                 if (newAccessToken) {
                     // 새로운 Access Token을 로컬 스토리지나 메모리에 저장
-                    localStorage.setItem('jwtToken', newAccessToken);
+                    sessionStorage.setItem('jwtToken', newAccessToken);
                 }
                 userId = response.headers.get('X-User-Id');
                 if (userId) {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // JWT 토큰을 로컬 스토리지에서 가져오는 함수
 function getJwtToken() {
-    return localStorage.getItem('jwtToken');
+    return sessionStorage.getItem('jwtToken');
 }
 
 // 로그인 페이지로 리다이렉트하는 함수

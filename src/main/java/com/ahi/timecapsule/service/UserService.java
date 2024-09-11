@@ -119,7 +119,6 @@ public class UserService {
   public String validateAndRefreshAccessToken(String accessToken, String refreshToken) {
     // Access Token 유효성 검사
     boolean isAccessTokenValid = jwtTokenProvider.validateToken(accessToken);
-    System.out.println("Access Token 유효성 결과: " + isAccessTokenValid); // 추가된 로깅
 
     if (isAccessTokenValid) {
       // Access Token이 유효하면 기존 토큰 반환

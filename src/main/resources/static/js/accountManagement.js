@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (responseBody.success === true) { //200
                 modalUtils.showAlert(responseBody.message, () => {
-                    localStorage.removeItem('jwtToken');
-                    localStorage.removeItem('accessToken');
+                    sessionStorage.removeItem('jwtToken');
+                    sessionStorage.removeItem('accessToken');
                     window.location.href = API_URL.LOGIN_PAGE;
                 });
             }
