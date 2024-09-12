@@ -9,6 +9,8 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/story-update.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -60,247 +62,25 @@
             <button class="back-btn" onclick="history.back()">뒤로가기</button>
             <button type="button" id="saveButton" onclick="submitForm()">저장</button>
         </div>
+        <input type="hidden" name="userId" id="userId">
     </div>
-    <input type="hidden" name="userId" id="userId">
 </main>
 
 <!-- Footer -->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
-<script th:src="@{/js/auth.js}"></script>
 <script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        const currentUser = /*[[${story.getAuthor().nickname}]]*/ ''; // 본인 ID
-
-        // 공유자 ID를 태그 형태로 추가 및 삭제
-        const tagInputContainer = document.querySelector('.tag-input-container');
-        const tagInput = document.querySelector('.tag-input');
-
-        tagInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && tagInput.value.trim() !== '') {
-                e.preventDefault();
-                const newSharedUser = tagInput.value.trim();
-
-                // 본인 ID와 동일한 공유자 ID일 경우
-                if(newSharedUser === currentUser) {
-                    alert('본인에게는 공유할 수 없습니다.');
-                    tagInput.value = '';
-                    return;
-                }
-
-                addTag(newSharedUser);
-                // 새로운 공유자를 sharedList에 추가
-                sharedList.push(newSharedUser);
-                tagInput.value = '';
-            }
-        });
-
-        function addTag(text) {
-            const tag = document.createElement('span');
-            tag.className = 'tag';
-            tag.innerHTML = `${text} <i class="remove-tag">×</i>`;
-            tagInputContainer.insertBefore(tag, tagInput);
-
-            tag.querySelector('.remove-tag').addEventListener('click', function () {
-                tagInputContainer.removeChild(tag);
-                // 삭제된 공유자를 shareList에서 제거
-                const index = sharedList.indexOf(text);
-                if (index > -1) {
-                    sharedList.splice(index, 1);
-                }
-            });
-        }
-
-        const sharedList = [];
-
-        // 기존 공유자 리스트를 태그 형태로 출력
-        const existingSharedList = /*[[${story.sharedStories}]]*/ [];
-        existingSharedList.forEach(function (shared) {
-            addTag(shared.userDTO.nickname);
-            sharedList.push(shared.userDTO.nickname); // sharedList 배열에 추가
-        });
-
-        const contentEditableDiv = document.getElementById('content');
-        const imageUploadInput = document.getElementById('imageUpload');
-        const uploadBtn = document.getElementById('uploadBtn');
-
-        // 기존 이미지, 콘텐츠 로드
-        const existingImages = /*[[${images}]]*/ {};
-        const content = /*[[${story.content}]]*/ '';
-        const deletedImages = [];
-
-        let beforeEditContent = `<p>${content}</p>`;
-
-        Object.entries(existingImages).forEach(([key, value]) => {
-            insertImage(value, true);
-            console.log(`Key: ${key}, Value: ${value}`);
-        });
-
-        contentEditableDiv.innerHTML += beforeEditContent;
-
-        // 이미지 업로드 버튼 클릭 시 파일 선택창 열기
-        uploadBtn.addEventListener('click', function () {
-            imageUploadInput.click();
-        })
-
-        // 파일 선택 후 이미지 추가
-        imageUploadInput.addEventListener('change', function () {
-            const files = Array.from(imageUploadInput.files);
-
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = e => insertImage(e.target.result, false);
-                reader.readAsDataURL(file);
-            })
-        });
-
-        // 페이지 로드 시 기존 이미지에 삭제 버튼 추가
-        window.onload = function() {
-            const images = contentEditableDiv.querySelectorAll('img');
-            images.forEach(function(img) {
-                const imageContainer = img.parentElement;
-
-                // 기존 이미지 삭제 버튼 추가
-                const removeButton = createRemoveButton(); // 아래에 removeButton 생성 함수
-                imageContainer.appendChild(removeButton);
-
-                // 삭제 버튼 클릭 이벤트 등록
-                removeButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    contentEditableDiv.removeChild(imageContainer); // 이미지 컨테이너 제거
-                    const imgSrc = img.src; // 이미지의 src 값 가져오기
-                    const key = findKeyByValue(existingImages, imgSrc.substring(18));
-                    console.log(existingImages);
-                    console.log(key);
-                    deletedImages.push(key);
-                });
-            });
-        };
-
-        function findKeyByValue(obj, value) {
-            const values = Object.values(obj);  // 객체의 값 배열
-            const index = values.indexOf(value);  // 값의 인덱스 찾기
-            if (index !== -1) {
-                return Object.keys(obj)[index];  // 인덱스를 기반으로 키 반환
-            }
-            return null;
-        }
-
-// 이미지 삭제 버튼 생성 함수
-        function createRemoveButton() {
-            const removeButton = document.createElement('button');
-            removeButton.className = 'remove-button';
-            removeButton.style.position = 'absolute';
-            removeButton.style.top = '0px';
-            removeButton.style.right = '0px';
-            removeButton.style.border = 'none';
-            removeButton.style.background = 'rgba(22, 22, 22, 0.3)';
-            removeButton.style.cursor = 'pointer';
-            removeButton.style.padding = '5px';
-
-            const removeIcon = document.createElement('img');
-            removeIcon.src = '/images/Trash.png';
-            removeIcon.alt = '이미지 삭제';
-            removeIcon.style.width = '20px';
-            removeIcon.style.height = '20px';
-            removeIcon.style.opacity = '1';
-
-            removeButton.appendChild(removeIcon);
-
-            return removeButton;
-        }
-
-        function insertImage(src, isExisted) {
-            const imageContainer = document.createElement('div');
-            imageContainer.style.position = 'relative';
-            imageContainer.style.display = 'inline-block';
-            imageContainer.style.marginBottom = '10px';
-
-            const img = document.createElement('img');
-            if(isExisted) {
-                img.src = `data:image;base64,${src}`;
-            } else {
-                img.src = src;
-            }
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '400px';
-            img.style.display = 'block';
-            imageContainer.appendChild(img);
-
-            const removeButton = createRemoveButton();
-            imageContainer.appendChild(removeButton);
-
-            contentEditableDiv.appendChild(imageContainer);
-
-            removeButton.addEventListener('click', function(e) {
-                contentEditableDiv.removeChild(imageContainer);
-            });
-        }
-
-        console.log(sharedList);
-
-        // 폼 데이터를 PUT 요청으로 서버로 전송
-        window.submitForm = function () {
-            const storyId = [[${story.id}]];
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').innerText;
-            const isCommunityPost = document.getElementById('communityToggle').checked;
-            const files = imageUploadInput.files;
-
-            // 제목을 입력하지 않을 시 오류 발생
-            if (!title || title.trim() === "") {
-                alert("제목을 입력해 주세요.");
-                return;
-            }
-
-            // 수정 요청할 데이터 추가
-            const formData = new FormData();
-            formData.append("storyId", storyId);
-            formData.append("title", title);
-            formData.append("content", content);
-            formData.append("isShared", isCommunityPost);
-
-            if (sharedList.length > 0) {
-                sharedList.forEach(sharedUser => {
-                    formData.append('sharedWithUsers', sharedUser);
-                });
-            } else {
-                formData.append('sharedWithUsers', []);
-            }
-
-            if (deletedImages.length > 0) {
-                deletedImages.forEach(image => {
-                    formData.append('deletedImages', image);
-                });
-            } else {
-                formData.append('deletedImages', []);
-            }
-
-            if (files.length > 0) {
-                Array.from(files).forEach(file => {
-                    formData.append('images', file);
-                });
-            } else {
-                formData.append('images', new Blob());
-            }
-
-            fetch(`/stories/${storyId}`, {
-                method: 'PUT',
-                body: formData
-            }).then(async response => {
-                const message = await response.text();
-                if (response.ok) {
-                    alert(message);
-                    window.location.href = `/stories/${storyId}`;
-                } else {
-                    alert(message);
-                    console.log(message);
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('스토리 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
-            });
-        };
-    });
+    const storyId = /*[[${story.id}]]*/ null;
+    const currentUser = /*[[${story.getAuthor().nickname}]]*/ ''; // 유저 닉네임
+    const existingSharedList = /*[[${story.sharedStories}]]*/ []; // 기존 공유자 리스트
+    const isEditMode = true;
+    const existingImages = /*[[${images}]]*/ {}; // 기존 이미지
+    const content = /*[[${story.content}]]*/ '';
 </script>
+<script th:src="@{/js/auth.js}"></script>
+<script th:src="@{/js/shared-list.js}"></script>
+<script th:src="@{/js/story-update.js}"></script>
+<script th:src="@{/js/update-image.js}"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
+
 </body>
 </html>

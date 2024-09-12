@@ -8,6 +8,8 @@
     <link rel="stylesheet" th:href="@{/css/story-created.css}">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -16,7 +18,7 @@
 
 <main>
     <h1>당신만의 특별한 스토리</h1>
-    <form th:action="@{/stories}" method="post" id="createForm" enctype="multipart/form-data">
+    <form id="createForm" enctype="multipart/form-data">
         <div class="form-group">
             <label>커뮤니티 게시&nbsp;&nbsp;&nbsp;</label>
             <label class="switch">
@@ -65,10 +67,12 @@
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script th:src="@{/js/story-modal.js}"></script>
 <script th:src="@{/js/image-upload.js}"></script>
 <script th:src="@{/js/story-submit.js}"></script>
 <script type="text/javascript" th:src="@{/js/auth.js}"></script>
-<!--<script th:src="@{/js/story.js}"></script>-->
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
+<script th:src="@{/js/story.js}"></script>
 </body>
 </html>

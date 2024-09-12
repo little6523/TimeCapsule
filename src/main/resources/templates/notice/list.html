@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>공지사항 목록</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/notice.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -18,7 +18,7 @@
     <div class="container-notice">
         <h1>공지사항</h1>
         <a th:href="@{/notices}">
-            <img th:src="@{/images/timecapsulelogo.png}" alt="TimeCapsule 로고" class="img-logo-notice">
+            <img th:src="@{/images/Maintimecapsulelogo.png}" alt="TimeCapsule 로고" class="img-logo-notice">
         </a>
         <div class="container-search">
             <form th:action="@{/notices}" method="get">
@@ -48,8 +48,9 @@
                 </li>
             </ul>
         </div>
-        <div class="container-button" sec:authorize="hasRole('ADMIN')">
-            <a th:href="@{/notices/form}" class="button-write">공지사항 작성</a>
+        <div class="container-button">
+<!--            <input type="hidden" name="adminActions" id="adminActions">-->
+            <a id="adminButton" th:href="@{/notices/form}" class="button-write" style="display:none;">공지사항 작성</a>
         </div>
         <nav th:if="${notices.totalElements > 0}">
             <ul class="list-pagination">
@@ -61,10 +62,13 @@
             </ul>
         </nav>
     </div>
+    <input type="hidden" name="userId" id="userId">
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<script th:src="@{/js/auth.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
+<script th:src="@{/js/auth-notice.js}"></script>
 </body>
 </html>

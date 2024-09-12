@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,7 +72,7 @@ public class StoryController {
     List<MultipartFile> files = new ArrayList<>();
     files.add(file);
 
-    List<String> filePath = storyService.saveFiles(files);
+    List<String> filePath = storyService.saveFiles(files, userId);
     storyOptionDTO.setSoundFile(filePath.get(0));
 
     session.setAttribute("StoryOptionDTO", storyOptionDTO);
@@ -82,9 +84,10 @@ public class StoryController {
   // 공유자 검색
   @GetMapping("/search")
   @ResponseBody
-  public List<String> searchUsers(@RequestParam("keyword") String keyword) {
+  public List<String> searchUsers(
+      @RequestParam("keyword") String keyword, @RequestParam("userId") String userId) {
 
-    return userService.searchUsersByNickname(keyword);
+    return userService.searchUsersByNickname(keyword, userId);
   }
 
   // 스토리 완성 폼 조회
@@ -99,20 +102,21 @@ public class StoryController {
   // 스토리 생성
   @PostMapping
   public String createStory(
-      @RequestPart(value = "images", required = false) List<MultipartFile> files,
+      @RequestPart("images") List<MultipartFile> images,
       @ModelAttribute StoryContentDTO storyContentDTO,
       @ModelAttribute("userId") String userId,
       HttpSession session)
       throws IOException {
 
     List<String> filesPath = new ArrayList<>();
-    if (files != null && !files.isEmpty()) {
-      filesPath = storyService.saveFiles(files);
+    if (images != null && !images.isEmpty()) {
+      filesPath = storyService.saveFiles(images, userId);
     }
 
     StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
 
     StoryDTO storyDTO = storyService.saveStory(storyOptionDTO, storyContentDTO, filesPath, userId);
+    imageService.saveImages(filesPath, storyDTO.getId());
 
     return "redirect:/stories/" + storyDTO.getId();
   }
@@ -121,19 +125,20 @@ public class StoryController {
   @GetMapping
   public String getStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
-      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @ModelAttribute("userId") String userId,
       HttpServletRequest request,
       Model model) {
+
+    int actualPage = page - 1;
+
     Page<FindStoryResponseDTO> storyPage;
 
-    System.out.println("userId" + userId);
-
     if (searchKeyword.isEmpty()) {
-      storyPage = storyService.findUserStories(userId, page, size);
+      storyPage = storyService.findUserStories(userId, actualPage, size);
     } else {
-      storyPage = storyService.findMyStoriesByKeyword(userId, searchKeyword, page, size);
+      storyPage = storyService.findMyStoriesByKeyword(userId, searchKeyword, actualPage, size);
     }
 
     model.addAttribute("userId", userId);
@@ -170,22 +175,41 @@ public class StoryController {
     return "story-detail";
   }
 
+  // 인터뷰 파일 다운로드
+  @GetMapping("/download")
+  public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) {
+
+    List<Object> getFile = storyService.getSoundFile(fileName);
+    Resource resource = (Resource) getFile.get(0);
+    String extension = (String) getFile.get(1);
+
+    if (resource == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    String mimeType = "audio/" + extension;
+
+    return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(resource);
+  }
+
   // 공유된 스토리 목록 조회(전체/검색)
   @GetMapping("/shared")
   public String getSharedStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
-      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @ModelAttribute("userId") String userId,
       HttpServletRequest request,
       Model model) {
 
+    int actualPage = page - 1;
+
     Page<FindStoryResponseDTO> storyPage;
 
     if (searchKeyword.isEmpty()) {
-      storyPage = storyService.findSharedStories(userId, page, size);
+      storyPage = storyService.findSharedStories(userId, actualPage, size);
     } else {
-      storyPage = storyService.findSharedStoriesByKeyword(userId, searchKeyword, page, size);
+      storyPage = storyService.findSharedStoriesByKeyword(userId, searchKeyword, actualPage, size);
     }
 
     model.addAttribute("userId", userId);
@@ -236,7 +260,6 @@ public class StoryController {
       }
       encodedImages.put(image.getId(), imageUrl);
     }
-    ;
 
     model.addAttribute("images", encodedImages);
     model.addAttribute("story", story);
@@ -253,12 +276,14 @@ public class StoryController {
       @RequestParam("isShared") boolean isShared,
       @RequestParam("sharedWithUsers") List<String> sharedWithUsers,
       @RequestParam("deletedImages") List<Long> deletedImages,
-      @RequestParam("images") List<MultipartFile> images) {
+      @RequestParam("images") List<MultipartFile> images,
+      @ModelAttribute("userId") String userId) {
 
     List<String> imageUrls = new ArrayList<>();
+
     try {
       if (!images.isEmpty() && !images.get(0).isEmpty()) {
-        List<String> newImageUrls = storyService.saveFiles(images);
+        List<String> newImageUrls = storyService.saveFiles(images, userId);
         imageUrls.addAll(newImageUrls);
       }
     } catch (Exception e) {

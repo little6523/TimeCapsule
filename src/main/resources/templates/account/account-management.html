@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
     <link rel="stylesheet" th:href="@{/css/modal.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -56,8 +58,11 @@
         </div>
     </section>
     <div th:replace="~{fragments/modal :: allModals}"></div>
+    <input type="hidden" name="userId" id="userId">
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" th:src="@{/js/auth.js}"></script>
 <script type="text/javascript" th:src="@{/js/header.js}"></script>
 <script type="text/javascript" th:src="@{/js/modalUtils.js}"></script>

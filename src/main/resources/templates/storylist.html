@@ -9,6 +9,8 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/storylist.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -62,33 +64,27 @@
     </table>
 
     <div class="pagination">
-        <span th:if="${storyPage.hasPrevious()}">
-            <a th:href="@{${currentURI}(page=${storyPage.number})}">
-                <img src="/images/KeyboardArrowLeft.png" alt="이전"></a>
-        </span>
+    <span th:if="${storyPage.hasPrevious()}">
+        <a th:href="@{${currentURI}(page=${storyPage.number}, userId=${userId})}">
+            <img src="/images/KeyboardArrowLeft.png" alt="이전"></a>
+    </span>
         <span th:if="${storyPage.totalPages >= 1}" th:each="i : ${#numbers.sequence(0, storyPage.totalPages - 1)}">
-<!--            <span th:text="${i}"></span>-->
-            <a th:href="@{${currentURI}(page=${i + 1})}" th:text="${i + 1}"
-               th:classappend="${i == storyPage.number} ? 'current'"></a>
-        </span>
+        <a th:href="@{${currentURI}(page=${i + 1}, userId=${userId})}" th:text="${i + 1}"
+           th:classappend="${i == storyPage.number} ? 'current'"></a>
+    </span>
         <span th:if="${storyPage.hasNext()}">
-            <a th:href="@{${currentURI}(page=${storyPage.number + 2})}">
-                <img src="/images/KeyboardArrowRight.png" alt="다음"></a>
-        </span>
+        <a th:href="@{${currentURI}(page=${storyPage.number + 2}, userId=${userId})}">
+            <img src="/images/KeyboardArrowRight.png" alt="다음"></a>
+    </span>
     </div>
+
 </main>
 
-<!--<script th:src="@{/js/page.js}"></script>-->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+  
+<script th:src="@{/js/page.js}"></script>
 <script th:src="@{/js/auth.js}"></script>
-<script>
-    // 현재 페이지 번호 유지를 위한 함수
-    // 현재 URL의 페이지 번호를 sessionStorage에 저장
-    window.onload = function() {
-        const params = new URLSearchParams(window.location.search);
-        const pageNumber = params.get('page') || 1;  // 페이지 번호가 없으면 기본값 1
-        sessionStorage.setItem('currentPage', pageNumber);
-    };
-</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
 </body>
 </html>

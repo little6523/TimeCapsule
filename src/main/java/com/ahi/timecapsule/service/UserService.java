@@ -3,6 +3,7 @@ package com.ahi.timecapsule.service;
 import com.ahi.timecapsule.config.*;
 import com.ahi.timecapsule.dto.*;
 import com.ahi.timecapsule.entity.User;
+import com.ahi.timecapsule.exception.UserNotFoundException;
 import com.ahi.timecapsule.oauth.CustomOAuth2User;
 import com.ahi.timecapsule.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -316,11 +317,21 @@ public class UserService {
         .collect(Collectors.joining());
   }
 
-  public List<String> searchUsersByNickname(String keyword) {
+  // 공유자 검색
+  public List<String> searchUsersByNickname(String keyword, String userId) {
     List<String> userNicknames = new ArrayList<>();
     for (User user : userRepository.findByNicknameContaining(keyword)) {
+      if (user.getRole() == 2 || user.getUserId().equals(userId)) {
+        continue;
+      }
       userNicknames.add(user.getNickname());
     }
     return userNicknames;
+  }
+
+  public String getNicknameByUserId(String userId) {
+    User user =
+        userRepository.findNicknameByUserId(userId).orElseThrow(() -> new UserNotFoundException());
+    return user.getNickname();
   }
 }

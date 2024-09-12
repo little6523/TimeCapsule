@@ -3,24 +3,69 @@ const uploadBtn = document.getElementById('uploadBtn');
 
 // 기존 이미지, 콘텐츠 로드
 const content = contentEditableDiv.innerText;
-const images = [];
+const images = [];  // 업로드된 파일들을 저장할 배열
 
 // 이미지 업로드 버튼 클릭 시 파일 선택창 열기
 uploadBtn.addEventListener('click', function () {
     imageUploadInput.click();
 })
 
-// 파일 선택 후 이미지 추가
 imageUploadInput.addEventListener('change', function () {
     const files = Array.from(imageUploadInput.files);
 
+    // 선택한 모든 파일을 images 배열에 추가
+    files.forEach(file => {
+        images.push(file);
+    });
+
+    // 이미지를 화면에 표시 (선택적 기능)
     files.forEach(file => {
         const reader = new FileReader();
-        reader.onload = e => insertImage(e.target.result);
+        reader.onload = e => insertImage(e.target.result);  // 이미지를 화면에 표시
         reader.readAsDataURL(file);
     });
 
-    imageUploadInput.value = '';
+    imageUploadInput.value = ''; // 파일 선택창 초기화
+});
+
+let redirectUrl = '';  // 리다이렉트할 URL을 저장할 변수
+
+saveButton.addEventListener('click', function () {
+    let formData = new FormData(document.getElementById('createForm'));  // 폼 데이터를 가져옴
+
+    // 선택한 파일들을 FormData에 추가
+    images.forEach((file, index) => {
+        formData.append('images', file);  // "images"는 컨트롤러에서 받을 파라미터 이름
+    });
+
+    // 체크박스 값 처리
+    const isShared = document.getElementById('communityToggle').checked;
+    formData.set('isShared', isShared); // 체크박스의 실제 값으로 설정
+
+    // 서버에 폼 데이터를 전송
+    fetch('/stories', {
+        method: "POST",
+        body: formData
+    }).then(response =>
+        redirectUrl = response.url)
+        .then(data => {
+            if (data) {
+                storyModalContent.innerText = '생성한 스토리가 저장되었습니다.';
+                storyModal.style.display = 'block';
+            } else {
+                console.error('스토리 저장에 실패했습니다.');
+            }
+        }).catch(error => console.error('Error:', error));
+});
+
+// 모달의 확인 버튼 클릭 시 리다이렉트 처리
+confirmButton.addEventListener('click', function () {
+    console.log('Confirm button clicked');  // 클릭 시 로그 출력
+    if (redirectUrl) {
+        window.location.href = redirectUrl;  // 저장된 리다이렉트 URL로 이동
+    } else {
+        window.location.href = '/stories/form';
+    }
 });
 
 // 이미지 및 삭제 버튼 삽입 함수

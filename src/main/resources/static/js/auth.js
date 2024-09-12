@@ -31,27 +31,44 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             } else {
                 console.log('메인 페이지 접근 실패: 401 Unauthorized');
-                redirectToLogin();
-                updateButtons(false); //header 처리
+                showError(response.text());
+                // redirectToLogin();
+                // updateButtons(false); //header 처리
                 throw new Error('Unauthorized'); // 오류를 던져 다음 then 블록이 실행되지 않도록 함
             }
         })
         .catch(error => {
             console.error('Error during fetching page:', error);
-            redirectToLogin();
-            updateButtons(false); //header 처리
+            showError("Error during fetching page");
+            // redirectToLogin();
+            // updateButtons(false); //header 처리
         });
 });
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: '입력 오류',
+        text: message,
+        confirmButtonText: '확인'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            redirectToLogin();
+            updateButtons(false); //header 처리
+        }
+    })
+}
 
 // JWT 토큰을 로컬 스토리지에서 가져오는 함수
 function getJwtToken() {
     return sessionStorage.getItem('jwtToken');
 }
 
+
 // 로그인 페이지로 리다이렉트하는 함수
 function redirectToLogin() {
     window.location.href = '/login';
-    localStorage.removeItem('jwtToken');
+    sessionStorage.removeItem('jwtToken');
 }
 
 //사이드바 설정

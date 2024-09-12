@@ -7,13 +7,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ahi.timecapsule.TestSecurityConfig;
-import com.ahi.timecapsule.config.JwtTokenProvider;
-import com.ahi.timecapsule.config.UserDetailService;
 import com.ahi.timecapsule.dto.notice.request.NoticeCreateDTO;
 import com.ahi.timecapsule.dto.notice.request.NoticeUpdateDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeDetailDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeListDTO;
 import com.ahi.timecapsule.service.NoticeService;
+import com.ahi.timecapsule.service.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -38,15 +37,11 @@ public class NoticeControllerTest {
 
   @MockBean private NoticeService noticeService;
 
-  @MockBean private JwtTokenProvider jwtTokenProvider;
-
-  @MockBean
-  @SuppressWarnings("unused")
-  private UserDetailService userDetailService;
+  @MockBean private UserService userService;
 
   private final LocalDateTime fixedTime = LocalDateTime.of(2024, 9, 4, 0, 0);
 
-  private NoticeDetailDTO createNoticeDetailDTO(Integer id, String title, String content) {
+  private NoticeDetailDTO createNoticeDetailDTO(Long id, String title, String content) {
     return NoticeDetailDTO.builder()
         .id(id)
         .title(title)
@@ -63,8 +58,8 @@ public class NoticeControllerTest {
   public void testGetNoticeList() throws Exception {
     List<NoticeListDTO> notices =
         List.of(
-            new NoticeListDTO(1, "Test Title 1", fixedTime, fixedTime, "admin"),
-            new NoticeListDTO(2, "Test Title 2", fixedTime, fixedTime, "admin"));
+            new NoticeListDTO(1L, "Test Title 1", fixedTime, fixedTime, "admin"),
+            new NoticeListDTO(2L, "Test Title 2", fixedTime, fixedTime, "admin"));
 
     Page<NoticeListDTO> noticePage = new PageImpl<>(notices, PageRequest.of(0, 10), 2);
 
@@ -85,7 +80,7 @@ public class NoticeControllerTest {
   @DisplayName("공지사항 검색 테스트")
   public void testGetNoticeListWithSearchTerm() throws Exception {
     List<NoticeListDTO> notices =
-        List.of(new NoticeListDTO(1, "Test Title 1", fixedTime, fixedTime, "admin"));
+        List.of(new NoticeListDTO(1L, "Test Title 1", fixedTime, fixedTime, "admin"));
 
     Page<NoticeListDTO> noticePage = new PageImpl<>(notices, PageRequest.of(0, 10), 1);
 
@@ -107,7 +102,7 @@ public class NoticeControllerTest {
   @Test
   @DisplayName("특정 공지사항 상세 조회 테스트")
   public void testFindNoticeDetail() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     NoticeDetailDTO noticeDetail = createNoticeDetailDTO(noticeId, "Test Title", "Test Content");
     when(noticeService.getDetailNotice(noticeId)).thenReturn(noticeDetail);
 
@@ -136,23 +131,23 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 생성 테스트")
   public void testCreateNotice() throws Exception {
-    NoticeDetailDTO createdNotice = createNoticeDetailDTO(1, "Test Title", "Test Content");
+    String userId = "testUser";
+    NoticeDetailDTO createdNotice = createNoticeDetailDTO(1L, "Test Title", "Test Content");
 
-    when(jwtTokenProvider.getUsernameFromJwtToken(anyString())).thenReturn("testUser");
     when(noticeService.createNotice(any(NoticeCreateDTO.class), anyString()))
         .thenReturn(createdNotice);
 
     mockMvc
         .perform(
             post("/notices")
-                .header("Authorization", "Bearer fake-token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("userId", userId)
                 .param("title", "Test Title")
                 .param("content", "Test Content"))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/notices/" + createdNotice.getId()));
 
-    verify(noticeService).createNotice(any(NoticeCreateDTO.class), anyString());
+    verify(noticeService).createNotice(any(NoticeCreateDTO.class), eq(userId));
   }
 
   @Test
@@ -162,7 +157,6 @@ public class NoticeControllerTest {
     mockMvc
         .perform(
             post("/notices")
-                .header("Authorization", "Bearer fake-token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "")
                 .param("content", "Test Content"))
@@ -175,7 +169,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 수정 폼 조회 테스트")
   public void testGetUpdateNoticeForm() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     NoticeDetailDTO noticeDetail = createNoticeDetailDTO(noticeId, "Test Title", "Test Content");
 
     when(noticeService.getDetailNotice(noticeId)).thenReturn(noticeDetail);
@@ -194,7 +188,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 수정 테스트")
   public void testUpdateNotice() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     NoticeUpdateDTO updateDTO =
         new NoticeUpdateDTO(noticeId, "Updated Test Title", "Updated Test Content");
 
@@ -214,7 +208,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 삭제 테스트")
   public void testDeleteNotice() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
 
     mockMvc.perform(delete("/notices/{id}", noticeId)).andExpect(status().isOk());
 
@@ -225,7 +219,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "USER")
   @DisplayName("비관리자 공지사항 삭제 실패 테스트")
   public void testNonAdminDeleteNotice() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
 
     mockMvc.perform(delete("/notices/{id}", noticeId)).andExpect(status().isForbidden());
   }

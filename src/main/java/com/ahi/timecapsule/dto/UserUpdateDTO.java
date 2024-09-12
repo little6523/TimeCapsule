@@ -15,14 +15,12 @@ public class UserUpdateDTO {
   private String id;
 
   @Pattern(
-      regexp =
-          "^(?:(?=.*[A-Z])(?=.*\\d)|(?=.*[A-Z])(?=.*[a-z])|(?=.*[a-z])(?=.*\\d))[A-Za-z\\d]{6,20}$",
+      regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#!~$%^&*()_+=<>?])?\\S{6,20}$",
       message = "비밀번호는 대문자, 소문자, 숫자 중 2가지 이상을 포함한 6-20자리여야 합니다.")
   private String password;
 
   @Pattern(
-      regexp =
-          "^(?:(?=.*[A-Z])(?=.*\\d)|(?=.*[A-Z])(?=.*[a-z])|(?=.*[a-z])(?=.*\\d))[A-Za-z\\d]{6,20}$",
+      regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#!~$%^&*()_+=<>?])?\\S{6,20}$",
       message = "새 비밀번호는 대문자, 소문자, 숫자 중 2가지 이상을 포함한 6-20자리여야 합니다.")
   private String newPassword;
 

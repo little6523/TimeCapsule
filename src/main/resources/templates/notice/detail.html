@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>공지사항 상세 조회</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/notice.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -27,7 +28,7 @@
             공지사항 내용이 여기에 표시됩니다.
         </div>
         <div class="container-notice-actions">
-            <div sec:authorize="hasRole('ADMIN')">
+            <div id="adminButton" style="display:none;">
                 <a th:href="@{/notices/{id}/edit(id=${notice.id})}" class="btn-notice-edit">수정</a>
                 <form th:action="@{/notices/{id}(id=${notice.id})}" method="post" style="display: inline;"
                       class="form-notice-delete">
@@ -41,11 +42,14 @@
             <a th:href="@{/notices}" class="btn-notice-back">목록</a>
         </div>
     </div>
+    <input type="hidden" name="userId" id="userId">
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script th:src="@{/js/notice-delete.js}"></script>
-<script th:src="@{/js/auth.js}"></script>
+<script th:src="@{/js/auth-notice.js}"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
 </body>
 </html>

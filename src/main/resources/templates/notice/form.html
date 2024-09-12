@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>공지사항 작성</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/notice.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -17,6 +18,7 @@
     <div class="wrapper-form-content">
         <h2>공지사항</h2>
         <form th:action="@{/notices}" method="post" th:object="${noticeForm}">
+            <input type="hidden" id="userId" name="userId" th:value="${userId}">
             <div class="group-form">
                 <input type="text" th:field="*{title}" placeholder="제목을 입력해 주세요." required>
             </div>
@@ -33,7 +35,9 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script th:src="@{/js/form-warning.js}"></script>
-<script th:src="@{/js/auth.js}"></script>
+<script th:src="@{/js/auth-admin.js}"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
 </body>
 </html>
