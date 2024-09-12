@@ -1,11 +1,11 @@
 package com.ahi.timecapsule.controller;
 
-import com.ahi.timecapsule.config.JwtTokenProvider;
 import com.ahi.timecapsule.dto.notice.request.NoticeCreateDTO;
 import com.ahi.timecapsule.dto.notice.request.NoticeUpdateDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeDetailDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeListDTO;
 import com.ahi.timecapsule.service.NoticeService;
+import com.ahi.timecapsule.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class NoticeController {
 
   private final NoticeService noticeService;
-  private final JwtTokenProvider jwtTokenProvider;
+  private final UserService userService;
 
   // 전체 공지사항 목록 조회 및 제목, 내용 검색
   @GetMapping
@@ -65,28 +65,21 @@ public class NoticeController {
   // 공지사항 생성
   @PostMapping
   public String createNotice(
-      @RequestHeader(value = "Authorization", required = false) String bearerToken,
+      @RequestParam("userId") String userId,
       @Valid @ModelAttribute("noticeForm") NoticeCreateDTO createDTO,
       BindingResult bindingResult,
       Model model) {
+
     if (bindingResult.hasErrors()) {
       return "notice/form";
     }
 
-    if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
-      model.addAttribute("errorMessage", "유효한 인증 토큰이 필요합니다.");
+    if (userId == null || userId.isEmpty()) {
+      model.addAttribute("errorMessage", "유효한 사용자 ID가 필요합니다.");
       return "notice/form";
     }
 
-    String token = bearerToken.substring(7);
-
-    String userNickname;
-    try {
-      userNickname = jwtTokenProvider.getUsernameFromJwtToken(token);
-    } catch (Exception e) {
-      model.addAttribute("errorMessage", "토큰이 유효하지 않습니다.");
-      return "notice/form";
-    }
+    String userNickname = userService.getNicknameByUserId(userId);
 
     NoticeDetailDTO createdNotice = noticeService.createNotice(createDTO, userNickname);
 
