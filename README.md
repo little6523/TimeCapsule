@@ -1,7 +1,6 @@
 # TimeCapsule
 ## 프로젝트 소개
 
----
 - 가족의 역사를 기록하고 싶은 분<br>
 - 세대 간의 추억을 간직하고 싶은 분<br>
 - 부모님이나 조부모님의 모습을 생생하게 기억하고 싶은 분
@@ -17,20 +16,17 @@
 
 ## 프로젝트 개요
 
----
 - 프로젝트 이름 : TimeCapsule
 - 프로젝트 팀명 : A-HI
 - 프로젝트 기간 : 2024.08.21 ~ 2024.09.13
 ## 프로젝트 목표
 
----
 - 가족의 **역사와 추억**을 세대 간에 전하는 커뮤니티
 - **생생한 기억**과 **따뜻한 목소리**를 보존하는 커뮤니티
 - 미래 세대에게 **소중한 유산**을 전달하는 커뮤니티
 
 ## 팀 소개
 
----
 <br>
 
 |     <img src="src/main/resources/static/docs/hjl-profile-img.png" width="257" height="250" alt="이현준">      |               <img src="src/main/resources/static/docs/smk-profile-img.png" width="257" height="250" alt="김수민">               |                           <img src="src/main/resources/static/docs/hskim-profile-img.png" width="257" height="250" alt="김형섭">                            |
@@ -49,7 +45,6 @@
 
 ## 기술 스택
 
----
 <br>
 
 ### FrontEnd
@@ -90,31 +85,25 @@
 
 ## 개발 일정
 
----
 <br>
 <img src="src/main/resources/static/docs/project-wbs.png" width="855" height="700" alt="요구사항 정의서 마인드 맵">
 
 ## 요구사항 정의서
 
----
 <br>
 <img src="src/main/resources/static/docs/requirements-mind-map.jpg" width="855" height="700" alt="요구사항 정의서 마인드 맵">
 
 ## ERD
 
----
 <br>
 <img src="src/main/resources/static/docs/database-erd.png" width="855" height="700" alt="데이터베이스 ERD">
 
 ## 시스템 아키텍처
 
----
 <br>
 <img src="src/main/resources/static/docs/system-architecture.png" width="855" height="700" alt="시스템 아키텍처">
 
 ## 프로젝트 구조
-
----
 
 ### BackEnd
 
@@ -310,7 +299,6 @@
 
 ## 화면 설계
 
----
 <br>
 
 |                                                    메인페이지                                                    |                                                     메인페이지                                                     |
