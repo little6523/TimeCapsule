@@ -1,18 +1,11 @@
-const contentEditableDiv = document.getElementById('content');
-const storyModal = document.getElementById('storyModal');
-const saveButton = document.getElementById('save');
-const editButton = document.getElementById('edit');
-const cancelButton = document.getElementById('cancel');
-const storyModalContent = document.getElementById('storyModalContent');
-const confirmButton = document.getElementById('storyModalButton');
-const shareModal = document.getElementById('shareModal');
-const shareButton = document.getElementById('share');
-const shareSearchButton = document.getElementById('shareSearchButton');
-const search = document.getElementById('search');
+const search = document.getElementById('sharedList');
 const result = document.getElementById('result');
 const searchedList = document.getElementById('searchedList');
+const shareModal = document.getElementById('shareModal');
+const shareButton = document.getElementById('share');
+const tagInputContainer = document.querySelector('.tag-input-container');
+window.sharedList = [];
 
-shareSearchButton.addEventListener('click', searchUsers);
 search.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -25,7 +18,6 @@ function searchUsers() {
     searchedList.innerHTML = '';
 
     result.innerText = "검색 결과";
-    result.style.backgroundColor = '#EAE1E1';
 
     // AJAX 요청을 통해 검색된 결과 가져오기
     fetch(`/stories/search?keyword=${search.value}&userId=${userId}`)
@@ -78,8 +70,6 @@ function searchUsers() {
         .catch(error => console.error('Error:', error));
 }
 
-const modalSharedList = document.getElementById('modalSharedList');
-let sharedList = [];
 
 // 태그 추가 함수
 function addTag(text) {
@@ -93,14 +83,15 @@ function addTag(text) {
     tag.innerHTML = `${text} <i class="remove-tag">×</i>`;
 
     // 태그를 modalSharedList에 추가
-    modalSharedList.appendChild(tag);
+    // tagInputContainer.appendChild(tag);
+    tagInputContainer.insertBefore(tag, search);
 
     // 선택된 사용자를 sharedList에 추가
     sharedList.push(text);
 
     // 삭제 버튼 클릭 시 태그 삭제
     tag.querySelector('.remove-tag').addEventListener('click', function () {
-        modalSharedList.removeChild(tag);
+        tagInputContainer.removeChild(tag);
         sharedList = sharedList.filter(item => item !== text);
 
         // 삭제된 공유자를 sharedList에서 제거
@@ -108,21 +99,6 @@ function addTag(text) {
         if (index > -1) {
             sharedList.splice(index, 1);
         }
-        updateHiddenInputs();
-    });
-
-    updateHiddenInputs();
-}
-
-// 숨겨진 input 필드에 리스트 형태로 사용자 추가
-function updateHiddenInputs() {
-    search.innerHTML = '';
-    sharedList.forEach(user => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'sharedUsers[]'; // 배열 형태로 전송
-        input.value = user;
-        search.appendChild(input);
     });
 }
 
@@ -130,43 +106,13 @@ function updateHiddenInputs() {
 shareButton.addEventListener('click', function () {
     if (hoveredUser) {
         addTag(hoveredUser.innerText.trim());
+        search.value = '';
     } else {
         alert('공유할 사용자를 선택하세요.');
     }
 });
 
-saveButton.addEventListener('click', function () {
-    storyModalContent.innerText = '생성한 스토리가 저장되었습니다.'
-    storyModal.style.display = 'block';
+existingSharedList.forEach(function (shared) {
+    addTag(shared.userDTO.nickname);
+    sharedList.push(shared.userDTO.nickname); // sharedList 배열에 추가
 });
-
-editButton.addEventListener('click', function () {
-    if (this.innerText === '스토리 수정') {
-        storyModalContent.innerText = '수정 모드로 변환합니다.'
-        storyModal.style.display = 'block';
-
-        saveButton.style.visibility = 'hidden';
-
-        contentEditableDiv.contentEditable = 'true';
-        contentEditableDiv.style.outline = 'none';
-        this.innerText = '수정 완료';
-    } else if (this.innerText === '수정 완료') {
-        storyModalContent.innerText = '생성한 스토리를 수정하였습니다.'
-        storyModal.style.display = 'block';
-
-        saveButton.style.visibility = 'visible';
-
-        contentEditableDiv.contentEditable = 'false';
-        this.innerText = '스토리 수정';
-    }
-});
-
-cancelButton.addEventListener('click', function () {
-    storyModalContent.innerText = '스토리 생성을 취소하였습니다.'
-    storyModal.style.display = 'block';
-});
-
-// confirmButton.addEventListener('click', function () {
-//
-//
-// });
