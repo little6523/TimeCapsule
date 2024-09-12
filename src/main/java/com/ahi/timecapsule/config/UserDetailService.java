@@ -1,5 +1,7 @@
 package com.ahi.timecapsule.config;
 
+import static com.ahi.timecapsule.config.AuthorityUtils.convertRolesToAuthorities;
+
 import com.ahi.timecapsule.entity.User;
 import com.ahi.timecapsule.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import static com.ahi.timecapsule.config.AuthorityUtils.convertRolesToAuthorities;
 
 @RequiredArgsConstructor
 @Service
