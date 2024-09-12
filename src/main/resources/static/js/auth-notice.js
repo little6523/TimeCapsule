@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log('userId 헤더가 응답에 포함되지 않았습니다.');
                 }
                 if (userRole) {
-                    document.getElementById('userRole').value = userRole;
+                    roleCheck(userRole);
+
                 } else {
                     console.log('userRole 헤더가 응답에 포함되지 않았습니다.')
                 }
@@ -49,6 +50,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             // updateButtons(false); //header 처리
         });
 });
+
+function roleCheck(userRole){
+    if (userRole === 'ROLE_ADMIN') {
+        console.log('관리자 권한이 확인되었습니다.');
+
+        document.getElementById('adminButton').style.display = 'block';
+    } else {
+        console.log('일반 사용자입니다.');
+
+        document.getElementById('adminButton').style.display = 'none';
+    }
+}
 
 function showError(message) {
     Swal.fire({
