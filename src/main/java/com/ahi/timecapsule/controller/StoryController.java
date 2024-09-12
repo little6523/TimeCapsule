@@ -13,18 +13,12 @@ import com.ahi.timecapsule.service.StoryService;
 import com.ahi.timecapsule.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -90,8 +84,8 @@ public class StoryController {
   // 공유자 검색
   @GetMapping("/search")
   @ResponseBody
-  public List<String> searchUsers(@RequestParam("keyword") String keyword,
-                                  @RequestParam("userId") String userId) {
+  public List<String> searchUsers(
+      @RequestParam("keyword") String keyword, @RequestParam("userId") String userId) {
 
     return userService.searchUsersByNickname(keyword, userId);
   }
@@ -108,11 +102,11 @@ public class StoryController {
   // 스토리 생성
   @PostMapping
   public String createStory(
-          @RequestPart("images") List<MultipartFile> images,
-          @ModelAttribute StoryContentDTO storyContentDTO,
-          @ModelAttribute("userId") String userId,
-          HttpSession session)
-          throws IOException {
+      @RequestPart("images") List<MultipartFile> images,
+      @ModelAttribute StoryContentDTO storyContentDTO,
+      @ModelAttribute("userId") String userId,
+      HttpSession session)
+      throws IOException {
 
     List<String> filesPath = new ArrayList<>();
     if (images != null && !images.isEmpty()) {
