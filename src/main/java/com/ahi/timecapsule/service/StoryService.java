@@ -15,6 +15,8 @@ import com.ahi.timecapsule.repository.UserRepository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -168,9 +170,16 @@ public class StoryService {
   @Transactional
   // 스토리 생성 시 필요한 인터뷰(사운드), 사진(이미지)파일 저장 메소드
   // 경로: TimeCapsule/files/images/{파일 이름} or TimeCapsule/files/sounds/{파일 이름}
-  public List<String> saveFiles(List<MultipartFile> files) throws IOException {
+  public List<String> saveFiles(List<MultipartFile> files, String userId) throws IOException {
     List<String> filesPath = new ArrayList<>();
     if (!files.isEmpty()) {
+
+      LocalDateTime now  = LocalDateTime.now();
+
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+
+      int fileIndex = 1;
+
       for (MultipartFile file : files) {
         // 외부 경로로 디렉토리와 파일을 지정
         File directory = getExternalPath(file);
@@ -180,14 +189,20 @@ public class StoryService {
           directory.mkdirs();
         }
 
+        // 새로운 파일명 설정
+        String timestamp = now.format(formatter);
+        String newFileName = timestamp + "_" + userId + "_" + fileIndex + "_" + file.getOriginalFilename();
+
         // 실제로 저장할 경로 생성
-        File save = new File(directory, file.getOriginalFilename());
+        File save = new File(directory, newFileName);
         System.out.println("저장경로: " + save.getPath());
 
         // 파일을 지정된 경로에 저장
         file.transferTo(save);
 
         filesPath.add(save.getPath());
+
+        fileIndex++;
       }
     }
     return filesPath;

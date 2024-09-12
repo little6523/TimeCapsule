@@ -22,46 +22,46 @@
     <div class="edit-container">
 
         <div style="display: flex; justify-content: space-between">
-            <div class="form-group">
+            <form class="form-group">
                 <label>커뮤니티 게시 여부</label>
                 <label class="switch">
                     <input type="checkbox" id="communityToggle" name="isCommunityPost" th:checked="${story.isShared()}">
                     <span class="slider"></span>
                 </label>
-            </div>
+            </form>
 
-            <div class="image-upload-container">
+            <form class="image-upload-container">
                 <input type="file" id="imageUpload" name="images" accept="image/*" multiple class="hidden-file-input">
                 <button type="button" class="upload-btn" id="uploadBtn"><img src="/images/ImageFileAdd.png"
                                                                              alt="이미지 업로드">이미지 업로드
                 </button>
-            </div>
+            </form>
         </div>
 
-        <div class="form-group">
+        <form class="form-group">
             <label for="title" class="hidden-file-input">제목</label>
             <input type="text" id="title" name="title" style="border: 1px solid #ccc;" th:value="${story.title}"
                    placeholder="제목을 입력하세요.">
-        </div>
+        </form>
 
-        <div class="form-group content-group">
+        <form class="form-group content-group">
             <label for="content" class="visually-hidden">내용</label>
             <div id="content" name="content" contenteditable="true" class="content"></div>
-        </div>
+        </form>
 
-        <div class="form-group shared-group">
+        <form class="form-group shared-group">
             <label for="sharedList" class="shared-list"><img src="/images/Share.png" alt="공유자">공유자</label>
             <div class="tag-input-container">
                 <input type="text" id="sharedList" class="tag-input" placeholder="공유할 사용자의 닉네임을 입력하세요.">
             </div>
-        </div>
+        </form>
 
         <div class="btn-container">
             <button class="back-btn" onclick="history.back()">뒤로가기</button>
             <button type="button" id="saveButton" onclick="submitForm()">저장</button>
         </div>
+        <input type="hidden" name="userId" id="userId">
     </div>
-    <input type="hidden" name="userId" id="userId">
 </main>
 
 <!-- Footer -->
@@ -133,7 +133,6 @@
 
         Object.entries(existingImages).forEach(([key, value]) => {
             insertImage(value, true);
-            console.log(`Key: ${key}, Value: ${value}`);
         });
 
         contentEditableDiv.innerHTML += beforeEditContent;
@@ -170,8 +169,6 @@
                     contentEditableDiv.removeChild(imageContainer); // 이미지 컨테이너 제거
                     const imgSrc = img.src; // 이미지의 src 값 가져오기
                     const key = findKeyByValue(existingImages, imgSrc.substring(18));
-                    console.log(existingImages);
-                    console.log(key);
                     deletedImages.push(key);
                 });
             });
@@ -237,8 +234,6 @@
             });
         }
 
-        console.log(sharedList);
-
         // 폼 데이터를 PUT 요청으로 서버로 전송
         window.submitForm = function () {
             const storyId = [[${story.id}]];
@@ -246,6 +241,7 @@
             const content = document.getElementById('content').innerText;
             const isCommunityPost = document.getElementById('communityToggle').checked;
             const files = imageUploadInput.files;
+            const userId = document.getElementById('userId').value;
 
             // 제목을 입력하지 않을 시 오류 발생
             if (!title || title.trim() === "") {
@@ -259,6 +255,7 @@
             formData.append("title", title);
             formData.append("content", content);
             formData.append("isShared", isCommunityPost);
+            formData.append("userId", userId);
 
             if (sharedList.length > 0) {
                 sharedList.forEach(sharedUser => {
