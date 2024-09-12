@@ -9,6 +9,8 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/storylist.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -80,6 +82,7 @@
 
 <!--<script th:src="@{/js/page.js}"></script>-->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script th:src="@{/js/auth.js}"></script>
 <script>
     // 현재 페이지 번호 유지를 위한 함수
@@ -90,5 +93,6 @@
         sessionStorage.setItem('currentPage', pageNumber);
     };
 </script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
 </body>
 </html>
