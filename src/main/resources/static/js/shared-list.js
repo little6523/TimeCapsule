@@ -3,6 +3,7 @@
 const tagInputContainer = document.querySelector('.tag-input-container');
 const tagInput = document.querySelector('.tag-input');
 window.sharedList = [];
+
 tagInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && tagInput.value.trim() !== '') {
         e.preventDefault();
@@ -27,6 +28,17 @@ function addTag(text) {
     tag.className = 'tag';
     tag.innerHTML = `${text}`;
 
+    if (isEditMode) {
+        tag.innerHTML = `${text} <i class="remove-tag">×</i>`;
+        tag.querySelector('.remove-tag').addEventListener('click', function () {
+            tagInputContainer.removeChild(tag);
+            // 삭제된 공유자를 shareList에서 제거
+            const index = sharedList.indexOf(text);
+            if (index > -1) {
+                sharedList.splice(index, 1);
+            }
+        });
+    }
     tagInputContainer.insertBefore(tag, tagInput);
 }
 
@@ -35,20 +47,3 @@ existingSharedList.forEach(function (shared) {
     addTag(shared.userDTO.nickname);
     sharedList.push(shared.userDTO.nickname); // sharedList 배열에 추가
 });
-
-// 페이지 번호를 유지한 스토리 목록 페이지로 이동하는 함수
-function goToStoryList() {
-    const pageNumber = sessionStorage.getItem('currentPage') || 1;
-    const currentURL = new URL(window.location.href);
-    console.log(pageNumber);
-    console.log(currentURL);
-
-    // 스토리 ID(숫자) 제거
-    const pathname = currentURL.pathname.replace(/\/\d+$/, '');
-
-    currentURL.pathname = pathname;
-    currentURL.searchParams.set('page', pageNumber);
-    currentURL.searchParams.set('userId', userId);
-
-    window.location.href = currentURL.toString();
-}

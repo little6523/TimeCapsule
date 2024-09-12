@@ -4,4 +4,4 @@ window.onload = function() {
     const params = new URLSearchParams(window.location.search);
     const pageNumber = params.get('page') || 1;  // 페이지 번호가 없으면 기본값 1
     sessionStorage.setItem('currentPage', pageNumber);
-};
+}
