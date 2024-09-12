@@ -32,8 +32,6 @@ public class StoryService {
 
   private StoryRepository storyRepository;
 
-  private ImageRepository imageRepository;
-
   private UserRepository userRepository;
 
   private StoryShareRepository storyShareRepository;
@@ -50,11 +48,9 @@ public class StoryService {
 
   public StoryService(
       StoryRepository storyRepository,
-      ImageRepository imageRepository,
       UserRepository userRepository,
       StoryShareRepository storyShareRepository) {
     this.storyRepository = storyRepository;
-    this.imageRepository = imageRepository;
     this.userRepository = userRepository;
     this.storyShareRepository = storyShareRepository;
   }
@@ -105,10 +101,6 @@ public class StoryService {
     Story existingStory =
         storyRepository.findById(id).orElseThrow(() -> new StoryNotFoundException(id));
 
-    //    List<User> users = storyRequestDTO.getSharedWithUsers().stream()
-    //            .map(userId -> userRepository.findById(userId)
-    //                    .orElseThrow(() -> new UserNotFoundException(userId)))
-    //            .toList();
     List<User> users =
         storyRequestDTO.getSharedWithUsers().stream()
             .map(
@@ -157,6 +149,7 @@ public class StoryService {
         });
   }
 
+  // 특정 키워드가 제목, 내용에 포함된 커뮤니티 목록 조회
   @Transactional(readOnly = true)
   public Page<FindStoryResponseDTO> findCommunityStoriesByKeyword(
       String keyword, int page, int size) {
@@ -167,9 +160,8 @@ public class StoryService {
     return storyPage.map(FindStoryResponseDTO::fromEntity);
   }
 
-  @Transactional
   // 스토리 생성 시 필요한 인터뷰(사운드), 사진(이미지)파일 저장 메소드
-  // 경로: TimeCapsule/files/images/{파일 이름} or TimeCapsule/files/sounds/{파일 이름}
+  @Transactional
   public List<String> saveFiles(List<MultipartFile> files, String userId) throws IOException {
     List<String> filesPath = new ArrayList<>();
     if (!files.isEmpty()) {
@@ -215,6 +207,8 @@ public class StoryService {
     String fileName = file.getOriginalFilename();
     String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 
+    System.out.println("file = " + fileName);
+
     String path = externalPath;
 
     // 확장자에 따른 경로 설정
@@ -235,19 +229,13 @@ public class StoryService {
       List<String> filesPath,
       String userId) {
 
-    // 1. 파일 경로 리스트를 ImageDTO 리스트로 변환
-    List<ImageDTO> images = new ArrayList<>();
-    for (String path : filesPath) {
-      images.add(ImageDTO.builder().url(path).build());
-    }
-
-    // 2. User 객체 조회
+    // User 객체 조회
     User user =
         userRepository
             .findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("일치하는 User가 존재하지 않습니다."));
 
-    // 3. StoryDTO 생성 후, Entity로 변환 및 저장
+    // StoryDTO 생성 후, Entity로 변환 및 저장
     StoryDTO storyDTO =
         StoryDTO.builder()
             .dialect(storyOptionDTO.getDialect())
@@ -262,7 +250,7 @@ public class StoryService {
     Story story = storyDTO.toEntity();
     Story savedStory = storyRepository.save(story); // 먼저 Story 저장
 
-    // 4. SharedUsers 저장
+    // SharedUsers 저장
     if (storyContentDTO.getSharedUsers() != null) {
       for (String sharedUserNickname : storyContentDTO.getSharedUsers()) {
         // 공유할 유저 조회
