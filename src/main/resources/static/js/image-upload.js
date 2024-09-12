@@ -64,8 +64,12 @@ confirmButton.addEventListener('click', function () {
         window.location.href = redirectUrl;
     }
 
-    else if (storyModalContent.innerText !== '스토리 생성을 취소하였습니다.') {
+    else if (storyModalContent.innerText === '스토리 생성을 취소하였습니다.') {
         window.location.href = '/stories/form';
+    }
+
+    else {
+        storyModal.style.display = 'none';
     }
 });
 
