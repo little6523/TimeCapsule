@@ -23,7 +23,7 @@ main {
 .notloginPage {
   flex: 1;
   padding: 2rem;
-  padding-top: 120px; /* 헤더와의 간격을 위해 상단 패딩 추가 */
+  padding-top: 80px; /* 헤더와의 간격을 위해 상단 패딩 추가 */
   max-width: 1200px;
   margin: 0 auto;
   text-align: center; /* 텍스트를 중앙 정렬 */
@@ -93,7 +93,7 @@ main {
 }
 
 .story-intro {
-  margin-top: 40px;
+  margin-top: 200px;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -185,7 +185,7 @@ main {
     margin: 0 auto;
     padding: 0 20px;
     position: relative;
-    left: 150px;
+    left: 200px;
 }
 
 .dialect-story-creation h2 {

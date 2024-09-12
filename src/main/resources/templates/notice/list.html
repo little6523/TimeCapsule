@@ -49,7 +49,7 @@
             </ul>
         </div>
         <div class="container-button">
-            <input type="hidden" name="userRole" id="userRole" value="USER">
+<!--            <input type="hidden" name="adminActions" id="adminActions">-->
             <a id="adminButton" th:href="@{/notices/form}" class="button-write" style="display:none;">공지사항 작성</a>
         </div>
         <nav th:if="${notices.totalElements > 0}">
@@ -68,7 +68,7 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" th:src="@{/js/header.js}"></script>
 <script th:src="@{/js/auth-notice.js}"></script>
-<script th:src="@{/js/role-check.js}"></script>
 </body>
 </html>

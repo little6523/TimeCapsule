@@ -166,7 +166,7 @@ public class StoryService {
     List<String> filesPath = new ArrayList<>();
     if (!files.isEmpty()) {
 
-      LocalDateTime now  = LocalDateTime.now();
+      LocalDateTime now = LocalDateTime.now();
 
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 
@@ -183,7 +183,8 @@ public class StoryService {
 
         // 새로운 파일명 설정
         String timestamp = now.format(formatter);
-        String newFileName = timestamp + "_" + userId + "_" + fileIndex + "_" + file.getOriginalFilename();
+        String newFileName =
+            timestamp + "_" + userId + "_" + fileIndex + "_" + file.getOriginalFilename();
 
         // 실제로 저장할 경로 생성
         File save = new File(directory, newFileName);
