@@ -28,8 +28,8 @@ public class ApiService {
     sttAPI.auth();
   }
 
-  public void post() throws IOException, ParseException {
-    sttAPI.post();
+  public void post(String soundFile) throws IOException, ParseException {
+    sttAPI.post(soundFile);
   }
 
   public List<String> get() throws IOException, ParseException, InterruptedException {

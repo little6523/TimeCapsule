@@ -23,8 +23,6 @@ public class STTAPI {
 
   private final String JWTFilePath;
 
-  private final String audioFilePath;
-
   @Value("${STT.URL}")
   private String URL;
 
@@ -43,8 +41,6 @@ public class STTAPI {
 
   public STTAPI() throws Exception {
     this.JWTFilePath = Paths.get(System.getProperty("user.home"), "files", "JWT.txt").toString();
-    this.audioFilePath =
-        Paths.get(System.getProperty("user.home"), "files") + "/sounds/recording.ogg";
 
     File file = new File(JWTFilePath);
     if (file.exists()) {
@@ -87,7 +83,7 @@ public class STTAPI {
   }
 
   // 저장되어 있는 음성 파일을 해당 API로 전송하는 메소드
-  public void post() throws IOException, ParseException {
+  public void post(String soundFile) throws IOException, ParseException {
     URL url = new URL(URL);
     HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
     httpConn.setRequestMethod("POST");
@@ -96,7 +92,7 @@ public class STTAPI {
     httpConn.setRequestProperty("Content-Type", "multipart/form-data;boundary=authsample");
     httpConn.setDoOutput(true);
 
-    File file = new File(audioFilePath);
+    File file = new File(soundFile);
 
     DataOutputStream outputStream;
     outputStream = new DataOutputStream(httpConn.getOutputStream());

@@ -1,4 +1,4 @@
-const eventSource = new EventSource('http://localhost:8080/api/story');
+const eventSource = new EventSource('/api/story');
 const story = document.getElementById('content')
 
 eventSource.onmessage = function (event) {

@@ -133,7 +133,6 @@ public class UserController {
       response.addHeader("X-User-Role", role);
       response.addHeader(
           HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
-      System.out.println("굿굿");
       return ResponseEntity.ok().build();
     } else {
       throw new RuntimeException("권한이 없습니다.");

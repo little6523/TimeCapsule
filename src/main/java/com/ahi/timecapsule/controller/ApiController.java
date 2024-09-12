@@ -22,10 +22,8 @@ public class ApiController {
   }
 
   @PostMapping("/story")
-  public ResponseEntity<Void> postStoryOptionDTO(@RequestBody StoryOptionDTO storyOptionDTO) {
+  public ResponseEntity<Void> postStoryOptionDTO(StoryOptionDTO storyOptionDTO) {
     this.storyOptionDTO = storyOptionDTO;
-    System.out.println(storyOptionDTO.getDialect());
-    System.out.println(storyOptionDTO.getSpeaker());
 
     return ResponseEntity.status(201).build();
   }
@@ -33,7 +31,7 @@ public class ApiController {
   @GetMapping(path = "/story", produces = "text/event-stream")
   public ResponseEntity<SseEmitter> createStory()
       throws IOException, ParseException, InterruptedException {
-    apiService.post();
+    apiService.post(storyOptionDTO.getSoundFile());
 
     List<String> contents = apiService.get();
 
