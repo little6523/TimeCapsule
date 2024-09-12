@@ -341,7 +341,7 @@
 ## API 명세서
 
 ---
-<br>
+
 
 #### User Management
 | **NAME**               | **HTTP METHOD** | **URL**                         | **DESCRIPTION**                                | **AUTHORITY** |
