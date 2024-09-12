@@ -1,5 +1,6 @@
 // 폼 데이터를 PUT 요청으로 서버로 전송
 window.submitForm = function () {
+    // const storyId = [[${story.id}]];
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').innerText;
     const isCommunityPost = document.getElementById('communityToggle').checked;
