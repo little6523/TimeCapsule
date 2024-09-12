@@ -28,7 +28,7 @@ function searchUsers() {
     result.style.backgroundColor = 'gray';
 
     // AJAX 요청을 통해 검색된 결과 가져오기
-    fetch(`http://localhost:8080/stories/search?keyword=${search.value}`)
+    fetch(`/stories/search?keyword=${search.value}`)
         .then(response => response.json())
         .then(users => {
 

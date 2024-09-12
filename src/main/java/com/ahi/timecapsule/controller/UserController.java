@@ -130,9 +130,10 @@ public class UserController {
     if (role.contains("ROLE_USER") || role.contains("ROLE_ADMIN")) {
       // 유효한 Access Token으로 사용자 정보 추출
       response.addHeader("X-User-Id", username); // 사용자 정보 추가
+      response.addHeader("X-User-Role", role);
       response.addHeader(
           HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
-
+      System.out.println("굿굿");
       return ResponseEntity.ok().build();
     } else {
       throw new RuntimeException("권한이 없습니다.");
@@ -163,7 +164,6 @@ public class UserController {
     // Access Token 검증 및 필요한 경우 재발급
     String validAccessToken = userService.validateAndRefreshAccessToken(accessToken, refreshToken);
     String role = jwtTokenProvider.getAuthoritiesFromJwtToken(validAccessToken);
-    System.out.println("role이다 " + role);
 
     if (role.contains("ROLE_ADMIN")) {
       // 유효한 Access Token으로 사용자 정보 추출

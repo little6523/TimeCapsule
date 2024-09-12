@@ -62,20 +62,20 @@
     </table>
 
     <div class="pagination">
-        <span th:if="${storyPage.hasPrevious()}">
-            <a th:href="@{${currentURI}(page=${storyPage.number})}">
-                <img src="/images/KeyboardArrowLeft.png" alt="이전"></a>
-        </span>
+    <span th:if="${storyPage.hasPrevious()}">
+        <a th:href="@{${currentURI}(page=${storyPage.number}, userId=${userId})}">
+            <img src="/images/KeyboardArrowLeft.png" alt="이전"></a>
+    </span>
         <span th:if="${storyPage.totalPages >= 1}" th:each="i : ${#numbers.sequence(0, storyPage.totalPages - 1)}">
-<!--            <span th:text="${i}"></span>-->
-            <a th:href="@{${currentURI}(page=${i + 1})}" th:text="${i + 1}"
-               th:classappend="${i == storyPage.number} ? 'current'"></a>
-        </span>
+        <a th:href="@{${currentURI}(page=${i + 1}, userId=${userId})}" th:text="${i + 1}"
+           th:classappend="${i == storyPage.number} ? 'current'"></a>
+    </span>
         <span th:if="${storyPage.hasNext()}">
-            <a th:href="@{${currentURI}(page=${storyPage.number + 2})}">
-                <img src="/images/KeyboardArrowRight.png" alt="다음"></a>
-        </span>
+        <a th:href="@{${currentURI}(page=${storyPage.number + 2}, userId=${userId})}">
+            <img src="/images/KeyboardArrowRight.png" alt="다음"></a>
+    </span>
     </div>
+
 </main>
 
 <!--<script th:src="@{/js/page.js}"></script>-->

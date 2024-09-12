@@ -69,6 +69,7 @@
 <script th:src="@{/js/auth.js}"></script>
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
+
         const currentUser = /*[[${story.getAuthor().nickname}]]*/ ''; // 본인 ID
 
         // 공유자 ID를 태그 형태로 추가 및 삭제
