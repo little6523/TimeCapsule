@@ -121,19 +121,22 @@ public class StoryController {
   @GetMapping
   public String getStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
-      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @ModelAttribute("userId") String userId,
       HttpServletRequest request,
       Model model) {
+
+    int actualPage = page - 1;
+
     Page<FindStoryResponseDTO> storyPage;
 
     System.out.println("userId" + userId);
 
     if (searchKeyword.isEmpty()) {
-      storyPage = storyService.findUserStories(userId, page, size);
+      storyPage = storyService.findUserStories(userId, actualPage, size);
     } else {
-      storyPage = storyService.findMyStoriesByKeyword(userId, searchKeyword, page, size);
+      storyPage = storyService.findMyStoriesByKeyword(userId, searchKeyword, actualPage, size);
     }
 
     model.addAttribute("userId", userId);
@@ -174,18 +177,20 @@ public class StoryController {
   @GetMapping("/shared")
   public String getSharedStoryList(
       @RequestParam(value = "keyword", required = false, defaultValue = "") String searchKeyword,
-      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @ModelAttribute("userId") String userId,
       HttpServletRequest request,
       Model model) {
 
+    int actualPage = page - 1;
+
     Page<FindStoryResponseDTO> storyPage;
 
     if (searchKeyword.isEmpty()) {
-      storyPage = storyService.findSharedStories(userId, page, size);
+      storyPage = storyService.findSharedStories(userId, actualPage, size);
     } else {
-      storyPage = storyService.findSharedStoriesByKeyword(userId, searchKeyword, page, size);
+      storyPage = storyService.findSharedStoriesByKeyword(userId, searchKeyword, actualPage, size);
     }
 
     model.addAttribute("userId", userId);
@@ -236,7 +241,6 @@ public class StoryController {
       }
       encodedImages.put(image.getId(), imageUrl);
     }
-    ;
 
     model.addAttribute("images", encodedImages);
     model.addAttribute("story", story);

@@ -21,6 +21,7 @@
     <h1 th:if="${currentURI.contains('/stories/shared')}" th:text="${story.author.nickname + '의 스토리'}"></h1>
     <h1 th:if="${currentURI.contains('/community')}">커뮤니티</h1>
 
+    </h2>
     <article>
         <div class="story-header">
             <div class="story-metadata">
@@ -113,6 +114,7 @@
             <button class="close" id="closeModal">확인</button>
         </div>
     </div>
+
 </main>
 <script th:inline="javascript">
     // 스토리 ID를 JavaScript 변수로 설정
@@ -126,18 +128,17 @@
 <script th:inline="javascript">
     // 페이지 번호를 유지한 스토리 목록 페이지로 이동하는 함수
     function goToStoryList() {
-        console.log("clicked!!!!")
-
         const pageNumber = sessionStorage.getItem('currentPage') || 1;
-        const currentPath = window.location.pathname;
+        const currentURL = new URL(window.location.href);
 
-        if (currentPath.startsWith('/stories/commmunity')) {
-            window.location.href = `/stories/community?page=${pageNumber}`;
-        } else if (currentPath.includes('/shared')) {
-            window.location.href = `/stories/shared?page=${pageNumber}`
-        } else {
-            window.location.href = `/stories?page=${pageNumber}`;
-        }
+        // 스토리 ID(숫자) 제거
+        const pathname = currentURL.pathname.replace(/\/\d+$/, '');
+
+        currentURL.pathname = pathname;
+        currentURL.searchParams.set('page', pageNumber);
+        currentURL.searchParams.set('userId', userId);
+
+        window.location.href = currentURL.toString();
     }
 
     document.addEventListener('DOMContentLoaded', function () {
