@@ -4,6 +4,7 @@ import com.ahi.timecapsule.config.JwtTokenProvider;
 import com.ahi.timecapsule.config.RedisService;
 import com.ahi.timecapsule.dto.*;
 import com.ahi.timecapsule.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.Map;
@@ -132,6 +133,44 @@ public class UserController {
       response.addHeader("X-User-Id", username); // 사용자 정보 추가
       response.addHeader(
           HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
+
+      return ResponseEntity.ok().build();
+    } else {
+      throw new RuntimeException("권한이 없습니다.");
+    }
+  }
+
+  // 페이지 접속 시, 토큰 유효성 검사
+  @GetMapping("/valid-token-admin")
+  public ResponseEntity<?> validateTokenAdmin(
+          @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+          HttpServletResponse response) {
+    // Access Token 추출
+    String accessToken =
+            authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
+                    ? authorizationHeader.substring(7)
+                    : null;
+
+    if (accessToken == null) {
+      throw new RuntimeException("Access Token이 제공되지 않았습니다.");
+    }
+
+    // Access Token에서 사용자 이름 추출
+    String username = jwtTokenProvider.getUsernameFromJwtToken(accessToken);
+
+    // Redis에서 Refresh Token 가져오기
+    String refreshToken = redisService.getRefreshToken(username);
+
+    // Access Token 검증 및 필요한 경우 재발급
+    String validAccessToken = userService.validateAndRefreshAccessToken(accessToken, refreshToken);
+    String role = jwtTokenProvider.getAuthoritiesFromJwtToken(validAccessToken);
+    System.out.println("role이다 " + role);
+
+    if (role.contains("ROLE_ADMIN")) {
+      // 유효한 Access Token으로 사용자 정보 추출
+      response.addHeader("X-User-Id", username); // 사용자 정보 추가
+      response.addHeader(
+              HttpHeaders.AUTHORIZATION, "Bearer " + validAccessToken); // 새로운 Access Token 반환
 
       return ResponseEntity.ok().build();
     } else {
