@@ -63,8 +63,8 @@ public class NoticeControllerTest {
   public void testGetNoticeList() throws Exception {
     List<NoticeListDTO> notices =
         List.of(
-            new NoticeListDTO(1, "Test Title 1", fixedTime, fixedTime, "admin"),
-            new NoticeListDTO(2, "Test Title 2", fixedTime, fixedTime, "admin"));
+            new NoticeListDTO(1L, "Test Title 1", fixedTime, fixedTime, "admin"),
+            new NoticeListDTO(2L, "Test Title 2", fixedTime, fixedTime, "admin"));
 
     Page<NoticeListDTO> noticePage = new PageImpl<>(notices, PageRequest.of(0, 10), 2);
 
@@ -85,7 +85,7 @@ public class NoticeControllerTest {
   @DisplayName("공지사항 검색 테스트")
   public void testGetNoticeListWithSearchTerm() throws Exception {
     List<NoticeListDTO> notices =
-        List.of(new NoticeListDTO(1, "Test Title 1", fixedTime, fixedTime, "admin"));
+        List.of(new NoticeListDTO(1L, "Test Title 1", fixedTime, fixedTime, "admin"));
 
     Page<NoticeListDTO> noticePage = new PageImpl<>(notices, PageRequest.of(0, 10), 1);
 
@@ -136,7 +136,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 생성 테스트")
   public void testCreateNotice() throws Exception {
-    NoticeDetailDTO createdNotice = createNoticeDetailDTO(1, "Test Title", "Test Content");
+    NoticeDetailDTO createdNotice = createNoticeDetailDTO(1L, "Test Title", "Test Content");
 
     when(jwtTokenProvider.getUsernameFromJwtToken(anyString())).thenReturn("testUser");
     when(noticeService.createNotice(any(NoticeCreateDTO.class), anyString()))

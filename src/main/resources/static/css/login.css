@@ -66,6 +66,7 @@ main {
     height: 30px;
     border: none;
     font-size: 13px;
+    cursor: pointer;
 }
 
 .form-group-oauth2 {
@@ -131,4 +132,5 @@ main {
     height: 34px;
     border: none;
     font-size: 13px;
+    cursor: pointer;
 }
