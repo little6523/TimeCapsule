@@ -22,8 +22,9 @@ public class ImageDTO {
 
   public static ImageDTO fromEntity(Image image) {
     return ImageDTO.builder()
-        .storyDTO(StoryDTO.fromEntity(image.getStory()))
-        .url(image.getUrl())
-        .build();
+            .id(image.getId())
+            .storyDTO(StoryDTO.fromEntity(image.getStory()))
+            .url(image.getUrl())
+            .build();
   }
 }
