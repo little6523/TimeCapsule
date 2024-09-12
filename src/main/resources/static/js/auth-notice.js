@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // JWT 토큰을 포함하여 /main으로 GET 요청
-    fetch('/valid-token-admin', {
+    fetch('/valid-token', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token, // JWT 토큰을 헤더에 포함
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     sessionStorage.setItem('jwtToken', newAccessToken);
                 }
                 userId = response.headers.get('X-User-Id');
+                userRole = response.headers.get('X-User-Role');
                 if (userId) {
                     // 로그인 된 사용자 이름을 표시
                     updateSidebarLinks(userId); //사이드바 처리
@@ -29,30 +30,49 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } else {
                     console.log('userId 헤더가 응답에 포함되지 않았습니다.');
                 }
+                if (userRole) {
+                    document.getElementById('userRole').value = userRole;
+                } else {
+                    console.log('userRole 헤더가 응답에 포함되지 않았습니다.')
+                }
             } else {
                 console.log('메인 페이지 접근 실패: 401 Unauthorized');
-                redirectToLogin();
-                updateButtons(false); //header 처리
+                const errorMessage = response.text();
+                showError(errorMessage);
+                // updateButtons(false); //header 처리
                 throw new Error('Unauthorized'); // 오류를 던져 다음 then 블록이 실행되지 않도록 함
             }
         })
         .catch(error => {
+            showError('Error during fetching page');
             console.error('Error during fetching page:', error);
-            redirectToLogin();
-            updateButtons(false); //header 처리
+            // updateButtons(false); //header 처리
         });
 });
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: '입력 오류',
+        text: message,
+        confirmButtonText: '확인'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            history.back();
+        }
+    })
+}
 
 // JWT 토큰을 로컬 스토리지에서 가져오는 함수
 function getJwtToken() {
     return sessionStorage.getItem('jwtToken');
 }
 
-// 로그인 페이지로 리다이렉트하는 함수
-function redirectToLogin() {
-    window.location.href = '/login';
-    sessionStorage.removeItem('jwtToken');
-}
+// // 로그인 페이지로 리다이렉트하는 함수
+// function redirectToLogin() {
+//     window.location.href = '/login';
+//     sessionStorage.removeItem('jwtToken');
+// }
 
 //사이드바 설정
 function updateSidebarLinks(userId) {
