@@ -25,7 +25,6 @@ public class ImageService {
   }
 
   public String encodeImageToBase64(String imagePath) throws IOException {
-    System.out.println("저장된 이미지 주소: " + imagePath);
     File imageFile = new File(imagePath);
     byte[] fileContent = Files.readAllBytes(imageFile.toPath());
     return Base64.getEncoder().encodeToString(fileContent);
