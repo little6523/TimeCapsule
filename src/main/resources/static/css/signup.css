@@ -68,6 +68,7 @@ main {
     border: none;
     margin-left: 15px;
     font-size: 13px;
+    cursor: pointer;
 }
 
 .action-button {
@@ -77,6 +78,7 @@ main {
     height: 34px;
     border: none;
     font-size: 13px;
+    cursor: pointer;
 }
 
 .error-message {
