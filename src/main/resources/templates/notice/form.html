@@ -18,6 +18,7 @@
     <div class="wrapper-form-content">
         <h2>공지사항</h2>
         <form th:action="@{/notices}" method="post" th:object="${noticeForm}">
+            <input type="hidden" id="userId" name="userId" th:value="${userId}">
             <div class="group-form">
                 <input type="text" th:field="*{title}" placeholder="제목을 입력해 주세요." required>
             </div>
@@ -30,7 +31,6 @@
             </div>
         </form>
     </div>
-    <input type="hidden" name="userId" id="userId">
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

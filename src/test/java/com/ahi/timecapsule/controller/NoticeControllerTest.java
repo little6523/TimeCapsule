@@ -7,13 +7,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.ahi.timecapsule.TestSecurityConfig;
-import com.ahi.timecapsule.config.JwtTokenProvider;
-import com.ahi.timecapsule.config.UserDetailService;
 import com.ahi.timecapsule.dto.notice.request.NoticeCreateDTO;
 import com.ahi.timecapsule.dto.notice.request.NoticeUpdateDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeDetailDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeListDTO;
 import com.ahi.timecapsule.service.NoticeService;
+import com.ahi.timecapsule.service.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -38,11 +37,7 @@ public class NoticeControllerTest {
 
   @MockBean private NoticeService noticeService;
 
-  @MockBean private JwtTokenProvider jwtTokenProvider;
-
-  @MockBean
-  @SuppressWarnings("unused")
-  private UserDetailService userDetailService;
+  @MockBean private UserService userService;
 
   private final LocalDateTime fixedTime = LocalDateTime.of(2024, 9, 4, 0, 0);
 
@@ -136,23 +131,23 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 생성 테스트")
   public void testCreateNotice() throws Exception {
+    String userId = "testUser";
     NoticeDetailDTO createdNotice = createNoticeDetailDTO(1L, "Test Title", "Test Content");
 
-    when(jwtTokenProvider.getUsernameFromJwtToken(anyString())).thenReturn("testUser");
     when(noticeService.createNotice(any(NoticeCreateDTO.class), anyString()))
         .thenReturn(createdNotice);
 
     mockMvc
         .perform(
             post("/notices")
-                .header("Authorization", "Bearer fake-token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("userId", userId)
                 .param("title", "Test Title")
                 .param("content", "Test Content"))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/notices/" + createdNotice.getId()));
 
-    verify(noticeService).createNotice(any(NoticeCreateDTO.class), anyString());
+    verify(noticeService).createNotice(any(NoticeCreateDTO.class), eq(userId));
   }
 
   @Test
@@ -162,7 +157,6 @@ public class NoticeControllerTest {
     mockMvc
         .perform(
             post("/notices")
-                .header("Authorization", "Bearer fake-token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "")
                 .param("content", "Test Content"))
