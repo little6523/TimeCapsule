@@ -316,9 +316,13 @@ public class UserService {
         .collect(Collectors.joining());
   }
 
-  public List<String> searchUsersByNickname(String keyword) {
+  // 공유자 검색
+  public List<String> searchUsersByNickname(String keyword, String userId) {
     List<String> userNicknames = new ArrayList<>();
     for (User user : userRepository.findByNicknameContaining(keyword)) {
+      if (user.getRole() == 2 || user.getUserId().equals(userId)) {
+        continue;
+      }
       userNicknames.add(user.getNickname());
     }
     return userNicknames;
