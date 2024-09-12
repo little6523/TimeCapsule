@@ -13,14 +13,14 @@ import com.ahi.timecapsule.service.StoryService;
 import com.ahi.timecapsule.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,8 +84,8 @@ public class StoryController {
   // 공유자 검색
   @GetMapping("/search")
   @ResponseBody
-  public List<String> searchUsers(@RequestParam("keyword") String keyword,
-                                  @RequestParam("userId") String userId) {
+  public List<String> searchUsers(
+      @RequestParam("keyword") String keyword, @RequestParam("userId") String userId) {
 
     return userService.searchUsersByNickname(keyword, userId);
   }
@@ -102,11 +102,11 @@ public class StoryController {
   // 스토리 생성
   @PostMapping
   public String createStory(
-          @RequestPart("images") List<MultipartFile> images,
-          @ModelAttribute StoryContentDTO storyContentDTO,
-          @ModelAttribute("userId") String userId,
-          HttpSession session)
-          throws IOException {
+      @RequestPart("images") List<MultipartFile> images,
+      @ModelAttribute StoryContentDTO storyContentDTO,
+      @ModelAttribute("userId") String userId,
+      HttpSession session)
+      throws IOException {
 
     List<String> filesPath = new ArrayList<>();
     if (images != null && !images.isEmpty()) {
@@ -173,6 +173,23 @@ public class StoryController {
     model.addAttribute("story", story);
     model.addAttribute("currentURI", request.getRequestURI());
     return "story-detail";
+  }
+
+  // 인터뷰 파일 다운로드
+  @GetMapping("/download")
+  public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) {
+
+    List<Object> getFile = storyService.getSoundFile(fileName);
+    Resource resource = (Resource) getFile.get(0);
+    String extension = (String) getFile.get(1);
+
+    if (resource == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    String mimeType = "audio/" + extension;
+
+    return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(resource);
   }
 
   // 공유된 스토리 목록 조회(전체/검색)

@@ -8,18 +8,19 @@ import com.ahi.timecapsule.entity.StoryShare;
 import com.ahi.timecapsule.entity.User;
 import com.ahi.timecapsule.exception.StoryNotFoundException;
 import com.ahi.timecapsule.exception.UserNotFoundException;
-import com.ahi.timecapsule.repository.ImageRepository;
 import com.ahi.timecapsule.repository.StoryRepository;
 import com.ahi.timecapsule.repository.StoryShareRepository;
 import com.ahi.timecapsule.repository.UserRepository;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -199,6 +200,23 @@ public class StoryService {
       }
     }
     return filesPath;
+  }
+
+  @Transactional
+  public List<Object> getSoundFile(String fileName) {
+    String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+    Path filePath = Paths.get(fileName);
+    File file = filePath.toFile();
+
+    if (!file.exists()) {
+      return null;
+    }
+
+    List<Object> getFile = new ArrayList<>();
+    getFile.add(new FileSystemResource(file));
+    getFile.add(extension);
+
+    return getFile;
   }
 
   // 외부 경로 설정 메소드

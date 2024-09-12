@@ -383,6 +383,7 @@
 | findSharedStoryDetail    | GET             | `/stories/shared/{id}`   | 공유된 특정 스토리 조회           | 일반            |
 | getCommunityStoryList    | GET             | `/community`             | 커뮤니티에 게시된 전체 스토리 조회     | 일반            |
 | findCommunityStoryDetail | GET             | `/community/{id}`        | 커뮤니티에 게시된 특정 스토리 조회     | 일반            |
+| downloadFile             | GET             | `/download`              | 인터뷰 파일 다운로드        | 일반             |
 
 <br>
 
