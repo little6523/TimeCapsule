@@ -49,7 +49,7 @@ public class NoticeController {
 
   // 특정 공지사항 상세 조회
   @GetMapping("/{id}")
-  public String findNoticeDetail(@PathVariable Integer id, Model model) {
+  public String findNoticeDetail(@PathVariable Long id, Model model) {
     NoticeDetailDTO noticeDetail = noticeService.getDetailNotice(id);
     model.addAttribute("notice", noticeDetail);
     return "notice/detail";
@@ -100,7 +100,7 @@ public class NoticeController {
 
   // 공지사항 수정 폼 조회
   @GetMapping("/{id}/edit")
-  public String getUpdateNoticeForm(@PathVariable Integer id, Model model) {
+  public String getUpdateNoticeForm(@PathVariable Long id, Model model) {
     NoticeDetailDTO noticeDetail = noticeService.getDetailNotice(id);
     model.addAttribute("noticeForm", noticeDetail);
     return "notice/edit";
@@ -109,7 +109,7 @@ public class NoticeController {
   // 공지사항 수정
   @PostMapping("/{id}")
   public String updateNotice(
-      @PathVariable Integer id,
+      @PathVariable Long id,
       @Valid @ModelAttribute("noticeForm") NoticeUpdateDTO updateDTO,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
@@ -122,7 +122,7 @@ public class NoticeController {
   // 공지사항 삭제
   @DeleteMapping("/{id}")
   @ResponseBody
-  public ResponseEntity<Void> deleteNotice(@PathVariable Integer id) {
+  public ResponseEntity<Void> deleteNotice(@PathVariable Long id) {
     noticeService.deleteNotice(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }

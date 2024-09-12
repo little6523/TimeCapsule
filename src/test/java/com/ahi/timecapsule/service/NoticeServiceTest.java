@@ -48,7 +48,7 @@ public class NoticeServiceTest {
 
     Notice savedNotice =
         Notice.builder()
-            .id(1)
+            .id(1L)
             .title("Test Title")
             .content("Test Content")
             .createdAt(fixedTime)
@@ -90,7 +90,7 @@ public class NoticeServiceTest {
   @Test
   @DisplayName("공지사항 상세조회 테스트")
   public void testGetDetailNotice() {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     User user = createUser();
 
     Notice notice =
@@ -120,7 +120,7 @@ public class NoticeServiceTest {
   @Test
   @DisplayName("존재하지 않는 공지사항 조회 예외 발생 테스트")
   public void testGetDetailNoticeNotFound() {
-    Integer nonExistentNoticeId = 1;
+    Long nonExistentNoticeId = 1L;
 
     assertThatThrownBy(() -> noticeService.getDetailNotice(nonExistentNoticeId))
         .isInstanceOf(NoticeNotFoundException.class)
@@ -132,7 +132,7 @@ public class NoticeServiceTest {
   @Test
   @DisplayName("공지사항 수정 테스트")
   public void testUpdateNotice() {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     User user = createUser();
     NoticeUpdateDTO updateDTO = new NoticeUpdateDTO(noticeId, "Updated Title", "Updated Content");
 
@@ -174,7 +174,7 @@ public class NoticeServiceTest {
   @Test
   @DisplayName("공지사항 삭제 테스트")
   public void testDeleteNotice() {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     User user = createUser();
 
     Notice notice =
