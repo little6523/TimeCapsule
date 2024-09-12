@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const commentForm = document.querySelector('.comment-form');
     const commentListContainer = document.getElementById('commentListContainer');
-    const storyId = window.storyId;
+    // const storyId = window.storyId; // html 문서내 inline 선언
 
     if (!storyId) {
         console.error('Story ID not found');
