@@ -39,7 +39,7 @@ public class NoticeService {
 
   // 공지사항 상세 조회
   @Transactional(readOnly = true)
-  public NoticeDetailDTO getDetailNotice(Integer id) {
+  public NoticeDetailDTO getDetailNotice(Long id) {
     Notice notice = noticeRepository.findById(id).orElseThrow(NoticeNotFoundException::new);
 
     return NoticeDetailDTO.fromEntity(notice);
@@ -47,7 +47,7 @@ public class NoticeService {
 
   // 공지사항 수정
   @Transactional
-  public NoticeDetailDTO updateNotice(Integer id, NoticeUpdateDTO updateDTO) {
+  public NoticeDetailDTO updateNotice(Long id, NoticeUpdateDTO updateDTO) {
     Notice notice = noticeRepository.findById(id).orElseThrow(NoticeNotFoundException::new);
 
     notice = updateDTO.toEntity(notice);
@@ -58,7 +58,7 @@ public class NoticeService {
 
   // 공지사항 삭제
   @Transactional
-  public void deleteNotice(Integer id) {
+  public void deleteNotice(Long id) {
     Notice notice = noticeRepository.findById(id).orElseThrow(NoticeNotFoundException::new);
 
     noticeRepository.delete(notice);

@@ -46,7 +46,7 @@ public class NoticeControllerTest {
 
   private final LocalDateTime fixedTime = LocalDateTime.of(2024, 9, 4, 0, 0);
 
-  private NoticeDetailDTO createNoticeDetailDTO(Integer id, String title, String content) {
+  private NoticeDetailDTO createNoticeDetailDTO(Long id, String title, String content) {
     return NoticeDetailDTO.builder()
         .id(id)
         .title(title)
@@ -107,7 +107,7 @@ public class NoticeControllerTest {
   @Test
   @DisplayName("특정 공지사항 상세 조회 테스트")
   public void testFindNoticeDetail() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     NoticeDetailDTO noticeDetail = createNoticeDetailDTO(noticeId, "Test Title", "Test Content");
     when(noticeService.getDetailNotice(noticeId)).thenReturn(noticeDetail);
 
@@ -175,7 +175,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 수정 폼 조회 테스트")
   public void testGetUpdateNoticeForm() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     NoticeDetailDTO noticeDetail = createNoticeDetailDTO(noticeId, "Test Title", "Test Content");
 
     when(noticeService.getDetailNotice(noticeId)).thenReturn(noticeDetail);
@@ -194,7 +194,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 수정 테스트")
   public void testUpdateNotice() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
     NoticeUpdateDTO updateDTO =
         new NoticeUpdateDTO(noticeId, "Updated Test Title", "Updated Test Content");
 
@@ -214,7 +214,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "ADMIN")
   @DisplayName("공지사항 삭제 테스트")
   public void testDeleteNotice() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
 
     mockMvc.perform(delete("/notices/{id}", noticeId)).andExpect(status().isOk());
 
@@ -225,7 +225,7 @@ public class NoticeControllerTest {
   @WithMockUser(roles = "USER")
   @DisplayName("비관리자 공지사항 삭제 실패 테스트")
   public void testNonAdminDeleteNotice() throws Exception {
-    Integer noticeId = 1;
+    Long noticeId = 1L;
 
     mockMvc.perform(delete("/notices/{id}", noticeId)).andExpect(status().isForbidden());
   }
