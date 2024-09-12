@@ -214,7 +214,7 @@ public class StoryService {
   }
 
   @Transactional
-  public void save(
+  public StoryDTO saveStory(
       StoryOptionDTO storyOptionDTO,
       StoryContentDTO storyContentDTO,
       List<String> filesPath,
@@ -247,7 +247,7 @@ public class StoryService {
     Story story = storyDTO.toEntity();
     Story savedStory = storyRepository.save(story); // 먼저 Story 저장
 
-    // 4. SharedUsers 처리
+    // 4. SharedUsers 저장
     if (storyContentDTO.getSharedUsers() != null) {
       for (String sharedUserNickname : storyContentDTO.getSharedUsers()) {
         // 공유할 유저 조회
@@ -266,5 +266,7 @@ public class StoryService {
         storyShareRepository.save(storyShare); // StoryShare 저장
       }
     }
+
+    return StoryDTO.fromEntity(story);
   }
 }

@@ -9,11 +9,11 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/story-detail.css}">
+    <link rel="stylesheet" th:href="@{/css/comment.css}">
 </head>
 
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
-
 <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
 <main>
@@ -25,23 +25,19 @@
         <div class="story-header">
             <div class="story-metadata">
                 <h2 th:text="${story.title}">스토리 제목</h2>
-                <p> <span th:text="${story.getAuthor().nickname}">작성자</span> |
+                <p><span th:text="${story.getAuthor().nickname}">작성자</span> |
                     <span th:text="${#temporals.format(story.createdAt, 'yyyy.MM.dd')}">YYYY.MM.DD</span> |
                     <span th:text="${story.isShared() ? '공개' : '비공개'}"></span>
                 </p>
-                <p th:th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}">공유자 |
-                    <span th:each="shared, iterStat : ${story.sharedStories}">
-                        <span th:text="${shared.userDTO.nickname}"></span><span th:if="${!iterStat.last}">,</span>
-                    </span>
-                </p>
             </div>
 
-            <div th:unless="${currentURI.contains('/stories/shared')}" class="download-buttons">
+            <div th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}"
+                 class="download-buttons">
                 <button class="download-btn" th:onclick="'downloadAudio(' + ${story.id} + ')'"><img
-                        src="/images/soundDownload.png" alt="MP3 다운로드 버튼">MP3 다운로드
+                        alt="MP3 다운로드 버튼" src="/images/soundDownload.png">MP3 다운로드
                 </button>
                 <button class="download-btn" th:onclick="'downloadPDF(' + ${story.id} + ')'"><img
-                        src="/images/pdfDownload.png" alt="PDF 다운로드 버튼">PDF 다운로드
+                        alt="PDF 다운로드 버튼" src="/images/pdfDownload.png">PDF 다운로드
                 </button>
             </div>
         </div>
@@ -50,7 +46,7 @@
 
         <div class="story-images">
             <div th:each="image : ${images}">
-                <img th:if="${!image.isEmpty()}" class="icon-img" th:src="'data:image;base64,'+${image}" alt="첨부된 이미지">
+                <img alt="첨부된 이미지" class="icon-img" th:if="${!image.isEmpty()}" th:src="'data:image;base64,'+${image}">
             </div>
         </div>
 
@@ -58,78 +54,173 @@
             <p th:text="${story.content}">게시물 내용 (사진 포함)</p>
         </div>
 
-        <div th:unless="${currentURI.contains('/stories/shared')}" class="story-buttons">
+        <div th:unless="${currentURI.contains('community')}" class="form-group shared-group">
+            <label for="sharedList" class="shared-list"><img src="/images/Share.png" alt="공유자">공유자</label>
+            <div class="tag-input-container">
+                <input type="text" id="sharedList" class="tag-input" readonly>
+            </div>
+        </div>
+
+        <div th:if="${!(currentURI.contains('/stories/shared') || currentURI.contains('/community'))}"
+             class="story-buttons">
             <button class="back-btn" onclick=goToStoryList()>목록</button>
-            <button class="edit-btn" th:data-url="@{/stories/{id}/edit(id=${story.id})}"
-                    onclick="location.href=this.getAttribute('data-url')">수정</button>
+            <button class="edit-btn" onclick="location.href=this.getAttribute('data-url')"
+                    th:data-url="@{/stories/{id}/edit(id=${story.id})}">수정
+            </button>
             <button class="delete-btn" id="deleteBtn">삭제</button>
         </div>
 
-        <div th:if="${currentURI.contains('/stories/shared')}" class="shared-version-btn">
+        <div th:if="${currentURI.contains('/stories/shared') || currentURI.contains('/community')}"
+             class="shared-version-btn">
             <button class="back-btn" onclick=goToStoryList()>목록</button>
         </div>
     </article>
+    <!--  댓글 영역-->
+    <div class="commentSection">
+        <h2 class="comment-header">댓글</h2>
+        <div id="commentListContainer">
+            <div class="commentList">
+                <div class="comment-item" th:data-id="${comment.id}" th:each="comment : ${comments}">
+                    <div class="comment-header">
+                        <span class="comment-author" th:text="${comment.userNickname + ' | ' + #temporals.format(comment.createdAt, 'yyyy.MM.dd')}"></span>
+                    </div>
+                    <div class="comment-content" th:text="${comment.content}"></div>
+                    <div class="comment-edit-form" style="display: none;">
+                        <textarea th:text="${comment.content}"></textarea>
+                        <button class="save-edit" type="submit">수정 완료</button>
+                        <button class="cancel-edit" type="button">취소</button>
+                    </div>
+                    <div class="commentListButtons" th:if="${comment.userId == #authentication.principal.userId}">
+                        <button class="edit-comment">수정</button>
+                        <button class="delete-comment">삭제</button>
+                        <button class="cancel-edit" style="display:none;">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form class="comment-form">
+            <textarea name="content" required></textarea>
+            <input name="storyId" th:value="${story.id}" type="hidden">
+            <button type="submit">등록</button>
+            <input type="hidden" name="userId" id="userId">
+        </form>
+    </div>
 
     <!-- 삭제 완료 모달 -->
-    <div id="deleteModal" class="modal">
+    <div class="modal" id="deleteModal">
         <div class="modal-content">
             <p>스토리가 삭제되었습니다.</p>
             <button class="close" id="closeModal">확인</button>
         </div>
     </div>
 </main>
-
+<script th:inline="javascript">
+    // 스토리 ID를 JavaScript 변수로 설정
+    var storyId = /*[[${story.id}]]*/ null;
+</script>
+<!--댓글 JS-->
+<script th:src="@{/js/comment.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
 <!-- Footer -->
 <footer th:replace="~{fragments/footer :: footer}"></footer>
-
-<script>
-    // 삭제 모달창
-    document.getElementById("deleteBtn").addEventListener("click", function() {
-
-        const storyId = [[${story.id}]];
-
-        console.log("story id: ", storyId);
-
-        if (confirm("정말로 삭제하시겠습니까?")) {
-            fetch('/stories/' + storyId, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let modal = document.getElementById("deleteModal");
-                        modal.style.display = "flex";
-                    } else {
-                        alert("삭제에 실패했습니다. 다시 시도해주세요.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error: ', error);
-                    alert("삭제에 실패했습니다. 다시 시도해주세요.");
-                });
-        }
-    });
-
-    document.getElementById("closeModal").addEventListener("click", function() {
-        let modal = document.getElementById("deleteModal");
-        modal.style.display = "none";
-        window.location.href = "/stories";
-    });
-
+<script th:inline="javascript">
     // 페이지 번호를 유지한 스토리 목록 페이지로 이동하는 함수
     function goToStoryList() {
+        console.log("clicked!!!!")
+
         const pageNumber = sessionStorage.getItem('currentPage') || 1;
         const currentPath = window.location.pathname;
 
-        if (currentPath.startsWith('/community/stories')) {
-            window.location.href = `/community/stories?page=${pageNumber}`;
+        if (currentPath.startsWith('/stories/commmunity')) {
+            window.location.href = `/stories/community?page=${pageNumber}`;
+        } else if (currentPath.includes('/shared')) {
+            window.location.href = `/stories/shared?page=${pageNumber}`
         } else {
             window.location.href = `/stories?page=${pageNumber}`;
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentUser = /*[[${story.getAuthor().nickname}]]*/ ''; // 본인 ID
+
+        // 공유자 ID를 태그 형태로 추가 및 삭제
+        const tagInputContainer = document.querySelector('.tag-input-container');
+        const tagInput = document.querySelector('.tag-input');
+
+        tagInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && tagInput.value.trim() !== '') {
+                e.preventDefault();
+                const newSharedUser = tagInput.value.trim();
+
+                // 본인 ID와 동일한 공유자 ID일 경우
+                if (newSharedUser === currentUser) {
+                    alert('본인에게는 공유할 수 없습니다.');
+                    tagInput.value = '';
+                    return;
+                }
+
+                addTag(newSharedUser);
+                // 새로운 공유자를 sharedList에 추가
+                sharedList.push(newSharedUser);
+                tagInput.value = '';
+            }
+        });
+
+        function addTag(text) {
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.innerHTML = `${text}`;
+            // tag.innerHTML = `${text} <i class="remove-tag">×</i>`;
+            tagInputContainer.insertBefore(tag, tagInput);
+        }
+
+        const sharedList = [];
+
+        // 기존 공유자 리스트를 태그 형태로 출력
+        const existingSharedList = /*[[${story.sharedStories}]]*/ [];
+        existingSharedList.forEach(function (shared) {
+            addTag(shared.userDTO.nickname);
+            sharedList.push(shared.userDTO.nickname); // sharedList 배열에 추가
+        });
+
+        // 삭제 모달창
+        document.getElementById("deleteBtn").addEventListener("click", function () {
+
+            const storyId = [[${story.id}]];
+
+            console.log("story id: ", storyId);
+
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                fetch('/stories/' + storyId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            let modal = document.getElementById("deleteModal");
+                            modal.style.display = "flex";
+                        } else {
+                            alert("삭제에 실패했습니다. 다시 시도해주세요.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error: ', error);
+                        alert("삭제에 실패했습니다. 다시 시도해주세요.");
+                    });
+            }
+        });
+
+        document.getElementById("closeModal").addEventListener("click", function () {
+            let modal = document.getElementById("deleteModal");
+            modal.style.display = "none";
+            window.location.href = "/stories";
+        });
+
+
+    });
 </script>
 </body>
 </html>
