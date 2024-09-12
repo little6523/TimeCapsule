@@ -13,7 +13,7 @@ main {
 
 .account-management-main {
     max-width: 1200px;
-    margin: 20px auto;
+    margin:  auto;
     padding: 40px;
     flex: 1;
 }
@@ -28,11 +28,10 @@ main {
 .account-management-container {
     width: 100%;
     max-width: 500px;
-    padding: 60px;
 }
 
 .password-reset-title {
-    margin-top: 250px;
+    margin-top: 200px;
     margin-bottom: 30px;
     font-size: 40px;
     font-weight: bold;
