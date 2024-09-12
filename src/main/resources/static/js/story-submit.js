@@ -1,16 +1,11 @@
-document.getElementById('createForm').addEventListener('submit', function() {
-    // div의 내용을 숨겨진 필드에 복사
-    document.getElementById('contentInput').value = document.getElementById('content').innerText;
+document.getElementById('createForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
     const searchedUsers = document.getElementsByClassName('searchedUser');
     for (let i = 0; i < searchedUsers.length; i++) {
         searchedUsers[i].value = searchedUsers[i].placeholder;
         console.log(searchedUsers.value);
     }
-});
-
-document.getElementById('createForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // 폼 제출을 막음
 });
 
 const communityToggle = document.getElementById('communityToggle');

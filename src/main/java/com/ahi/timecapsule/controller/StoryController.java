@@ -111,16 +111,18 @@ public class StoryController {
       @RequestPart("images") List<MultipartFile> images,
       @ModelAttribute StoryContentDTO storyContentDTO,
       @ModelAttribute("userId") String userId,
+      @ModelAttribute("content") String content,
       HttpSession session)
       throws IOException {
 
     List<String> filesPath = new ArrayList<>();
-    if (images != null && !images.isEmpty()) {
+    if (images != null && !images.isEmpty() && !images.get(0).getOriginalFilename().isEmpty()) {
       filesPath = storyService.saveFiles(images, userId);
     }
 
     StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
 
+//    storyContentDTO.setContent(content);
     StoryDTO storyDTO = storyService.saveStory(storyOptionDTO, storyContentDTO, filesPath, userId);
     imageService.saveImages(filesPath, storyDTO.getId());
 

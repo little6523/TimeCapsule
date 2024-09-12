@@ -38,6 +38,8 @@ saveButton.addEventListener('click', function () {
         formData.append('images', file);  // "images"는 컨트롤러에서 받을 파라미터 이름
     });
 
+    formData.set('content', document.getElementById('content').innerText);
+
     // 체크박스 값 처리
     const isShared = document.getElementById('communityToggle').checked;
     formData.set('isShared', isShared); // 체크박스의 실제 값으로 설정

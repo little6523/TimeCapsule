@@ -263,7 +263,7 @@ public class StoryService {
             .title(storyContentDTO.getTitle())
             .isShared(storyContentDTO.isShared())
             .content(storyContentDTO.getContent())
-            .userDTO(UserDTO.fromEntity(user)) // Story는 User와도 관계가 있을 수 있음
+            .userDTO(UserDTO.fromEntity(user))
             .build();
 
     Story story = storyDTO.toEntity();
