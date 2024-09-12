@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 public class NoticeDetailDTO {
 
-  private Integer id;
+  private Long id;
   private String title;
   private String content;
   private LocalDateTime createdAt;

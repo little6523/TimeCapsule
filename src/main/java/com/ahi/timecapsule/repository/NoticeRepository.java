@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface NoticeRepository extends JpaRepository<Notice, Integer> {
+public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
   // 최신 날짜 기준 게시글 나오는 메서드
   Page<Notice> findAllByOrderByCreatedAtDesc(Pageable pageable);

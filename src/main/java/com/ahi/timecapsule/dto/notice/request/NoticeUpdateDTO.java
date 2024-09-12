@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 public class NoticeUpdateDTO {
 
-  private Integer id;
+  private Long id;
 
   @NotBlank(message = "제목은 비워둘 수 없습니다.")
   @Size(min = 1, max = 50, message = "제목은 최소 1자, 최대 50자까지 허용됩니다.")
