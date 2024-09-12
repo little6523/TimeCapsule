@@ -14,48 +14,53 @@
 
 언제든지 원할 때마다 이 기록들을 되돌아보며, 가족의 유대감을 강화하고, 세대 간의 소통을 돕는 소중한 자산이 될 것입니다.
 
+<br>
+
 ## 프로젝트 개요
 
 - 프로젝트 이름 : TimeCapsule
 - 프로젝트 팀명 : A-HI
 - 프로젝트 기간 : 2024.08.21 ~ 2024.09.13
+
+<br>
+
 ## 프로젝트 목표
 
 - 가족의 **역사와 추억**을 세대 간에 전하는 커뮤니티
 - **생생한 기억**과 **따뜻한 목소리**를 보존하는 커뮤니티
 - 미래 세대에게 **소중한 유산**을 전달하는 커뮤니티
 
+<br>
+
 ## 팀 소개
 
 <br>
 
-|     <img src="src/main/resources/static/docs/hjl-profile-img.png" width="257" height="250" alt="이현준">      |               <img src="src/main/resources/static/docs/smk-profile-img.png" width="257" height="250" alt="김수민">               |                           <img src="src/main/resources/static/docs/hskim-profile-img.png" width="257" height="250" alt="김형섭">                            |
+|     <img src="src/main/resources/static/docs/hjl-profile-img.png" width="310" height="250" alt="이현준">      |               <img src="src/main/resources/static/docs/smk-profile-img.png" width="310" height="250" alt="김수민">               |                           <img src="src/main/resources/static/docs/hskim-profile-img.png" width="310" height="250" alt="김형섭">                            |
 |:----------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------:|
 |                                                  **이현준**                                                   |                                                            **김수민**                                                            |                                                                         **김형섭**                                                                          |
 |                                                     팀장                                                     |                                                              팀원                                                               |                                                                            팀원                                                                            |
 |                                         ERD 설계/시스템 아키텍처 작성/회의록 작성                                          |                                                    화면 설계/PPT 작성/노션 템플릿 작성                                                     |                                                                     화면 설계/README 작성                                                                      |
 | **Backend** <br>- API 연동<br>- 스토리 생성 및 저장<br>- CI/CD 구축 <br> **Frontend** <br>- 스토리 생성 페이지<br>- 스토리 작성 페이지 | **Backend** <br>- 공지사항 CRUD<br>- 공지사항 단위 테스트 코드 작성<br> **Frontend** <br>- 공지사항 목록 페이지<br>- 공지사항 상세 페이지<br>- 공지사항 작성/수정/삭제 페이지 | **Backend** <br>- OAuth2.0 로그인(구글/카카오)<br>- 회원정보수정<br>- 회원탈퇴<br>- 임시비밀번호발급<br> **Frontend** <br>- 메인페이지(로그인 전/후)<br>- 회원정보수정/회원탈퇴 페이지<br>- 임시비밀번호 발급 페이지 |
 
-|           <img src="src/main/resources/static/docs/yrp-profile-img.png" width="257" height="250" alt="박예린">            | <img src="src/main/resources/static/docs/dhl-profile-img.png" width="257" height="250" alt="이동현"> |                                    <img src="src/main/resources/static/docs/sjl-profile-img.png" width="257" height="250" alt="이소정">                                    |
+|           <img src="src/main/resources/static/docs/yrp-profile-img.png" width="310" height="250" alt="박예린">            | <img src="src/main/resources/static/docs/dhl-profile-img.png" width="310" height="250" alt="이동현"> |                                    <img src="src/main/resources/static/docs/sjl-profile-img.png" width="310" height="250" alt="이소정">                                    |
 |:----------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 |                                                        **박예린**                                                         |                                              **이동현**                                              |                                                                                 **이소정**                                                                                 |
 |                                                           팀원                                                           |                                                팀원                                                 |                                                                                   팀원                                                                                    |
 |                                                   ERD 설계/시스템 아키텍처 작성                                                   |                                               화면 설계                                               |                                                                           ERD 설계/시스템 아키텍처 작성                                                                            |
 | **Backend** <br>- 스토리 조회/수정/삭제<br>- 스토리 검색<br>- 커뮤니티 조회<br> **Frontend** <br>- 스토리/커뮤니티 목록 페이지<br>- 스토리/커뮤니티 상세 조회 페이지 |            **Backend** <br>- 댓글 CRUD <br> **Frontend** <br>- 마이스토리 & 커뮤니티 페이지 댓글 CRUD             | **Backend** <br>- 회원가입<br>- 로그인<br>- 로그아웃<br>- Spring Security<br>- JWT 토큰 관리<br>- Redis<br>- 회원 Repository 단위 테스트 코드 작성  <br> **Frontend** <br>- 회원가입 페이지<br>- 로그인 페이지 |
 
-## 기술 스택
-
 <br>
 
+## 기술 스택
+
 ### FrontEnd
-<img src="https://img.shields.io/badge/THYMELEAF-005F0F?style=for-the-badge&logo=THYMELEAF&logoColor=white" alt="THYMELEAF">
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white" alt="HTML5">
+<img src="https://img.shields.io/badge/THYMELEAF-005F0F?style=for-the-badge&logo=THYMELEAF&logoColor=white" alt="THYMELEAF"> <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white" alt="HTML5">
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white" alt="CSS3">
 <img src="https://img.shields.io/badge/JAVASCRIPT-F7DF1E?style=for-the-badge&logo=JAVASCRIPT&logoColor=white" alt="JAVASCRIPT">
 
 ### BackEnd
-<img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=JAVA&logoColor=white" alt="JAVA">
-<img src="https://img.shields.io/badge/SPRING BOOT-6DB33F?style=for-the-badge&logo=SPRING BOOT&logoColor=white" alt="SPRING BOOT">
+<img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=JAVA&logoColor=white" alt="JAVA"> <img src="https://img.shields.io/badge/SPRING BOOT-6DB33F?style=for-the-badge&logo=SPRING BOOT&logoColor=white" alt="SPRING BOOT">
 <img src="https://img.shields.io/badge/SPRING SECURITY-6DB33F?style=for-the-badge&logo=SPRING SECURITY&logoColor=white" alt="SPRING SECURITY">
 <img src="https://img.shields.io/badge/SPRING DATA JPA-6DB33F?style=for-the-badge&logo=SPRING DATA JPA&logoColor=white" alt="SPRING DATA JPA">
 <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON WEB TOKENS&logoColor=white" alt="JWT">
@@ -66,42 +71,49 @@
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MYSQL">
 
 ### Deployment
-<img src="https://img.shields.io/badge/AMAZON EC2-FF9900?style=for-the-badge&logo=AMAZON EC2&logoColor=white" alt="AMAZON EC2">
-<img src="https://img.shields.io/badge/AMAZON RDS-527FFF?style=for-the-badge&logo=AMAZON RDS&logoColor=white" alt="AMAZON RDS">
+<img src="https://img.shields.io/badge/AMAZON EC2-FF9900?style=for-the-badge&logo=AMAZON EC2&logoColor=white" alt="AMAZON EC2"> <img src="https://img.shields.io/badge/AMAZON RDS-527FFF?style=for-the-badge&logo=AMAZON RDS&logoColor=white" alt="AMAZON RDS">
 <img src="https://img.shields.io/badge/DOCKER-2496ED?style=for-the-badge&logo=DOCKER&logoColor=white" alt="DOCKER">
 
 ### CI/CD
 <img src="https://img.shields.io/badge/GITHUB ACTIONS-2088FF?style=for-the-badge&logo=GITHUB ACTIONS&logoColor=white" alt="GITHUB ACTIONS">
 
 ### External API
-<img src="https://img.shields.io/badge/STT API-6B66FF?style=for-the-badge&logo=STT API&logoColor=white" alt="STT API">
-<img src="https://img.shields.io/badge/Alan AI-A6A6A6?style=for-the-badge&logo=Alan AI&logoColor=white" alt="Alan AI">
+<img src="https://img.shields.io/badge/STT API-6B66FF?style=for-the-badge&logo=STT API&logoColor=white" alt="STT API"> <img src="https://img.shields.io/badge/Alan AI-A6A6A6?style=for-the-badge&logo=Alan AI&logoColor=white" alt="Alan AI">
 
 ### Collaboration Tools
-<img src="https://img.shields.io/badge/GITHUB-181717?style=for-the-badge&logo=GITHUB&logoColor=white" alt="GITHUB">
-<img src="https://img.shields.io/badge/NOTION-000000?style=for-the-badge&logo=NOTION&logoColor=white" alt="NOTION">
+<img src="https://img.shields.io/badge/GITHUB-181717?style=for-the-badge&logo=GITHUB&logoColor=white" alt="GITHUB"> <img src="https://img.shields.io/badge/NOTION-000000?style=for-the-badge&logo=NOTION&logoColor=white" alt="NOTION">
 <img src="https://img.shields.io/badge/FIGMA-F24E1E?style=for-the-badge&logo=FIGMA&logoColor=white" alt="FIGMA">
 <img src="https://img.shields.io/badge/dbdiagram.io-F08705?style=for-the-badge&logo=dbdiagram.io&logoColor=white" alt="dbdiagram.io">
+
+<br>
 
 ## 개발 일정
 
 <br>
-<img src="src/main/resources/static/docs/project-wbs.png" width="855" height="700" alt="요구사항 정의서 마인드 맵">
+<img src="src/main/resources/static/docs/project-wbs.png" width="1100" height="700" alt="요구사항 정의서 마인드 맵">
+
+<br>
 
 ## 요구사항 정의서
 
 <br>
-<img src="src/main/resources/static/docs/requirements-mind-map.jpg" width="855" height="700" alt="요구사항 정의서 마인드 맵">
+<img src="src/main/resources/static/docs/requirements-mind-map.jpg" width="1100" height="700" alt="요구사항 정의서 마인드 맵">
+
+<br>
 
 ## ERD
 
 <br>
-<img src="src/main/resources/static/docs/database-erd.png" width="855" height="700" alt="데이터베이스 ERD">
+<img src="src/main/resources/static/docs/database-erd.png" width="1100" height="700" alt="데이터베이스 ERD">
+
+<br>
 
 ## 시스템 아키텍처
 
 <br>
-<img src="src/main/resources/static/docs/system-architecture.png" width="855" height="700" alt="시스템 아키텍처">
+<img src="src/main/resources/static/docs/system-architecture.png" width="1100" height="700" alt="시스템 아키텍처">
+
+<br>
 
 ## 프로젝트 구조
 
@@ -297,34 +309,37 @@
 
 ```
 
+<br>
+
 ## 화면 설계
 
 <br>
 
 |                                                    메인페이지                                                    |                                                     메인페이지                                                     |
 |:-----------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------:|
-|      <img src="src/main/resources/static/docs/index.png" width="400" height="350" alt="메인페이지(로그인 전)">       |        <img src="src/main/resources/static/docs/main.png" width="400" height="350" alt="메인페이지(로그인 후)">        |
+|      <img src="src/main/resources/static/docs/index.png" width="550" height="350" alt="메인페이지(로그인 전)">       |        <img src="src/main/resources/static/docs/main.png" width="550" height="350" alt="메인페이지(로그인 후)">        |
 |                                                     로그인                                                     |                                                     회원가입                                                      |
-|           <img src="src/main/resources/static/docs/login.png" width="400" height="350" alt="로그인">           |           <img src="src/main/resources/static/docs/signup.png" width="400" height="350" alt="회원가입">           |
+|           <img src="src/main/resources/static/docs/login.png" width="550" height="350" alt="로그인">           |           <img src="src/main/resources/static/docs/signup.png" width="550" height="350" alt="회원가입">           |
 |                                                   비밀번호 찾기                                                   |                                                     계정 관리                                                     |
-|    <img src="src/main/resources/static/docs/reset-password.png" width="400" height="350" alt="비밀번호 찾기">     |       <img src="src/main/resources/static/docs/profile.png" width="400" height="350" alt="임시 비밀번호 발급">        |
+|    <img src="src/main/resources/static/docs/reset-password.png" width="550" height="350" alt="비밀번호 찾기">     |       <img src="src/main/resources/static/docs/profile.png" width="550" height="350" alt="임시 비밀번호 발급">        |
 |                                                공지사항 목록(관리자)                                                 |                                                 공지사항 상세(관리자)                                                  |
-|   <img src="src/main/resources/static/docs/notice-list.png" width="400" height="400" alt="공지사항 목록(관리자)">    |   <img src="src/main/resources/static/docs/notice-detail.png" width="400" height="400" alt="공지사항 상세(관리자)">    |
+|   <img src="src/main/resources/static/docs/notice-list.png" width="550" height="400" alt="공지사항 목록(관리자)">    |   <img src="src/main/resources/static/docs/notice-detail.png" width="550" height="400" alt="공지사항 상세(관리자)">    |
 |                                                공지사항 생성(관리자)                                                 |                                                 공지사항 수정(관리자)                                                  |
-|  <img src="src/main/resources/static/docs/notice-create.png" width="400" height="400" alt="공지사항 생성(관리자)">   |   <img src="src/main/resources/static/docs/notice-update.png" width="400" height="400" alt="공지사항 수정(관리자)">    |
+|  <img src="src/main/resources/static/docs/notice-create.png" width="550" height="400" alt="공지사항 생성(관리자)">   |   <img src="src/main/resources/static/docs/notice-update.png" width="550" height="400" alt="공지사항 수정(관리자)">    |
 |                                                공지사항 목록(사용자)                                                 |                                                 공지사항 상세(사용자)                                                  |
-| <img src="src/main/resources/static/docs/notice-list-user.png" width="400" height="400" alt="공지사항 목록(사용자)"> | <img src="src/main/resources/static/docs/notice-detail-user.png" width="400" height="400" alt="공지사항 상세(사용자)"> |
+| <img src="src/main/resources/static/docs/notice-list-user.png" width="550" height="400" alt="공지사항 목록(사용자)"> | <img src="src/main/resources/static/docs/notice-detail-user.png" width="550" height="400" alt="공지사항 상세(사용자)"> |
 |                                                   스토리 생성                                                    |                                                    스토리 결과                                                     |
-|      <img src="src/main/resources/static/docs/story-create.png" width="400" height="400" alt="스토리 생성">      |       <img src="src/main/resources/static/docs/story-result.png" width="400" height="400" alt="스토리 결과">       |
+|      <img src="src/main/resources/static/docs/story-create.png" width="550" height="400" alt="스토리 생성">      |       <img src="src/main/resources/static/docs/story-result.png" width="550" height="400" alt="스토리 결과">       |
 |                                                  마이스토리 목록                                                   |                                                   마이스토리 상세                                                    |
-|    <img src="src/main/resources/static/docs/my-story-list.png" width="400" height="400" alt="마이스토리 목록">     |    <img src="src/main/resources/static/docs/my-story-detail.png" width="400" height="400" alt="마이스토리 상세">     |
+|    <img src="src/main/resources/static/docs/my-story-list.png" width="550" height="400" alt="마이스토리 목록">     |    <img src="src/main/resources/static/docs/my-story-detail.png" width="550" height="400" alt="마이스토리 상세">     |
 |                                                  마이스토리 수정                                                   |                                                   공유스토리 목록                                                    |
-|   <img src="src/main/resources/static/docs/my-story-update.png" width="400" height="400" alt="마이스토리 수정">    |    <img src="src/main/resources/static/docs/share-story-list.png" width="400" height="400" alt="공유스토리 목록">    |
+|   <img src="src/main/resources/static/docs/my-story-update.png" width="550" height="400" alt="마이스토리 수정">    |    <img src="src/main/resources/static/docs/share-story-list.png" width="550" height="400" alt="공유스토리 목록">    |
 |                                                  공유스토리 상세                                                   |                                                    커뮤니티 목록                                                    |
-|  <img src="src/main/resources/static/docs/share-story-detail.png" width="400" height="400" alt="공유스토리 상세">  |     <img src="src/main/resources/static/docs/community-list.png" width="400" height="400" alt="커뮤니티 목록">      |
+|  <img src="src/main/resources/static/docs/share-story-detail.png" width="550" height="400" alt="공유스토리 상세">  |     <img src="src/main/resources/static/docs/community-list.png" width="550" height="400" alt="커뮤니티 목록">      |
 |                                                   커뮤니티 상세                                                   |                                                      비고                                                       |
-|   <img src="src/main/resources/static/docs/community-detail.png" width="400" height="400" alt="커뮤니티 상세">    |                                                                                                               |
+|   <img src="src/main/resources/static/docs/community-detail.png" width="550" height="400" alt="커뮤니티 상세">    |                                                                                                               |
 
+<br>
 
 ## API 명세서
 
