@@ -1,9 +1,12 @@
 // 메인 페이지로 인증된 사용자만 접근할 수 있도록 하는 함수
 document.addEventListener("DOMContentLoaded", async () => {
+    // 페이지 로드 시 기본적으로 사이드바를 숨깁니다.
+    hideSidebar();
     const token = getJwtToken();
 
     if (!token) {
         redirectToLogin();
+        return;  // 토큰이 없으면 여기서 함수 실행을 멈춥니다.
     }
 
     // JWT 토큰을 포함하여 /main으로 GET 요청
@@ -27,8 +30,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     updateSidebarLinks(userId); //사이드바 처리
                     updateButtons(true); //header 처리
                     document.getElementById('userId').value = userId;
+                    showSidebar();  // 유효한 사용자 ID가 있을 때만 사이드바를 표시합니다.
                 } else {
                     console.log('userId 헤더가 응답에 포함되지 않았습니다.');
+                    hideSidebar();
                 }
                 if (userRole) {
                     roleCheck(userRole);
@@ -40,6 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log('메인 페이지 접근 실패: 401 Unauthorized');
                 const errorMessage = response.text();
                 showError(errorMessage);
+                hideSidebar();
                 // updateButtons(false); //header 처리
                 throw new Error('Unauthorized'); // 오류를 던져 다음 then 블록이 실행되지 않도록 함
             }
@@ -47,11 +53,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         .catch(error => {
             showError('Error during fetching page');
             console.error('Error during fetching page:', error);
+            hideSidebar(); //사이드바 숨김
             // updateButtons(false); //header 처리
         });
 });
 
-function roleCheck(userRole){
+function roleCheck(userRole) {
     if (userRole === 'ROLE_ADMIN') {
         console.log('관리자 권한이 확인되었습니다.');
 
@@ -119,5 +126,21 @@ function updateButtons(isLoggedIn) {
         loginButton.style.display = 'block';
         signupButton.style.display = 'block';
         logoutButton.style.display = 'none';
+    }
+}
+
+// 사이드바 표시 함수
+function showSidebar() {
+    const sidebar = document.querySelector('.sidebar'); // 사이드바의 클래스나 ID에 맞게 수정하세요
+    if (sidebar) {
+        sidebar.style.display = 'block';
+    }
+}
+
+// 사이드바 숨김 함수
+function hideSidebar() {
+    const sidebar = document.querySelector('.sidebar'); // 사이드바의 클래스나 ID에 맞게 수정하세요
+    if (sidebar) {
+        sidebar.style.display = 'none';
     }
 }
