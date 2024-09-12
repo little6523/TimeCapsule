@@ -84,9 +84,10 @@ public class StoryController {
   // 공유자 검색
   @GetMapping("/search")
   @ResponseBody
-  public List<String> searchUsers(@RequestParam("keyword") String keyword) {
+  public List<String> searchUsers(@RequestParam("keyword") String keyword,
+                                  @RequestParam("userId") String userId) {
 
-    return userService.searchUsersByNickname(keyword);
+    return userService.searchUsersByNickname(keyword, userId);
   }
 
   // 스토리 완성 폼 조회
@@ -101,20 +102,21 @@ public class StoryController {
   // 스토리 생성
   @PostMapping
   public String createStory(
-          @RequestPart(value = "images", required = false) List<MultipartFile> files,
+          @RequestPart("images") List<MultipartFile> images,
           @ModelAttribute StoryContentDTO storyContentDTO,
           @ModelAttribute("userId") String userId,
           HttpSession session)
           throws IOException {
 
     List<String> filesPath = new ArrayList<>();
-    if (files != null && !files.isEmpty()) {
-      filesPath = storyService.saveFiles(files, userId);
+    if (images != null && !images.isEmpty()) {
+      filesPath = storyService.saveFiles(images, userId);
     }
 
     StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
 
     StoryDTO storyDTO = storyService.saveStory(storyOptionDTO, storyContentDTO, filesPath, userId);
+    imageService.saveImages(filesPath, storyDTO.getId());
 
     return "redirect:/stories/" + storyDTO.getId();
   }
