@@ -165,8 +165,3 @@ cancelButton.addEventListener('click', function () {
     storyModalContent.innerText = '스토리 생성을 취소하였습니다.'
     storyModal.style.display = 'block';
 });
-
-// confirmButton.addEventListener('click', function () {
-//
-//
-// });

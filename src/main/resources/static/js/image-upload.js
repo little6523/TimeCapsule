@@ -60,10 +60,11 @@ saveButton.addEventListener('click', function () {
 
 // 모달의 확인 버튼 클릭 시 리다이렉트 처리
 confirmButton.addEventListener('click', function () {
-    console.log('Confirm button clicked');  // 클릭 시 로그 출력
     if (redirectUrl) {
-        window.location.href = redirectUrl;  // 저장된 리다이렉트 URL로 이동
-    } else {
+        window.location.href = redirectUrl;
+    }
+
+    else if (storyModalContent.innerText !== '스토리 생성을 취소하였습니다.') {
         window.location.href = '/stories/form';
     }
 });

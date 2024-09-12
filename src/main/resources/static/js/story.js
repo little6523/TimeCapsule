@@ -4,7 +4,6 @@ const story = document.getElementById('content')
 eventSource.onmessage = function (event) {
     try {
         let data = event.data.replace(/'/g, '"');
-        console.log(data);
         const jsonData = JSON.parse(data);
 
         if (jsonData.type === "complete") {
