@@ -181,6 +181,7 @@ public class StoryController {
     return "story-detail";
   }
 
+  // 인터뷰 파일 다운로드
   @GetMapping("/download")
   public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) {
 
