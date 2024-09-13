@@ -120,13 +120,15 @@
     const storyId = /*[[${story.id}]]*/ null; // 스토리 ID
     const currentUser = /*[[${story.getAuthor().nickname}]]*/ ''; // 유저 닉네임
     const existingSharedList = /*[[${story.sharedStories}]]*/ []; // 기존 공유자 리스트
+    const isEditMode = false;
 </script>
 <!--댓글 JS-->
 <script th:src="@{/js/comment.js}"></script>
 
 <script th:src="@{/js/auth.js}"></script>
-<script th:src="@{/js/story-detail.js}"></script>
+<script th:src="@{/js/detail-page.js}"></script>
 <script th:src="@{/js/story-delete.js}"></script>
+<script th:src="@{/js/shared-list.js}"></script>
 <script type="text/javascript" th:src="@{/js/header.js}"></script>
 </body>
 </html>

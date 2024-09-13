@@ -45,7 +45,11 @@ public class StoryController {
   private final ApiController apiController;
 
   public StoryController(
-          UserService userService, StoryService storyService, ImageService imageService, ApiService apiService, ApiController apiController) {
+      UserService userService,
+      StoryService storyService,
+      ImageService imageService,
+      ApiService apiService,
+      ApiController apiController) {
     this.userService = userService;
     this.storyService = storyService;
     this.imageService = imageService;
