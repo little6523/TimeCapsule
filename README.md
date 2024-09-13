@@ -61,10 +61,6 @@ PW: test1234!!
 ID: test  
 PW: a12345
 
-### 음성 녹음 샘플 사운드(발표 후 내릴 예정입니다.)
-[Download the sound file](https://drive.google.com/file/d/1HrUrZbw7pk2PTRQUdg7_WkbMPU-ZgcXC/view?usp=drive_link)
-
-
 <br>
 
 ## 기술 스택
