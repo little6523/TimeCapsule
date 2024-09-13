@@ -72,8 +72,6 @@ public class StoryController {
       RedirectAttributes redirectAttributes)
       throws IOException {
 
-    System.out.println(file.getOriginalFilename());
-
     List<MultipartFile> files = new ArrayList<>();
     files.add(file);
 

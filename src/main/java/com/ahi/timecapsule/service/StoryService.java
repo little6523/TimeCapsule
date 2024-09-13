@@ -189,7 +189,6 @@ public class StoryService {
 
         // 실제로 저장할 경로 생성
         File save = new File(directory, newFileName);
-        System.out.println("저장경로: " + save.getPath());
 
         // 파일을 지정된 경로에 저장
         file.transferTo(save);
@@ -225,8 +224,6 @@ public class StoryService {
     // 원본 파일의 이름과 확장자 분리
     String fileName = file.getOriginalFilename();
     String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-
-    System.out.println("file = " + fileName);
 
     String path = externalPath;
 

@@ -73,7 +73,6 @@ public class STTAPI {
     Scanner s = new Scanner(responseStream).useDelimiter("\\A");
     String response = s.hasNext() ? s.next() : "";
     s.close();
-    System.out.println(response);
 
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
@@ -131,7 +130,6 @@ public class STTAPI {
     Scanner s = new Scanner(responseStream).useDelimiter("\\A");
     String response = s.hasNext() ? s.next() : "";
     s.close();
-    System.out.println(response);
 
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
@@ -165,13 +163,11 @@ public class STTAPI {
       if (response.contains("completed")) {
         break;
       } else {
-        System.out.println("응답 결과" + response);
         Thread.sleep(10000);
       }
     }
 
     s.close();
-    System.out.println(response);
 
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObject = (JSONObject) jsonParser.parse(response);

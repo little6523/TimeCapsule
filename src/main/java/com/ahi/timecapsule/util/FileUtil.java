@@ -28,8 +28,6 @@ public class FileUtil {
 
     // 암호화된 데이터를 파일로 저장
     Files.write(Paths.get(JWTFilePath), encryptedBytes);
-
-    System.out.println("파일 암호화 완료: " + JWTFilePath);
   }
 
   // 파일 복호화 (결과를 파일로 저장)
@@ -41,8 +39,6 @@ public class FileUtil {
     Cipher cipher = Cipher.getInstance("AES");
     cipher.init(Cipher.DECRYPT_MODE, secretKey);
     byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-
-    System.out.println("파일 복호화 완료: " + JWTFilePath);
 
     return new String(decryptedBytes, "UTF-8");
   }

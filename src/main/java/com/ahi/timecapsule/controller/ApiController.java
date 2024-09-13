@@ -35,8 +35,6 @@ public class ApiController {
 
     List<String> contents = apiService.get();
 
-    System.out.println(contents.get(0));
-
     return ResponseEntity.ok(apiService.createContent(contents, storyOptionDTO));
   }
 

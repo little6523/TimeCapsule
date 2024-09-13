@@ -41,7 +41,6 @@ public class ImageService {
 
     for (String addedImage : addedImages) {
       Image image = Image.builder().story(story).url(addedImage).build();
-      System.out.println("image = " + image.getUrl());
       imageRepository.save(image);
     }
   }

@@ -65,7 +65,6 @@ public class AlanAPI {
         data -> {
           // 데이터를 받았을 때마다 비동기 작업으로 emitter.send 호출
           executorService.submit(() -> sendData(emitter, data));
-          System.out.println("보낼 Data: " + data);
           try {
             Thread.sleep(10);
           } catch (InterruptedException e) {
