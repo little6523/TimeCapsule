@@ -50,6 +50,17 @@
 |                                                   ERD 설계/시스템 아키텍처 작성                                                   |                                               화면 설계                                               |                                                                           ERD 설계/시스템 아키텍처 작성                                                                            |
 | **Backend** <br>- 스토리 조회/수정/삭제<br>- 스토리 검색<br>- 커뮤니티 조회<br> **Frontend** <br>- 스토리/커뮤니티 목록 페이지<br>- 스토리/커뮤니티 상세 조회 페이지 |            **Backend** <br>- 댓글 CRUD <br> **Frontend** <br>- 마이스토리 & 커뮤니티 페이지 댓글 CRUD             | **Backend** <br>- 회원가입<br>- 로그인<br>- 로그아웃<br>- Spring Security<br>- JWT 토큰 관리<br>- Redis<br>- 회원 Repository 단위 테스트 코드 작성  <br> **Frontend** <br>- 회원가입 페이지<br>- 로그인 페이지 |
 
+## 프로젝트 배포
+서버 주소:  http://ec2-3-36-56-149.ap-northeast-2.compute.amazonaws.com:8080/
+
+### 관리자 계정  
+ID: test123  
+PW: test1234!!
+
+### 일반 계정  
+ID: test  
+PW: a12345
+
 <br>
 
 ## 기술 스택
