@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   spring-app:
-    image: lhj0430/github-actions-demo:latest
+    image: lhj0430/final:latest
     build: .
     ports:
       - "8080:8080"
