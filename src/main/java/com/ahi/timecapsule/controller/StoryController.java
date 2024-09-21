@@ -124,7 +124,6 @@ public class StoryController {
 
     StoryOptionDTO storyOptionDTO = (StoryOptionDTO) session.getAttribute("StoryOptionDTO");
 
-//    storyContentDTO.setContent(content);
     StoryDTO storyDTO = storyService.saveStory(storyOptionDTO, storyContentDTO, filesPath, userId);
     imageService.saveImages(filesPath, storyDTO.getId());
 
