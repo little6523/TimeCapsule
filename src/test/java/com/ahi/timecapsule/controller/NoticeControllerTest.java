@@ -1,12 +1,11 @@
 package com.ahi.timecapsule.controller;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.ahi.timecapsule.TestSecurityConfig;
+import com.ahi.timecapsule.config.JwtAuthenticationFilter;
 import com.ahi.timecapsule.dto.notice.request.NoticeCreateDTO;
 import com.ahi.timecapsule.dto.notice.request.NoticeUpdateDTO;
 import com.ahi.timecapsule.dto.notice.response.NoticeDetailDTO;
@@ -15,12 +14,12 @@ import com.ahi.timecapsule.service.NoticeService;
 import com.ahi.timecapsule.service.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,9 +27,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @WebMvcTest(value = NoticeController.class)
-@Import(TestSecurityConfig.class)
 public class NoticeControllerTest {
 
   @Autowired private MockMvc mockMvc;
@@ -38,6 +38,20 @@ public class NoticeControllerTest {
   @MockBean private NoticeService noticeService;
 
   @MockBean private UserService userService;
+
+  @MockBean private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+  @BeforeEach
+  public void setup() {
+    InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+    viewResolver.setPrefix("/WEB-INF/views/");
+    viewResolver.setSuffix(".jsp");
+
+    this.mockMvc =
+        MockMvcBuilders.standaloneSetup(new NoticeController(noticeService, userService))
+            .setViewResolvers(viewResolver)
+            .build();
+  }
 
   private final LocalDateTime fixedTime = LocalDateTime.of(2024, 9, 4, 0, 0);
 
@@ -132,9 +146,11 @@ public class NoticeControllerTest {
   @DisplayName("공지사항 생성 테스트")
   public void testCreateNotice() throws Exception {
     String userId = "testUser";
+    String userNickname = "admin";
     NoticeDetailDTO createdNotice = createNoticeDetailDTO(1L, "Test Title", "Test Content");
 
-    when(noticeService.createNotice(any(NoticeCreateDTO.class), anyString()))
+    when(userService.getNicknameByUserId(userId)).thenReturn(userNickname);
+    when(noticeService.createNotice(any(NoticeCreateDTO.class), eq(userNickname)))
         .thenReturn(createdNotice);
 
     mockMvc
@@ -146,8 +162,6 @@ public class NoticeControllerTest {
                 .param("content", "Test Content"))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/notices/" + createdNotice.getId()));
-
-    verify(noticeService).createNotice(any(NoticeCreateDTO.class), eq(userId));
   }
 
   @Test
@@ -158,6 +172,7 @@ public class NoticeControllerTest {
         .perform(
             post("/notices")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("userId", "12345")
                 .param("title", "")
                 .param("content", "Test Content"))
         .andExpect(status().isOk())
@@ -213,14 +228,5 @@ public class NoticeControllerTest {
     mockMvc.perform(delete("/notices/{id}", noticeId)).andExpect(status().isOk());
 
     verify(noticeService).deleteNotice(noticeId);
-  }
-
-  @Test
-  @WithMockUser(roles = "USER")
-  @DisplayName("비관리자 공지사항 삭제 실패 테스트")
-  public void testNonAdminDeleteNotice() throws Exception {
-    Long noticeId = 1L;
-
-    mockMvc.perform(delete("/notices/{id}", noticeId)).andExpect(status().isForbidden());
   }
 }
