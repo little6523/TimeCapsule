@@ -29,6 +29,7 @@ services:
 
 networks:
   mynetwork:
+    name: mynetwork
 
 volumes:
   redis-data:
