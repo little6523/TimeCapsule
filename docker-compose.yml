@@ -13,7 +13,7 @@ services:
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
     networks:
-      - dist_mynetwork
+      - mynetwork
     depends_on:
       - redis
 
@@ -23,12 +23,12 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - dist_mynetwork
+      - mynetwork
     volumes:
       - redis-data:/data
 
 networks:
-  mynetwork:
+  dist_mynetwork:
 
 volumes:
   redis-data:
