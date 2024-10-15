@@ -82,21 +82,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 아티팩트 전송을 위한 임시 공간
-      - name: Create distribute
-        run: mkdir ~/dist
+#      # 1. 아티팩트 전송을 위한 임시 공간
+#      - name: Create distribute
+#        run: mkdir ~/dist
 
       # 2. 빌드 한 아티팩트 다운로드
       - name: Download build artifact for job
         uses: actions/download-artifact@v3
         with:
           name: project_artifact
-          path: dist
+          path: ./
 
       # 3. 다운 받은 아티팩트 확인
       - name: Show structure of downloaded files
         run: |
-          ls -alh dist
+          ls -alh ./
 
       # 4. docker-compose.yml 전송
       - name: transfer docker-compose.yml
@@ -105,7 +105,7 @@ jobs:
           host: ${{ secrets.AWS_HOST}}
           username: ${{ secrets.AWS_USERNAME}}
           key: ${{ secrets.AWS_PRIVATE_KEY}}
-          source: "dist/docker-compose.yml"
+          source: "docker-compose.yml"
           target: "/home/ubuntu"
 
       # 5. 최신 이미지를 컨테이너화하여 실행 및 사용하지 않는 이미지 제거
@@ -116,7 +116,6 @@ jobs:
           username: ${{ secrets.AWS_USERNAME}}
           key: ${{ secrets.AWS_PRIVATE_KEY}}
           script: |
-            cd dist
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/final
             sudo docker-compose down
             sudo docker system prune -f
