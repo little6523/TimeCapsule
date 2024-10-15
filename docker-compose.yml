@@ -28,7 +28,7 @@ services:
       - redis-data:/data
 
 networks:
-  dist_mynetwork:
+  mynetwork:
 
 volumes:
   redis-data:
