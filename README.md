@@ -354,6 +354,24 @@ PW: a12345
 
 <br>
 
+## 동작 예시
+- 현재 생성형 AI API 비용 이슈로 인해 스토리 생성 기능은 작동하지 않으니, 영상을 참고해주시길 바랍니다.
+
+### 1. 회원 가입 및 로그인
+https://github.com/user-attachments/assets/dee12743-7f8a-4eac-83e7-19caaab8ace9
+
+### 2. 음성 녹음 및 파일 추가 & 스토리 생성
+https://github.com/user-attachments/assets/c306c6b2-6778-4f3c-8ede-3ea8f1796723
+
+### 3. 스토리 조회, 수정, 삭제
+https://github.com/user-attachments/assets/d966a91a-5734-4edf-8cdf-d129dd59adac
+
+### 4. 공지사항 작성, 조회, 수정, 삭제
+https://github.com/user-attachments/assets/8ccedbce-5f1e-454d-9c3a-f9350f271074
+
+
+
+
 ## API 명세서
 
 #### User Management
